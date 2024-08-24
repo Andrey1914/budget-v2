@@ -19,8 +19,15 @@
     ],
     "paths": {
       "@/*": ["./*"]
-    }
+    },
+    "types": ["next", "next-auth", "next-auth/jwt"]
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "pages/api/migrate-expenses.js"
+  ],
   "exclude": ["node_modules"]
 }
