@@ -3,14 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { handleDelete } from "@/app/dashboard/expense/delete";
-
-type Expense = {
-  _id: string;
-  amount: number;
-  description: string;
-  category: string;
-  date: string;
-};
+import { Expense } from "@/types";
 
 const ExpensesList: React.FC = () => {
   const { data: session } = useSession();

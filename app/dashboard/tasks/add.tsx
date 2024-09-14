@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 const AddTask: React.FC = () => {
   const router = useRouter();
 
-  const handleSubmit = async (data: { title: string; description: string }) => {
+  const handleSubmit = async (data: { title: string; content: string }) => {
     const response = await fetch("/api/tasks/add", {
       method: "POST",
       headers: {

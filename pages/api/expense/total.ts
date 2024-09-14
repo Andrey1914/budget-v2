@@ -1,8 +1,9 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import clientPromise from "@/lib/db";
 import { getToken } from "next-auth/jwt";
-import { startOfMonth, endOfMonth } from "date-fns";
 import { ObjectId } from "mongodb";
+
+const secret = process.env.JWT_SECRET;
 
 const getTotalExpense = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method !== "GET") {
@@ -10,37 +11,48 @@ const getTotalExpense = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   try {
-    const token = await getToken({ req, raw: true });
-    // console.log("Get Token:", token);
+    const token = await getToken({ req, secret });
+    console.log("Full token content:", JSON.stringify(token, null, 2));
 
     if (!token) {
       console.error("No token found");
+
       return res.status(401).json({ error: "Unauthorized - No token" });
     }
 
     const userId = new ObjectId(token.sub);
-    // console.log("User ID for match:", userId);
 
-    if (!userId) {
-      console.error("No user ID found in token");
-      return res
-        .status(401)
-        .json({ error: "Unauthorized - No user ID in token" });
-    }
+    console.log("Token user ID (sub):", userId);
+
+    console.log("User ID for total expense calculation:", userId);
 
     const client = await clientPromise;
     const db = client.db("budget-v2");
 
-    const startDate = startOfMonth(new Date());
+    const startDate = new Date(
+      Date.UTC(new Date().getFullYear(), new Date().getMonth(), 1, 0, 0, 0)
+    );
+    const endDate = new Date(
+      Date.UTC(
+        new Date().getFullYear(),
+        new Date().getMonth() + 1,
+        0,
+        23,
+        59,
+        59
+      )
+    );
 
-    const endDate = endOfMonth(new Date());
+    console.log("Start Date:", startDate.toISOString());
+    console.log("End Date:", endDate.toISOString());
 
-    const totalExpense = await db
+    const total = await db
       .collection("expense")
       .aggregate([
         {
           $match: {
-            userId: userId,
+            userId: new ObjectId(userId),
+
             date: {
               $gte: startDate,
               $lte: endDate,
@@ -55,15 +67,12 @@ const getTotalExpense = async (req: NextApiRequest, res: NextApiResponse) => {
         },
       ])
       .toArray();
+    console.log("Total expense - DB:", total);
 
-    // console.log("Total Expense Result:", totalExpense);
+    const totalExpense = total.length > 0 ? total[0].total : 0;
+    console.log("Calculation expense:", totalExpense);
 
-    if (totalExpense.length === 0) {
-      console.warn("No expenses found for the user in the given date range");
-      return res.status(200).json({ total: 0 });
-    }
-
-    res.status(200).json({ total: totalExpense[0]?.total || 0 });
+    res.status(200).json({ total: totalExpense });
   } catch (error: any) {
     console.error("Failed to calculate total expense:", error.message);
     console.error("Detailed Error:", JSON.stringify(error, null, 2));

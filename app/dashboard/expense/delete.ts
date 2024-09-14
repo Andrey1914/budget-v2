@@ -3,9 +3,7 @@ import { getSession } from "next-auth/react";
 export const deleteExpense = async (id: string) => {
   try {
     const session = await getSession();
-    console.log("Session:", session);
-
-    if (!session || !session.token) {
+    if (!session) {
       throw new Error("No session available");
     }
 
@@ -13,7 +11,6 @@ export const deleteExpense = async (id: string) => {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${session.token}`,
       },
       body: JSON.stringify({ id }),
     });
@@ -29,7 +26,6 @@ export const deleteExpense = async (id: string) => {
   }
 };
 
-// Функция для обработки удаления и обновления состояния
 export const handleDelete = async (
   id: string,
   expenses: any[],

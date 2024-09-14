@@ -1,8 +1,8 @@
-import { getSession } from "next-auth/react"; // Импортируем getSession
+import { getSession } from "next-auth/react";
 
 export const deleteIncome = async (id: string) => {
   try {
-    const session = await getSession(); // Получаем сессию
+    const session = await getSession();
     if (!session) {
       throw new Error("No session available");
     }
@@ -12,7 +12,7 @@ export const deleteIncome = async (id: string) => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ id }), // Передача id в теле запроса
+      body: JSON.stringify({ id }),
     });
 
     if (!response.ok) {
@@ -26,7 +26,6 @@ export const deleteIncome = async (id: string) => {
   }
 };
 
-// Функция для обработки удаления и обновления состояния
 export const handleDelete = async (
   id: string,
   incomes: any[],

@@ -16,6 +16,7 @@ export interface Token {
 }
 
 // Expense interfeces
+
 export interface IExpense extends Document {
   user: Schema.Types.ObjectId;
   amount: number;

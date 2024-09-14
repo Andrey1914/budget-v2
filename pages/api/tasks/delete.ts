@@ -1,31 +1,34 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import clientPromise from "@/lib/db";
-import { getToken } from "next-auth/jwt";
 import { ObjectId } from "mongodb";
-import { Token } from "@/interfaces";
 
 const deleteTask = async (req: NextApiRequest, res: NextApiResponse) => {
-  if (req.method === "DELETE") {
-    const token = (await getToken({ req })) as Token;
-    if (!token) {
-      return res.status(401).end();
+  if (req.method !== "DELETE") {
+    return res.status(405).json({ error: "Method not allowed" });
+  }
+
+  try {
+    const { id } = req.query;
+
+    if (!id || typeof id !== "string") {
+      return res.status(400).json({ error: "Invalid request query" });
     }
 
-    const { id } = req.body;
     const client = await clientPromise;
     const db = client.db("budget-v2");
 
-    try {
-      const result = await db.collection("tasks").deleteOne({
-        _id: new ObjectId(id),
-        userId: token.sub, // Используем token.sub
-      });
-      res.status(200).json(result);
-    } catch (error) {
-      res.status(500).json({ error: "Failed to delete task" });
+    const result = await db
+      .collection("tasks")
+      .deleteOne({ _id: new ObjectId(id) });
+
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ error: "Task not found" });
     }
-  } else {
-    res.status(405).end();
+
+    res.status(200).json({ message: "Task deleted successfully" });
+  } catch (error: any) {
+    console.error("Failed to delete task:", error.message);
+    res.status(500).json({ error: "Failed to delete task" });
   }
 };
 

@@ -1,26 +1,31 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import clientPromise from "@/lib/db";
 import { getToken } from "next-auth/jwt";
-import { Token } from "@/interfaces";
+import { ObjectId } from "mongodb";
 
 const secret = process.env.JWT_SECRET;
 
 const addTask = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "POST") {
-    const token = (await getToken({ req, secret })) as Token;
+    const token = await getToken({ req, secret });
     if (!token) {
       return res.status(401).json({ error: "Unauthorized" });
     }
 
-    const { title, content } = req.body; // Предполагаем, что title и content приходят в теле запроса
+    const { title, content, date } = req.body; // Предполагаем, что title и content приходят в теле запроса
+
+    const userId = new ObjectId(token); // Преобразуем userId в ObjectId для использования в MongoDB
+
     const client = await clientPromise;
     const db = client.db("budget-v2");
+    const taskDate = new Date(date);
 
     try {
       const task = await db.collection("tasks").insertOne({
-        userId: token.sub, // Используем token.sub
+        userId: userId,
         title,
         content,
+        date: taskDate,
         createdAt: new Date(),
       });
       res.status(201).json(task);

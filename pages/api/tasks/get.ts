@@ -1,16 +1,18 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import clientPromise from "@/lib/db";
 import { getToken } from "next-auth/jwt";
-import { Token } from "@/interfaces";
+import { ObjectId } from "mongodb";
 
 const secret = process.env.JWT_SECRET;
 
 const getTasks = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "GET") {
-    const token = (await getToken({ req, secret })) as Token;
+    const token = await getToken({ req, secret });
     if (!token) {
       return res.status(401).json({ error: "Unauthorized" });
     }
+
+    const userId = token.sub;
 
     const client = await clientPromise;
     const db = client.db("budget-v2");
@@ -18,7 +20,8 @@ const getTasks = async (req: NextApiRequest, res: NextApiResponse) => {
     try {
       const tasks = await db
         .collection("tasks")
-        .find({ userId: token.sub })
+
+        .find({ userId: new ObjectId(userId) })
         .toArray();
       res.status(200).json(tasks);
     } catch (error) {
