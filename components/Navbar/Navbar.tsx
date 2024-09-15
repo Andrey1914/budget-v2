@@ -4,29 +4,28 @@ import React from "react";
 import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
 
+import { Box } from "@mui/material";
+import theme from "@/app/styles/theme";
+
 const Navbar: React.FC = () => {
   const { data: session, status } = useSession();
 
   return (
     <nav>
-      <div>
-        <div>
-          {status === "authenticated" ? (
-            <>
-              <Link href="/dashboard/income">Incomes</Link>
-              <Link href="/dashboard/expense">Expenses</Link>
-              <Link href="/dashboard/tasks">Tasks</Link>
-              <h1>Welcome, {session?.user?.name}</h1>
-              <button onClick={() => signOut()}>Sign Out</button>
-            </>
-          ) : (
-            <>
-              <Link href="/auth/login">Login</Link>
-              <Link href="/auth/register">Register</Link>
-            </>
-          )}
-        </div>
-      </div>
+      {status === "authenticated" ? (
+        <Box component="div" style={{ display: "flex", gap: theme.spacing(3) }}>
+          <Link href="/dashboard/income">Incomes</Link>
+          <Link href="/dashboard/expense">Expenses</Link>
+          <Link href="/dashboard/tasks">Tasks</Link>
+          <h3>Welcome, {session?.user?.name}</h3>
+          <button onClick={() => signOut()}>Sign Out</button>
+        </Box>
+      ) : (
+        <>
+          <Link href="/auth/login">Login</Link>
+          <Link href="/auth/register">Register</Link>
+        </>
+      )}
     </nav>
   );
 };

@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import { useSession } from "next-auth/react";
 import { IncomeFormProps } from "@/interfaces";
 
+import { Box, TextField } from "@mui/material";
+
 const IncomeForm: React.FC<IncomeFormProps> = () => {
   const { data: session } = useSession();
   const [amount, setAmount] = useState("");
@@ -41,10 +43,19 @@ const IncomeForm: React.FC<IncomeFormProps> = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <Box
+      component="form"
+      sx={{ "& > :not(style)": { m: 2, width: "25ch" } }}
+      noValidate
+      autoComplete="off"
+      onSubmit={handleSubmit}
+    >
       <div>
-        <label>Amount</label>
-        <input
+        <TextField
+          // id="outlined-basic"
+          label="Amount"
+          variant="outlined"
+          autoFocus={true}
           type="number"
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
@@ -52,8 +63,9 @@ const IncomeForm: React.FC<IncomeFormProps> = () => {
         />
       </div>
       <div>
-        <label>Category</label>
-        <input
+        <TextField
+          label="Category"
+          variant="outlined"
           type="text"
           value={category}
           onChange={(e) => setCategory(e.target.value)}
@@ -61,8 +73,13 @@ const IncomeForm: React.FC<IncomeFormProps> = () => {
         />
       </div>
       <div>
-        <label>Description</label>
-        <input
+        <TextField
+          // id="outlined-multiline-static"
+          multiline
+          rows={4}
+          color="primary"
+          label="Description"
+          variant="outlined"
           type="text"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
@@ -70,8 +87,9 @@ const IncomeForm: React.FC<IncomeFormProps> = () => {
         />
       </div>
       <div>
-        <label>Date</label>
-        <input
+        <TextField
+          // label="Date"
+          variant="outlined"
           type="date"
           value={date}
           onChange={(e) => setDate(e.target.value)}
@@ -80,7 +98,7 @@ const IncomeForm: React.FC<IncomeFormProps> = () => {
       </div>
       {error && <p style={{ color: "red" }}>{error}</p>}
       <button type="submit">Add Income</button>
-    </form>
+    </Box>
   );
 };
 

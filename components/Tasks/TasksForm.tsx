@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { useSession } from "next-auth/react";
 import { TaskFormProps } from "@/interfaces";
+import { Box, TextField } from "@mui/material";
 
 const TaskForm: React.FC<TaskFormProps> = () => {
   const { data: session } = useSession();
@@ -38,10 +39,18 @@ const TaskForm: React.FC<TaskFormProps> = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <Box
+      component="form"
+      sx={{ "& > :not(style)": { m: 2, width: "25ch" } }}
+      noValidate
+      autoComplete="off"
+      onSubmit={handleSubmit}
+    >
       <div>
-        <label>Title</label>
-        <input
+        <TextField
+          label="Title"
+          variant="outlined"
+          autoFocus={true}
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
@@ -50,8 +59,13 @@ const TaskForm: React.FC<TaskFormProps> = () => {
         />
       </div>
       <div>
-        <label>Content</label>
-        <textarea
+        <TextField
+          // id="outlined-multiline-static"
+          multiline
+          rows={4}
+          color="primary"
+          label="Content"
+          variant="outlined"
           value={content}
           onChange={(e) => setContent(e.target.value)}
           placeholder="Content"
@@ -59,7 +73,7 @@ const TaskForm: React.FC<TaskFormProps> = () => {
       </div>
       {error && <p style={{ color: "red" }}>{error}</p>}
       <button type="submit">Save</button>
-    </form>
+    </Box>
   );
 };
 

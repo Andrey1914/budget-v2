@@ -1,6 +1,6 @@
 "use client";
 
-import styles from "./page.module.css";
+// import styles from "./page.module.css";
 import { SessionProvider } from "next-auth/react";
 
 // export default function Home() {
@@ -13,7 +13,7 @@ import { SessionProvider } from "next-auth/react";
 //   );
 // }
 import React from "react";
-import Navbar from "@/components/Navbar";
+// import Navbar from "@/components/Navbar";
 // import { useAuth } from "@/hooks/useAuth";
 // import Dashboard from "@/app/dashboard/page";
 
@@ -23,11 +23,11 @@ const Home: React.FC = () => {
   return (
     // <Dashboard />
     <SessionProvider>
-      <div>
-        <Navbar />
+      {/* <div> */}
+      {/* <Navbar /> */}
 
-        <main className={styles.main}>
-          {/* {user ? (
+      <main>
+        {/* {user ? (
             <div>
               <h1>Welcome, {user.name}</h1>
               <button onClick={logout}>Logout</button>
@@ -37,8 +37,8 @@ const Home: React.FC = () => {
               <h1>Please log in</h1>
             </div>
           )} */}
-        </main>
-      </div>
+      </main>
+      {/* </div> */}
     </SessionProvider>
   );
 };

@@ -6,6 +6,7 @@ import IncomeForm from "@/components/Income/IncomeForm";
 import { useRouter } from "next/navigation";
 import { SessionProvider } from "next-auth/react";
 import Link from "next/link";
+import { Box, Container, Typography } from "@mui/material";
 
 const AddIncome: React.FC = () => {
   const router = useRouter();
@@ -28,11 +29,17 @@ const AddIncome: React.FC = () => {
 
   return (
     <SessionProvider>
-      <div>
-        <h1>Add Income</h1>
-        <IncomeForm onSubmit={handleSubmit} />
-      </div>
-      <Link href="/dashboard">Back to Dashboard</Link>
+      <Box component="section">
+        <Container maxWidth="sm">
+          <div>
+            <Typography variant="h2" component="h1">
+              Add Income
+            </Typography>
+            <IncomeForm onSubmit={handleSubmit} />
+          </div>
+          <Link href="/dashboard">Back to Dashboard</Link>
+        </Container>
+      </Box>
     </SessionProvider>
   );
 };

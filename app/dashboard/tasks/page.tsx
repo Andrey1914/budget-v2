@@ -5,6 +5,7 @@ import TaskForm from "@/components/Tasks/TasksForm";
 import { useRouter } from "next/navigation";
 import { SessionProvider } from "next-auth/react";
 import Link from "next/link";
+import { Box, Container, Typography } from "@mui/material";
 
 const AddTask: React.FC = () => {
   const router = useRouter();
@@ -27,11 +28,17 @@ const AddTask: React.FC = () => {
 
   return (
     <SessionProvider>
-      <div>
-        <h1>Add Task</h1>
-        <TaskForm onSubmit={handleSubmit} />
-      </div>
-      <Link href="/dashboard">Back to Dashboard</Link>
+      <Box component="section">
+        <Container maxWidth="sm">
+          <div>
+            <Typography variant="h2" component="h1">
+              Add Task
+            </Typography>
+            <TaskForm onSubmit={handleSubmit} />
+          </div>
+          <Link href="/dashboard">Back to Dashboard</Link>
+        </Container>
+      </Box>
     </SessionProvider>
   );
 };

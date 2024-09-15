@@ -32,7 +32,7 @@ const TasksList: React.FC = () => {
           }
 
           const tasksData: Task[] = await tasksRes.json();
-          console.log("Fetched tasks:", tasksData);
+          // console.log("Fetched tasks:", tasksData);
           setTasks(tasksData);
         } catch (err) {
           setError((err as Error).message);

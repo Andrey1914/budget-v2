@@ -6,6 +6,7 @@ import ExpenseForm from "@/components/Expense/ExpenseForm";
 import { SessionProvider } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { Box, Container, Typography } from "@mui/material";
 
 const AddExpense: React.FC = () => {
   const router = useRouter();
@@ -28,11 +29,17 @@ const AddExpense: React.FC = () => {
 
   return (
     <SessionProvider>
-      <div>
-        <h1>Add Expense</h1>
-        <ExpenseForm onSubmit={handleSubmit} />
-      </div>
-      <Link href="/dashboard">Back to Dashboard</Link>
+      <Box component="section">
+        <Container maxWidth="sm">
+          <div>
+            <Typography variant="h2" component="h1">
+              Add Expense
+            </Typography>
+            <ExpenseForm onSubmit={handleSubmit} />
+          </div>
+          <Link href="/dashboard">Back to Dashboard</Link>
+        </Container>
+      </Box>
     </SessionProvider>
   );
 };
