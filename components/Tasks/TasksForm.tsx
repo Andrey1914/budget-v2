@@ -3,13 +3,21 @@
 import React, { useState } from "react";
 import { useSession } from "next-auth/react";
 import { TaskFormProps } from "@/interfaces";
-import { Box, TextField } from "@mui/material";
+import SnackbarNotification from "@/components/Notification/Snackbar";
+
+import { Box, TextField, Button } from "@mui/material";
 
 const TaskForm: React.FC<TaskFormProps> = () => {
   const { data: session } = useSession();
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
   const [error, setError] = useState<string>("");
+
+  const [showSnackbar, setShowSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">(
+    "success"
+  );
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -19,99 +27,83 @@ const TaskForm: React.FC<TaskFormProps> = () => {
       return;
     }
 
-    const res = await fetch("/api/tasks/add", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ title, content }),
-    });
+    try {
+      const res = await fetch("/api/tasks/add", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ title: title || "", content: content || "" }),
+      });
 
-    if (!res.ok) {
-      const data = await res.json();
-      setError(data.error || "Failed to add task");
-    } else {
-      setTitle("");
-      setContent("");
-      setError("");
-      // Здесь можно добавить логику успешного добавления задачи, например, редирект или обновление состояния
+      if (!res.ok) {
+        const data = await res.json();
+        setError(data.error || "Failed to add task");
+
+        setSnackbarMessage("Failed to add task");
+        setSnackbarSeverity("error");
+        setShowSnackbar(true);
+      } else {
+        setTitle("");
+        setContent("");
+        setError("");
+
+        setSnackbarMessage("Task added successfully");
+        setSnackbarSeverity("success");
+        setShowSnackbar(true);
+      }
+    } catch (error) {
+      setError("An unexpected error occurred.");
+      setSnackbarMessage("An unexpected error occurred");
+      setSnackbarSeverity("error");
+      setShowSnackbar(true);
     }
   };
 
   return (
-    <Box
-      component="form"
-      sx={{ "& > :not(style)": { m: 2, width: "25ch" } }}
-      noValidate
-      autoComplete="off"
-      onSubmit={handleSubmit}
-    >
-      <div>
-        <TextField
-          label="Title"
-          variant="outlined"
-          autoFocus={true}
-          type="text"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder="Title"
-          required
+    <>
+      <Box
+        component="form"
+        sx={{ "& > :not(style)": { m: 2, width: "25ch" } }}
+        noValidate
+        autoComplete="off"
+        onSubmit={handleSubmit}
+      >
+        <div>
+          <TextField
+            label="Title"
+            variant="outlined"
+            autoFocus={true}
+            type="text"
+            value={title || ""}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Title"
+            required
+          />
+        </div>
+        <div>
+          <TextField
+            multiline
+            rows={4}
+            color="primary"
+            label="Content"
+            variant="outlined"
+            value={content || ""}
+            onChange={(e) => setContent(e.target.value)}
+            placeholder="Content"
+          />
+        </div>
+        {error && <p style={{ color: "red" }}>{error}</p>}
+        <button type="submit">Save</button>
+      </Box>
+      {showSnackbar && (
+        <SnackbarNotification
+          message={snackbarMessage}
+          severity={snackbarSeverity}
         />
-      </div>
-      <div>
-        <TextField
-          // id="outlined-multiline-static"
-          multiline
-          rows={4}
-          color="primary"
-          label="Content"
-          variant="outlined"
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          placeholder="Content"
-        />
-      </div>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      <button type="submit">Save</button>
-    </Box>
+      )}
+    </>
   );
 };
 
 export default TaskForm;
-
-// "use client";
-
-// import React, { useState } from "react";
-
-// const TaskForm: React.FC<{
-//   onSubmit: (data: any) => void;
-//   initialData?: any;
-// }> = ({ onSubmit, initialData }) => {
-//   const [title, setTitle] = useState<string>(initialData?.title || "");
-//   const [content, setContent] = useState<string>(initialData?.content || "");
-
-//   const handleSubmit = (e: React.FormEvent) => {
-//     e.preventDefault();
-//     onSubmit({ title, content });
-//   };
-
-//   return (
-//     <form onSubmit={handleSubmit}>
-//       <input
-//         type="text"
-//         value={title}
-//         onChange={(e) => setTitle(e.target.value)}
-//         placeholder="Title"
-//         required
-//       />
-//       <textarea
-//         value={content}
-//         onChange={(e) => setContent(e.target.value)}
-//         placeholder="Content"
-//       />
-//       <button type="submit">Save</button>
-//     </form>
-//   );
-// };
-
-// export default TaskForm;

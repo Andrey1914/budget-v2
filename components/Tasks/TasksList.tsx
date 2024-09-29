@@ -4,14 +4,6 @@ import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { Task } from "@/types";
 
-// type Task = {
-//   _id: string;
-//   description: string;
-//   category: string;
-//   date: string;
-//   completed: boolean;
-// };
-
 const TasksList: React.FC = () => {
   const { data: session } = useSession();
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -103,7 +95,7 @@ const TasksList: React.FC = () => {
               <li key={item._id}>
                 <input
                   type="checkbox"
-                  checked={item.completed}
+                  checked={Boolean(item.completed)}
                   onChange={() =>
                     handleCheckboxChange(item._id, item.completed)
                   }

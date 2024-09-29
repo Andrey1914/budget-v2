@@ -10,22 +10,47 @@ export default NextAuth({
       credentials: {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
+        verificationCode: { label: "Verification Code", type: "text" },
       },
       authorize: async (credentials) => {
+        console.log("Credentials received:", credentials);
+
         if (!credentials) {
-          console.error("No credentials provided");
           throw new Error("No credentials provided");
         }
 
         const client = await clientPromise;
         const db = client.db("budget-v2");
+
         const user = await db
           .collection("users")
           .findOne({ email: credentials.email });
 
+        console.log("User found:", user);
+
         if (!user) {
-          console.error("User not found with email:", credentials.email);
           throw new Error("Invalid email or password");
+        }
+
+        //--------------Added--------------------
+        //---------------------------------------
+        if (!user.isVerified) {
+          throw new Error("Email not verified. Please verify your email.");
+        }
+
+        if (!user.isVerified) {
+          if (credentials.verificationCode !== user.token) {
+            throw new Error(
+              "Invalid verification code. Please check your email."
+            );
+          }
+          await db
+            .collection("users")
+            .updateOne(
+              { email: user.email },
+              { $set: { isVerified: true }, $unset: { token: "" } }
+            );
+          user.isVerified = true;
         }
 
         const isPasswordValid = await bcrypt.compare(
@@ -33,34 +58,48 @@ export default NextAuth({
           user.password
         );
 
+        console.log("Password valid:", isPasswordValid);
+
         if (!isPasswordValid) {
-          console.error("Invalid password for user:", credentials.email);
           throw new Error("Invalid email or password");
         }
+
+        //-------------added-----------------
+
+        //-----------------------------------
 
         return {
           id: user._id.toString(),
           email: user.email,
           name: user.name,
+          token: user.token,
+          isVerified: user.isVerified,
         };
       },
     }),
   ],
   session: {
     strategy: "jwt",
+    maxAge: 20 * 60, // 20 минут
   },
-
+  jwt: {
+    maxAge: 20 * 60, // 20 минут
+  },
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
+        token.token = user.token;
+        token.isVerified = user.isVerified;
       }
       return token;
     },
     async session({ session, token }) {
-      session.user.id = token.id as string;
-      session.token = token.id as string;
-
+      if (session?.user) {
+        session.user.id = token.id as string;
+        session.user.token = token.token as string;
+        session.user.isVerified = token.isVerified as boolean;
+      }
       return session;
     },
   },

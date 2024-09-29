@@ -2,9 +2,21 @@ import { Schema, Document } from "mongoose";
 
 // User interfaces
 export interface IUser extends Document {
+  _id?: string;
   name: string;
   email: string;
   password: string;
+  token?: string;
+  isVerified: boolean;
+  verificationCode?: string;
+  // tempPassword?: string;
+  // tempPasswordExpires?: Date;
+}
+
+export interface IVerifyResponse {
+  isVerified: boolean;
+  message?: string;
+  error?: string;
 }
 
 export interface Token {

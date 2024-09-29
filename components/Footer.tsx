@@ -8,10 +8,10 @@ import { Container } from "@mui/material";
 const Footer: React.FC = () => {
   return (
     <SessionProvider>
-      <footer style={{ padding: "2rem 0" }}>
+      <footer style={{ padding: "2rem 0", borderTop: "1px solid #000" }}>
         <Container maxWidth="sm">
           <h2>Footer</h2>
-          <Link href="/">My Finance App</Link>
+          <Link href="/dashboard">My Finance App</Link>
         </Container>
       </footer>
     </SessionProvider>

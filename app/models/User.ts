@@ -16,6 +16,18 @@ const userSchema = new Schema<IUser>(
       type: String,
       required: true,
     },
+    token: {
+      type: String,
+    },
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
+    verificationCode: {
+      type: String,
+    },
+    // tempPassword: { type: String }, // Хэш временного пароля
+    // tempPasswordExpires: { type: Date },
   },
   { timestamps: true }
 );
