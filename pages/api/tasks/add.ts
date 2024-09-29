@@ -12,12 +12,13 @@ const addTask = async (req: NextApiRequest, res: NextApiResponse) => {
       return res.status(401).json({ error: "Unauthorized" });
     }
 
-    const { title, content, date } = req.body; // Предполагаем, что title и content приходят в теле запроса
+    const { title, content, date } = req.body;
 
-    const userId = new ObjectId(token); // Преобразуем userId в ObjectId для использования в MongoDB
+    const userId = new ObjectId(token);
 
     const client = await clientPromise;
     const db = client.db("budget-v2");
+
     const taskDate = new Date(date);
 
     try {
@@ -39,36 +40,3 @@ const addTask = async (req: NextApiRequest, res: NextApiResponse) => {
 };
 
 export default addTask;
-
-// import { NextApiRequest, NextApiResponse } from "next";
-// import clientPromise from "@/lib/db";
-// import { getToken } from "next-auth/jwt";
-// import { Token } from "@/interfaces";
-
-// const addTask = async (req: NextApiRequest, res: NextApiResponse) => {
-//   if (req.method === "POST") {
-//     const token = (await getToken({ req })) as Token;
-//     if (!token) {
-//       return res.status(401).end();
-//     }
-
-//     const { amount } = req.body;
-//     const client = await clientPromise;
-//     const db = client.db("budget-v2");
-
-//     try {
-//       const task = await db.collection("tasks").insertOne({
-//         userId: token.sub, // Используем token.sub
-//         amount,
-//         createdAt: new Date(),
-//       });
-//       res.status(201).json(task);
-//     } catch (error) {
-//       res.status(500).json({ error: "Failed to add task" });
-//     }
-//   } else {
-//     res.status(405).end();
-//   }
-// };
-
-// export default addTask;

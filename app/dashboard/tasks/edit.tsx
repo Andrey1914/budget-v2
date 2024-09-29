@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useRouter } from "next/router";
-import TaskForm from "@/components/Tasks/TasksForm";
+// import TaskForm from "@/components/Tasks/TasksForm";
 
 const EditTask: React.FC = () => {
   const router = useRouter();
@@ -27,7 +27,7 @@ const EditTask: React.FC = () => {
   return (
     <div>
       <h1>Edit Task</h1>
-      <TaskForm onSubmit={handleSubmit} />
+      {/* <TaskForm onSubmit={handleSubmit} /> */}
     </div>
   );
 };

@@ -3,11 +3,15 @@
 import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { Task } from "@/types";
+import EditTaskForm from "@/components/Tasks/EditTaskForm";
+
+import { Button } from "@mui/material";
 
 const TasksList: React.FC = () => {
   const { data: session } = useSession();
   const [tasks, setTasks] = useState<Task[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
 
   useEffect(() => {
     if (session) {
@@ -24,7 +28,7 @@ const TasksList: React.FC = () => {
           }
 
           const tasksData: Task[] = await tasksRes.json();
-          // console.log("Fetched tasks:", tasksData);
+
           setTasks(tasksData);
         } catch (err) {
           setError((err as Error).message);
@@ -79,6 +83,23 @@ const TasksList: React.FC = () => {
     }
   };
 
+  const handleEdit = (id: string) => {
+    setEditingTaskId(id);
+  };
+
+  const refreshTasks = async () => {
+    if (session) {
+      const tasksRes = await fetch("/api/tasks/get", {
+        headers: {
+          Authorization: `Bearer ${session?.token}`,
+        },
+      });
+
+      const tasksData: Task[] = await tasksRes.json();
+      setTasks(tasksData);
+    }
+  };
+
   if (!session) {
     return null;
   }
@@ -101,17 +122,32 @@ const TasksList: React.FC = () => {
                   }
                 />
                 {item.title} - {item.content}
-                <button
+                <Button
+                  variant="contained"
+                  onClick={() => handleEdit(item._id)}
+                  style={{ marginLeft: "10px" }}
+                >
+                  Edit
+                </Button>
+                <Button
+                  variant="contained"
                   onClick={() => handleDelete(item._id)}
                   style={{ marginLeft: "10px", color: "red" }}
                 >
                   Delete
-                </button>
+                </Button>
               </li>
             ))}
           </ul>
         </div>
       </div>
+      {editingTaskId && (
+        <EditTaskForm
+          taskId={editingTaskId}
+          refreshTasks={refreshTasks}
+          onClose={() => setEditingTaskId(null)}
+        />
+      )}
     </div>
   );
 };

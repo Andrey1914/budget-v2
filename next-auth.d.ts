@@ -7,11 +7,12 @@ declare module "next-auth" {
     isVerified: boolean;
   }
   interface Session {
-    // token?: string;
+    token?: string;
     user: {
       id: string;
       name?: string | null;
       email?: string | null;
+      image?: string;
       token?: string | null;
       isVerified: boolean;
     } & DefaultSession["user"];

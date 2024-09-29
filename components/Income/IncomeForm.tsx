@@ -72,7 +72,7 @@ const IncomeForm: React.FC<IncomeFormProps> = () => {
       >
         <div>
           <TextField
-            // id="outlined-basic"
+            id="amount"
             label="Amount"
             variant="outlined"
             autoFocus={true}
@@ -84,6 +84,7 @@ const IncomeForm: React.FC<IncomeFormProps> = () => {
         </div>
         <div>
           <TextField
+            id="category"
             label="Category"
             variant="outlined"
             type="text"
@@ -94,7 +95,7 @@ const IncomeForm: React.FC<IncomeFormProps> = () => {
         </div>
         <div>
           <TextField
-            // id="outlined-multiline-static"
+            id="description"
             multiline
             rows={4}
             color="primary"
@@ -108,7 +109,6 @@ const IncomeForm: React.FC<IncomeFormProps> = () => {
         </div>
         <div>
           <TextField
-            // label="Date"
             variant="outlined"
             type="date"
             value={date}

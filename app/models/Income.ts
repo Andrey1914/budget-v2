@@ -8,6 +8,10 @@ const incomeSchema = new Schema<IIncome>(
       ref: "User",
       required: true,
     },
+    userId: {
+      type: Schema.Types.ObjectId,
+      required: true,
+    },
     amount: {
       type: Number,
       required: true,

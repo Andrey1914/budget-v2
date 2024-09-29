@@ -8,6 +8,10 @@ const expenseSchema = new Schema<IExpense>(
       ref: "user",
       required: true,
     },
+    userId: {
+      type: Schema.Types.ObjectId,
+      required: true,
+    },
     amount: {
       type: Number,
       required: true,
