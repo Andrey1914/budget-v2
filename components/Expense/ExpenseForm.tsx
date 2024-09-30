@@ -51,6 +51,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = () => {
     >
       <div>
         <TextField
+          id="amount"
           label="Amount"
           variant="outlined"
           autoFocus={true}
@@ -62,6 +63,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = () => {
       </div>
       <div>
         <TextField
+          id="category"
           label="Category"
           variant="outlined"
           type="text"
@@ -72,7 +74,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = () => {
       </div>
       <div>
         <TextField
-          // id="outlined-multiline-static"
+          id="description"
           multiline
           rows={4}
           color="primary"
@@ -86,7 +88,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = () => {
       </div>
       <div>
         <TextField
-          // label="Date"
+          id="date"
           variant="outlined"
           type="date"
           value={date}

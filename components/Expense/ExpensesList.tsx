@@ -4,12 +4,16 @@ import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { handleDelete } from "@/app/dashboard/expense/delete";
 import { Expense } from "@/types";
+import EditExpenseForm from "@/components/Expense/editExpenseForm";
+
+import { Button } from "@mui/material";
 
 const ExpensesList: React.FC = () => {
   const { data: session } = useSession();
   const [expense, setExpense] = useState<Expense[]>([]);
   const [totalExpense, setTotalExpense] = useState<number>(0);
   const [error, setError] = useState<string | null>(null);
+  const [editingExpenseId, setEditingExpenseId] = useState<string | null>(null);
 
   useEffect(() => {
     if (session) {
@@ -42,6 +46,23 @@ const ExpensesList: React.FC = () => {
     }
   }, [session]);
 
+  const handleEdit = (id: string) => {
+    setEditingExpenseId(id);
+  };
+
+  const refreshExpenses = async () => {
+    if (session) {
+      const expenseRes = await fetch("/api/expense/get", {
+        headers: {
+          Authorization: `Bearer ${session?.token}`,
+        },
+      });
+
+      const expensesData: Expense[] = await expenseRes.json();
+      setExpense(expensesData);
+    }
+  };
+
   if (!session) {
     return null;
   }
@@ -57,19 +78,34 @@ const ExpensesList: React.FC = () => {
             {expense.map((item: Expense) => (
               <li key={item._id}>
                 {item.amount} - {item.description}
-                <button
+                <Button
+                  variant="contained"
+                  onClick={() => handleEdit(item._id)}
+                  style={{ marginLeft: "10px" }}
+                >
+                  Edit
+                </Button>
+                <Button
+                  variant="contained"
                   onClick={() =>
                     handleDelete(item._id, expense, setExpense, setTotalExpense)
                   }
                   style={{ marginLeft: "10px", color: "red" }}
                 >
                   Delete
-                </button>
+                </Button>
               </li>
             ))}
           </ul>
         </div>
       </div>
+      {editingExpenseId && (
+        <EditExpenseForm
+          expenseId={editingExpenseId}
+          refreshExpenses={refreshExpenses}
+          onClose={() => setEditingExpenseId(null)}
+        />
+      )}
     </div>
   );
 };

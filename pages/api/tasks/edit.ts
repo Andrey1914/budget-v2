@@ -8,6 +8,7 @@ const secret = process.env.JWT_SECRET;
 const editTask = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "PUT") {
     const token = await getToken({ req, secret });
+
     if (!token) {
       return res.status(401).json({ error: "Unauthorized" });
     }

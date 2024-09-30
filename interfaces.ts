@@ -37,6 +37,14 @@ export interface IExpense extends Document {
   date: Date;
 }
 
+export interface EditExpenseFormProps {
+  expenseId: string;
+  initialAmount: number;
+  initialDescription: string;
+  initialCategory: string;
+  onExpenseUpdated: () => void; // Коллбэк для обновления задач после редактирования
+}
+
 export interface ExpenseFormProps {
   onSubmit: (data: {
     amount: number;
