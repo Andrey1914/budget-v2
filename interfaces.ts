@@ -63,6 +63,14 @@ export interface IIncome extends Document {
   date: Date;
 }
 
+export interface EditIncomeFormProps {
+  incomeId: string;
+  initialAmount: number;
+  initialDescription: string;
+  initialCategory: string;
+  onIncomeUpdated: () => void; // Коллбэк для обновления задач после редактирования
+}
+
 export interface IncomeFormProps {
   onSubmit: (data: {
     amount: number;

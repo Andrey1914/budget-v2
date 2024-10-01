@@ -4,12 +4,16 @@ import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { handleDelete } from "@/app/dashboard/income/delete";
 import { Income } from "@/types";
+import EditIncomeForm from "@/components/Income/editIncomeForm";
+
+import { Button } from "@mui/material";
 
 const IncomesList: React.FC = () => {
   const { data: session } = useSession();
   const [income, setIncome] = useState<any[]>([]);
   const [totalIncome, setTotalIncome] = useState<number>(0);
   const [error, setError] = useState<string | null>(null);
+  const [editingIncomeId, setEditingIncomeId] = useState<string | null>(null);
 
   useEffect(() => {
     if (session) {
@@ -42,6 +46,23 @@ const IncomesList: React.FC = () => {
     }
   }, [session]);
 
+  const handleEdit = (id: string) => {
+    setEditingIncomeId(id);
+  };
+
+  const refreshIncomes = async () => {
+    if (session) {
+      const incomeRes = await fetch("/api/income/get", {
+        headers: {
+          Authorization: `Bearer ${session?.token}`,
+        },
+      });
+
+      const incomesData: Income[] = await incomeRes.json();
+      setIncome(incomesData);
+    }
+  };
+
   if (!session) {
     return null;
   }
@@ -57,19 +78,34 @@ const IncomesList: React.FC = () => {
             {income.map((item: Income) => (
               <li key={item._id}>
                 {item.amount} - {item.description}
-                <button
+                <Button
+                  variant="contained"
+                  onClick={() => handleEdit(item._id)}
+                  style={{ marginLeft: "10px" }}
+                >
+                  Edit
+                </Button>
+                <Button
+                  variant="contained"
                   onClick={() =>
                     handleDelete(item._id, income, setIncome, setTotalIncome)
                   }
                   style={{ marginLeft: "10px", color: "red" }}
                 >
                   Delete
-                </button>
+                </Button>
               </li>
             ))}
           </ul>
         </div>
       </div>
+      {editingIncomeId && (
+        <EditIncomeForm
+          incomeId={editingIncomeId}
+          refreshIncomes={refreshIncomes}
+          onClose={() => setEditingIncomeId(null)}
+        />
+      )}
     </div>
   );
 };
