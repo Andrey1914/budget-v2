@@ -24,13 +24,23 @@ const editExpense = async (req: NextApiRequest, res: NextApiResponse) => {
     const client = await clientPromise;
     const db = client.db("budget-v2");
 
+    const parsedAmount = parseFloat(amount);
+    if (isNaN(parsedAmount)) {
+      return res.status(400).json({ error: "Amount must be a number" });
+    }
+
     try {
-      const result = await db
-        .collection("expense")
-        .updateOne(
-          { _id: new ObjectId(id), userId: userId },
-          { $set: { amount, description, category, updatedAt: new Date() } }
-        );
+      const result = await db.collection("expense").updateOne(
+        { _id: new ObjectId(id), userId: userId },
+        {
+          $set: {
+            amount: parsedAmount,
+            description,
+            category,
+            updatedAt: new Date(),
+          },
+        }
+      );
 
       if (result.matchedCount === 0) {
         return res.status(404).json({ error: "Task not found" });

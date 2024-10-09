@@ -23,10 +23,22 @@ const editIncome = async (req: NextApiRequest, res: NextApiResponse) => {
     const client = await clientPromise;
     const db = client.db("budget-v2");
 
+    const parsedAmount = parseFloat(amount);
+    if (isNaN(parsedAmount)) {
+      return res.status(400).json({ error: "Amount must be a number" });
+    }
+
     try {
       const result = await db.collection("income").updateOne(
         { _id: new ObjectId(id), userId: userId }, // Используем token.sub
-        { $set: { amount, description, category, updatedAt: new Date() } }
+        {
+          $set: {
+            amount: parsedAmount,
+            description,
+            category,
+            updatedAt: new Date(),
+          },
+        }
       );
 
       if (result.matchedCount === 0) {

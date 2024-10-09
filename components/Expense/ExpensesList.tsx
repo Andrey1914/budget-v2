@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { handleDelete } from "@/app/dashboard/expense/delete";
 import { Expense } from "@/types";
-import EditExpenseForm from "@/components/Expense/editExpenseForm";
+import EditExpenseForm from "@/components/Expense/EditExpenseForm";
 
 import { Button } from "@mui/material";
 

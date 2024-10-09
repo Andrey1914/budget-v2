@@ -1,4 +1,5 @@
 import { Schema, Document } from "mongoose";
+import { ObjectId } from "mongodb";
 
 // User interfaces
 export interface IUser extends Document {
@@ -30,7 +31,8 @@ export interface Token {
 // Expense interfeces
 
 export interface IExpense extends Document {
-  user: Schema.Types.ObjectId;
+  _id: Schema.Types.ObjectId;
+  // user: Schema.Types.ObjectId;
   userId: Schema.Types.ObjectId;
   amount: number;
   description: string;
@@ -56,7 +58,8 @@ export interface ExpenseFormProps {
 
 // Income interfaces
 export interface IIncome extends Document {
-  user: Schema.Types.ObjectId;
+  _id: Schema.Types.ObjectId;
+  // user: Schema.Types.ObjectId;
   userId: Schema.Types.ObjectId;
   amount: number;
   description: string;
@@ -99,4 +102,11 @@ export interface EditTaskFormProps {
   initialContent: string;
   initialCompleted: boolean;
   onTaskUpdated: () => void; // Коллбэк для обновления задач после редактирования
+}
+
+export interface Transaction {
+  _id: ObjectId; // Или ObjectId, в зависимости от вашей реализации
+  date: string;
+  amount: number;
+  type: "income" | "expense";
 }
