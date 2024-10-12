@@ -8,7 +8,12 @@ import { useRouter } from "next/router";
 const AddIncome: React.FC = () => {
   const router = useRouter();
 
-  const handleSubmit = async (data: { amount: number }) => {
+  const handleSubmit = async (data: {
+    amount: number;
+    description: string;
+    category: string;
+    date: string;
+  }) => {
     const response = await fetch("/api/income/add", {
       method: "POST",
       headers: {

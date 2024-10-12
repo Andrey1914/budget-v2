@@ -23,26 +23,9 @@ const Navbar: React.FC = () => {
 
     if (month !== "") query.append("month", month.toString());
     if (type !== "all") query.append("type", type);
-    query.append("page", "1"); // По умолчанию устанавливаем первую страницу
+    query.append("page", "1");
 
-    // Перенаправляем пользователя на страницу "history" с query параметрами
-    router.push(`/dashboard/history?${query.toString()}`); // Формируем строку URL
-    // const query = {
-    //   month: month !== "" ? month : undefined,
-    //   type: type !== "all" ? type : undefined,
-    //   page: 1, // По умолчанию устанавливаем первую страницу
-    // };
-
-    // // Удаляем пустые параметры из объекта
-    // const filteredQuery = Object.fromEntries(
-    //   Object.entries(query).filter(([_, value]) => value !== undefined)
-    // );
-
-    // // Перенаправляем пользователя на страницу "history" с query параметрами
-    // router.push({
-    //   pathname: "/dashboard/history", // Переход на страницу "История"
-    //   query: filteredQuery, // Параметры фильтрации
-    // });
+    router.push(`/dashboard/history?${query.toString()}`);
   };
 
   useEffect(() => {

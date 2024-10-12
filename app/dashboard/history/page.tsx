@@ -52,8 +52,8 @@ const HistoryPage = () => {
 
   return (
     <div>
-      <h1>История транзакций</h1>
-      <p>Общая сумма: {totalSum}</p>
+      <h1>History</h1>
+      <p>Total sum: {totalSum}</p>
       <ul>
         {transactions.map((transaction) => (
           <li key={transaction._id.toString()}>

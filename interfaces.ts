@@ -32,7 +32,6 @@ export interface Token {
 
 export interface IExpense extends Document {
   _id: Schema.Types.ObjectId;
-  // user: Schema.Types.ObjectId;
   userId: Schema.Types.ObjectId;
   amount: number;
   description: string;
@@ -48,6 +47,12 @@ export interface EditExpenseFormProps {
 }
 
 export interface ExpenseFormProps {
+  initialData?: {
+    amount: number;
+    category: string;
+    description: string;
+    date: string;
+  };
   onSubmit: (data: {
     amount: number;
     category: string;
@@ -59,7 +64,6 @@ export interface ExpenseFormProps {
 // Income interfaces
 export interface IIncome extends Document {
   _id: Schema.Types.ObjectId;
-  // user: Schema.Types.ObjectId;
   userId: Schema.Types.ObjectId;
   amount: number;
   description: string;
@@ -71,16 +75,35 @@ export interface EditIncomeFormProps {
   initialAmount: number;
   initialDescription: string;
   initialCategory: string;
-  onIncomeUpdated: () => void; // Коллбэк для обновления задач после редактирования
+  onIncomeUpdated: () => void;
 }
 
 export interface IncomeFormProps {
+  initialData?: {
+    amount: number;
+    category: string;
+    description: string;
+    date: string;
+  };
   onSubmit: (data: {
     amount: number;
     category: string;
     description: string;
     date: string;
   }) => void;
+}
+
+// Category interfaces
+
+export interface Category {
+  _id: string;
+  name: string;
+  description: string;
+}
+
+export interface CategoryFormProps {
+  initialData?: Category;
+  onSubmit: (data: Category) => void;
 }
 
 // Task interfaces

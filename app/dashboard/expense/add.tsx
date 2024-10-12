@@ -7,7 +7,12 @@ import { useRouter } from "next/navigation";
 const AddExpense: React.FC = () => {
   const router = useRouter();
 
-  const handleSubmit = async (data: { amount: number }) => {
+  const handleSubmit = async (data: {
+    amount: number;
+    description: string;
+    category: string;
+    date: string;
+  }) => {
     const response = await fetch("/api/expense/add", {
       method: "POST",
       headers: {
