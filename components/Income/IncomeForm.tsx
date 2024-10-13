@@ -4,7 +4,12 @@ import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { IncomeFormProps, Category } from "@/interfaces";
 import SnackbarNotification from "@/components/Notification/Snackbar";
-import { AddCategory } from "@/app/dashboard/catecories";
+import {
+  fetchCategories,
+  AddCategory,
+  EditCategory,
+  DeleteCategory,
+} from "@/app/dashboard/income/handlers";
 
 import {
   Box,
@@ -18,7 +23,7 @@ import {
   DialogTitle,
 } from "@mui/material";
 
-const IncomeForm: React.FC<IncomeFormProps> = ({ onSubmit, initialData }) => {
+const IncomeForm: React.FC<IncomeFormProps> = ({ initialData }) => {
   const { data: session } = useSession();
 
   const [amount, setAmount] = useState(initialData?.amount || "");
@@ -46,19 +51,18 @@ const IncomeForm: React.FC<IncomeFormProps> = ({ onSubmit, initialData }) => {
   );
 
   // Загрузка категорий из базы данных
-  const fetchCategories = async () => {
-    try {
-      const res = await fetch("/api/income/categories");
-      const data = await res.json();
-      setCategories(data || []);
-      console.log("Categories data:", data);
-    } catch (error) {
-      console.error("Error fetching categories:", error);
-    }
-  };
 
   useEffect(() => {
-    fetchCategories();
+    const loadCategories = async () => {
+      try {
+        const data = await fetchCategories();
+        setCategories(data);
+      } catch (error) {
+        console.error("Failed to load categories", error);
+      }
+    };
+
+    loadCategories();
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -101,121 +105,44 @@ const IncomeForm: React.FC<IncomeFormProps> = ({ onSubmit, initialData }) => {
     }
   };
 
-  const AddCategory = async () => {
-    try {
-      const res = await fetch("/api/income/categories", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: newCategory,
-          description: newCategoryDescription,
-        }),
-      });
-
-      if (!res.ok) {
-        throw new Error("Failed to add category");
-      }
-
-      const newCategoryData = await res.json();
-      console.log(newCategoryData);
-
-      if (Array.isArray(categories)) {
-        setCategories([...categories, newCategoryData.category]);
-      } else {
-        setCategories([newCategoryData.category]);
-      }
-
-      setCategories((prev) => [...prev, newCategoryData.category]);
-
-      await fetchCategories();
-
-      setNewCategory("");
-      setNewCategoryDescription("");
-      setOpen(false);
-    } catch (error) {
-      console.error("Error adding category:", error);
-    }
+  // Add function
+  const handleAddCategory = async () => {
+    await AddCategory(
+      newCategory,
+      newCategoryDescription,
+      setCategories,
+      setNewCategory,
+      setNewCategoryDescription,
+      setOpen,
+      fetchCategories
+    );
   };
 
   // Функция для редактирования категории
-  const editCategory = async () => {
-    if (!editingCategory) return;
-
-    try {
-      const res = await fetch("/api/income/categories", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          id: editingCategory._id,
-          name: newCategory,
-          description: newCategoryDescription,
-        }),
-      });
-
-      if (!res.ok) {
-        throw new Error("Failed to edit category");
-      }
-
-      setCategories((prev) =>
-        prev.map((cat) =>
-          cat._id === editingCategory._id
-            ? { ...cat, name: newCategory, description: newCategoryDescription }
-            : cat
-        )
-      );
-
-      setCategory(editingCategory._id);
-
-      setSnackbarMessage("Category updated successfully");
-      setSnackbarSeverity("success");
-      setShowSnackbar(true);
-      handleCloseEditDialog();
-    } catch (error) {
-      console.error("Error editing category:", error);
-      setSnackbarMessage("Failed to edit category");
-      setSnackbarSeverity("error");
-      setShowSnackbar(true);
-    }
+  const handleEditCategory = async () => {
+    await EditCategory(
+      editingCategory,
+      newCategory,
+      newCategoryDescription,
+      setCategories,
+      setSnackbarMessage,
+      setSnackbarSeverity,
+      setShowSnackbar,
+      handleCloseEditDialog
+    );
   };
 
   // Функция для удаления категории
-  const deleteCategory = async (id: string) => {
-    try {
-      const res = await fetch("/api/income/categories", {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ id }),
-      });
-
-      if (!res.ok) {
-        throw new Error("Failed to delete category");
-      }
-
-      setCategories((prev) => {
-        const updatedCategories = prev.filter((cat) => cat._id !== id);
-
-        if (category === id) {
-          setCategory("");
-        }
-        return updatedCategories;
-      });
-
-      setCategories((prev) => prev.filter((category) => category._id !== id));
-      setSnackbarMessage("Category deleted successfully");
-      setSnackbarSeverity("success");
-      setShowSnackbar(true);
-    } catch (error) {
-      console.error("Error deleting category:", error);
-      setSnackbarMessage("Failed to delete category");
-      setSnackbarSeverity("error");
-      setShowSnackbar(true);
-    }
+  const handleDeleteCategory = async () => {
+    await DeleteCategory(
+      category,
+      category,
+      setCategory,
+      setCategories,
+      setSnackbarMessage,
+      setSnackbarSeverity,
+      setShowSnackbar
+    );
   };
 
   // Обработчик для открытия диалогового окна редактирования
@@ -296,7 +223,7 @@ const IncomeForm: React.FC<IncomeFormProps> = ({ onSubmit, initialData }) => {
                 <Button
                   variant="outlined"
                   onClick={() => {
-                    deleteCategory(category);
+                    handleDeleteCategory();
                     setCategory("");
                   }}
                 >
@@ -343,64 +270,66 @@ const IncomeForm: React.FC<IncomeFormProps> = ({ onSubmit, initialData }) => {
         />
       )}
 
-      <Dialog open={open} onClose={() => setOpen(false)}>
-        <DialogTitle>Add New Category</DialogTitle>
-        <DialogContent>
-          <TextField
-            id="new-category"
-            label="Category Name"
-            variant="outlined"
-            value={newCategory}
-            onChange={(e) => setNewCategory(e.target.value)}
-            required
-          />
-          <TextField
-            id="new-category-description"
-            label="Category Description"
-            variant="outlined"
-            value={newCategoryDescription}
-            onChange={(e) => setNewCategoryDescription(e.target.value)}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button variant="outlined" onClick={() => setOpen(false)}>
-            Cancel
-          </Button>
-          <Button variant="outlined" onClick={AddCategory}>
-            Add Category
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <div>
+        <Dialog open={open} onClose={() => setOpen(false)}>
+          <DialogTitle>Add New Category</DialogTitle>
+          <DialogContent>
+            <TextField
+              id="new-category"
+              label="Category Name"
+              variant="outlined"
+              value={newCategory}
+              onChange={(e) => setNewCategory(e.target.value)}
+              required
+            />
+            <TextField
+              id="new-category-description"
+              label="Category Description"
+              variant="outlined"
+              value={newCategoryDescription}
+              onChange={(e) => setNewCategoryDescription(e.target.value)}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button variant="outlined" onClick={() => setOpen(false)}>
+              Cancel
+            </Button>
+            <Button variant="outlined" onClick={handleAddCategory}>
+              Add Category
+            </Button>
+          </DialogActions>
+        </Dialog>
 
-      {/* Диалог для редактирования категории */}
-      <Dialog open={openEditDialog} onClose={handleCloseEditDialog}>
-        <DialogTitle>Edit Category</DialogTitle>
-        <DialogContent>
-          <TextField
-            id="edit-category"
-            label="Category Name"
-            variant="outlined"
-            value={newCategory}
-            onChange={(e) => setNewCategory(e.target.value)}
-            required
-          />
-          <TextField
-            id="edit-category-description"
-            label="Category Description"
-            variant="outlined"
-            value={newCategoryDescription}
-            onChange={(e) => setNewCategoryDescription(e.target.value)}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button variant="outlined" onClick={handleCloseEditDialog}>
-            Cancel
-          </Button>
-          <Button variant="outlined" onClick={editCategory}>
-            Save Changes
-          </Button>
-        </DialogActions>
-      </Dialog>
+        {/* Диалог для редактирования категории */}
+        <Dialog open={openEditDialog} onClose={handleCloseEditDialog}>
+          <DialogTitle>Edit Category</DialogTitle>
+          <DialogContent>
+            <TextField
+              id="edit-category"
+              label="Category Name"
+              variant="outlined"
+              value={newCategory}
+              onChange={(e) => setNewCategory(e.target.value)}
+              required
+            />
+            <TextField
+              id="edit-category-description"
+              label="Category Description"
+              variant="outlined"
+              value={newCategoryDescription}
+              onChange={(e) => setNewCategoryDescription(e.target.value)}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button variant="outlined" onClick={handleCloseEditDialog}>
+              Cancel
+            </Button>
+            <Button variant="outlined" onClick={handleEditCategory}>
+              Save Changes
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </div>
     </>
   );
 };

@@ -1,5 +1,4 @@
 import { Category } from "@/interfaces";
-// import { fetchCategories } from "@/app/dashboard/catecories/get";
 
 export const AddCategory = async (
   newCategory: string,
@@ -11,7 +10,7 @@ export const AddCategory = async (
   fetchCategories: () => Promise<void>
 ) => {
   try {
-    const res = await fetch("/api/income/categories", {
+    const res = await fetch("/api/expense/categories", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

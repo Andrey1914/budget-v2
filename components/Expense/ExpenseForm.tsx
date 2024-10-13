@@ -5,6 +5,13 @@ import { useSession } from "next-auth/react";
 import { ExpenseFormProps, Category } from "@/interfaces";
 import SnackbarNotification from "@/components/Notification/Snackbar";
 import {
+  fetchCategories,
+  AddCategory,
+  EditCategory,
+  DeleteCategory,
+} from "@/app/dashboard/expense/handlers";
+
+import {
   Box,
   TextField,
   Select,
@@ -44,19 +51,17 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ initialData }) => {
   );
 
   // Загрузка категорий из базы данных
-  const fetchCategories = async () => {
-    try {
-      const res = await fetch("/api/expense/categories");
-      const data = await res.json();
-      setCategories(data || []);
-      console.log("Categories data:", data);
-    } catch (error) {
-      console.error("Error fetching categories:", error);
-    }
-  };
-
   useEffect(() => {
-    fetchCategories();
+    const loadCategories = async () => {
+      try {
+        const data = await fetchCategories();
+        setCategories(data);
+      } catch (error) {
+        console.error("Failed to load categories", error);
+      }
+    };
+
+    loadCategories();
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -100,121 +105,43 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ initialData }) => {
   };
 
   // Добавление новой категории
-  const AddCategory = async () => {
-    try {
-      const res = await fetch("/api/expense/categories", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: newCategory,
-          description: newCategoryDescription,
-        }),
-      });
-
-      if (!res.ok) {
-        throw new Error("Failed to add category");
-      }
-
-      const newCategoryData = await res.json();
-      console.log(newCategoryData);
-
-      if (Array.isArray(categories)) {
-        setCategories([...categories, newCategoryData.category]);
-      } else {
-        setCategories([newCategoryData.category]);
-      }
-
-      setCategories((prev) => [...prev, newCategoryData.category]);
-
-      await fetchCategories();
-
-      setNewCategory("");
-      setNewCategoryDescription("");
-      setOpen(false);
-    } catch (error) {
-      console.error("Error adding category:", error);
-    }
+  const handleAddCategory = async () => {
+    await AddCategory(
+      newCategory,
+      newCategoryDescription,
+      setCategories,
+      setNewCategory,
+      setNewCategoryDescription,
+      setOpen,
+      fetchCategories
+    );
   };
 
   // Функция для редактирования категории
-  const editCategory = async () => {
-    if (!editingCategory) return;
-
-    try {
-      const res = await fetch("/api/expense/categories", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          id: editingCategory._id,
-          name: newCategory,
-          description: newCategoryDescription,
-        }),
-      });
-
-      if (!res.ok) {
-        throw new Error("Failed to edit category");
-      }
-
-      setCategories((prev) =>
-        prev.map((cat) =>
-          cat._id === editingCategory._id
-            ? { ...cat, name: newCategory, description: newCategoryDescription }
-            : cat
-        )
-      );
-
-      setCategory(editingCategory._id);
-
-      setSnackbarMessage("Category updated successfully");
-      setSnackbarSeverity("success");
-      setShowSnackbar(true);
-      handleCloseEditDialog();
-    } catch (error) {
-      console.error("Error editing category:", error);
-      setSnackbarMessage("Failed to edit category");
-      setSnackbarSeverity("error");
-      setShowSnackbar(true);
-    }
+  const handleEditCategory = async () => {
+    await EditCategory(
+      editingCategory,
+      newCategory,
+      newCategoryDescription,
+      setCategories,
+      setSnackbarMessage,
+      setSnackbarSeverity,
+      setShowSnackbar,
+      handleCloseEditDialog
+    );
   };
 
   // Функция для удаления категории
-  const deleteCategory = async (id: string) => {
-    try {
-      const res = await fetch("/api/expense/categories", {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ id }),
-      });
-
-      if (!res.ok) {
-        throw new Error("Failed to delete category");
-      }
-
-      setCategories((prev) => {
-        const updatedCategories = prev.filter((cat) => cat._id !== id);
-        // Проверяем, была ли удалена выбранная категория
-        if (category === id) {
-          setCategory(""); // Сброс значения в Select, если удалена текущая категория
-        }
-        return updatedCategories;
-      });
-
-      setCategories((prev) => prev.filter((category) => category._id !== id));
-      setSnackbarMessage("Category deleted successfully");
-      setSnackbarSeverity("success");
-      setShowSnackbar(true);
-    } catch (error) {
-      console.error("Error deleting category:", error);
-      setSnackbarMessage("Failed to delete category");
-      setSnackbarSeverity("error");
-      setShowSnackbar(true);
-    }
+  const handleDeleteCategory = async () => {
+    await DeleteCategory(
+      category,
+      category,
+      setCategory,
+      setCategories,
+      setSnackbarMessage,
+      setSnackbarSeverity,
+      setShowSnackbar
+    );
   };
 
   // Обработчик для открытия диалогового окна редактирования
@@ -295,7 +222,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ initialData }) => {
                 <Button
                   variant="outlined"
                   onClick={() => {
-                    deleteCategory(category);
+                    handleDeleteCategory();
                     setCategory("");
                   }}
                 >
@@ -366,7 +293,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ initialData }) => {
           <Button variant="outlined" onClick={() => setOpen(false)}>
             Cancel
           </Button>
-          <Button variant="outlined" onClick={AddCategory}>
+          <Button variant="outlined" onClick={handleAddCategory}>
             Add Category
           </Button>
         </DialogActions>
@@ -396,7 +323,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ initialData }) => {
           <Button variant="outlined" onClick={handleCloseEditDialog}>
             Cancel
           </Button>
-          <Button variant="outlined" onClick={editCategory}>
+          <Button variant="outlined" onClick={handleEditCategory}>
             Save Changes
           </Button>
         </DialogActions>
