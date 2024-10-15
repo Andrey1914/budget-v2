@@ -1,3 +1,4 @@
+import axios from "axios";
 import { Category } from "@/interfaces";
 
 export const AddCategory = async (
@@ -10,22 +11,16 @@ export const AddCategory = async (
   fetchCategories: () => Promise<void>
 ) => {
   try {
-    const res = await fetch("/api/income/categories", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name: newCategory,
-        description: newCategoryDescription,
-      }),
+    const res = await axios.post("/api/income/categories", {
+      name: newCategory,
+      description: newCategoryDescription,
     });
 
-    if (!res.ok) {
+    if (res.status !== 201) {
       throw new Error("Failed to add category");
     }
 
-    const newCategoryData = await res.json();
+    const newCategoryData = await res.data;
     console.log(newCategoryData);
 
     setCategories((prev) => [...prev, newCategoryData.category]);
