@@ -1,8 +1,9 @@
 "use client";
 
 import React from "react";
-import ExpenseForm from "@/components/Expense/ExpenseForm";
 import { useRouter } from "next/navigation";
+import axios from "axios";
+import ExpenseForm from "@/components/Expense/ExpenseForm";
 
 const AddExpense: React.FC = () => {
   const router = useRouter();
@@ -13,15 +14,13 @@ const AddExpense: React.FC = () => {
     category: string;
     date: string;
   }) => {
-    const response = await fetch("/api/expense/add", {
-      method: "POST",
+    const res = await axios.post("/api/expense/add", data, {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(data),
     });
 
-    if (response.ok) {
+    if (res.status === 200) {
       router.push("/dashboard");
     } else {
       console.error("Failed to add expense");
