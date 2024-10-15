@@ -44,7 +44,6 @@ export default async function verifyEmail(
 
     return res.status(200).json({
       message: "Email verified successfully!",
-      // token,
       email: user.email,
       isVerified: true,
     });

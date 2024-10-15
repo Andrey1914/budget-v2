@@ -59,6 +59,7 @@ const Login: React.FC = () => {
         <h1>You need to register or logged in.</h1>
 
         <h2>Login</h2>
+        {error && <p style={{ color: "red" }}>{error}</p>}
         <form onSubmit={handleSubmit}>
           <Box mb={2}>
             <TextField

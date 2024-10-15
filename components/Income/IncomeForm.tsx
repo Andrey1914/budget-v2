@@ -51,7 +51,6 @@ const IncomeForm: React.FC<IncomeFormProps> = ({ initialData }) => {
   );
 
   // Загрузка категорий из базы данных
-
   useEffect(() => {
     const loadCategories = async () => {
       try {
@@ -270,7 +269,7 @@ const IncomeForm: React.FC<IncomeFormProps> = ({ initialData }) => {
         />
       )}
 
-      <div>
+      <div aria-hidden="false">
         <Dialog open={open} onClose={() => setOpen(false)}>
           <DialogTitle>Add New Category</DialogTitle>
           <DialogContent>

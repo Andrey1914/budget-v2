@@ -3,12 +3,7 @@ import clientPromise from "@/lib/db";
 import { getToken } from "next-auth/jwt";
 import { ObjectId } from "mongodb";
 
-const secret = process.env.JWT_SECRET; // Убедитесь, что секретная строка установлена
-// const secret = process.env.NEXTAUTH_SECRET; // Убедитесь, что секретная строка установлена
-
-if (!secret) {
-  console.error("JWT_SECRET is not defined");
-}
+const secret = process.env.JWT_SECRET;
 
 const addExpense = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "POST") {

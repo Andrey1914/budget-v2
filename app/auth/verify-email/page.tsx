@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 import SnackbarNotification from "@/components/Notification/Snackbar";
 
 import { Box, TextField, Button, Container } from "@mui/material";
@@ -23,18 +24,14 @@ const VerifyEmail: React.FC = () => {
     setLoading(true);
 
     try {
-      const res = await fetch("/api/confirmEmail/check-email-verification", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ verificationCode }),
-      });
+      const res = await axios.post(
+        "/api/confirmEmail/check-email-verification",
+        {
+          verificationCode,
+        }
+      );
 
-      const data = await res.json();
-      console.log(data);
-
-      if (res.ok) {
+      if (res.status === 200) {
         setSnackbarMessage("Email verified successfully!");
         setSnackbarSeverity("success");
         setShowSnackbar(true);
@@ -43,12 +40,15 @@ const VerifyEmail: React.FC = () => {
           router.push("/dashboard");
         }, 1500);
       } else {
-        setSnackbarMessage(data.error || "Invalid verification code");
+        setSnackbarMessage(res.data?.error || "Invalid verification code");
         setSnackbarSeverity("error");
         setShowSnackbar(true);
       }
     } catch (error: any) {
-      setSnackbarMessage("Something went wrong");
+      const errorMessage =
+        error.response?.data?.error || "Invalid verification code";
+
+      setSnackbarMessage(errorMessage || "Invalid verification code");
       setSnackbarSeverity("error");
       setShowSnackbar(true);
     } finally {

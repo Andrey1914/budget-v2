@@ -1,14 +1,14 @@
-"use client";
+// "use client";
 
-import React from "react";
+// import React from "react";
 
-const EmailConfirmed: React.FC = () => {
-  return (
-    <div>
-      <h2>Ваша почта успешно подтверждена!</h2>
-      <p>Теперь вы можете пользоваться всеми функциями приложения.</p>
-    </div>
-  );
-};
+// const EmailConfirmed: React.FC = () => {
+//   return (
+//     <div>
+//       <h2>Ваша почта успешно подтверждена!</h2>
+//       <p>Теперь вы можете пользоваться всеми функциями приложения.</p>
+//     </div>
+//   );
+// };
 
-export default EmailConfirmed;
+// export default EmailConfirmed;

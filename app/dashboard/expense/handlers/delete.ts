@@ -1,3 +1,4 @@
+import axios from "axios";
 import { Category } from "@/interfaces";
 
 export const DeleteCategory = async (
@@ -12,15 +13,11 @@ export const DeleteCategory = async (
   setShowSnackbar: React.Dispatch<React.SetStateAction<boolean>>
 ) => {
   try {
-    const res = await fetch("/api/expense/categories", {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ id }),
+    const res = await axios.delete("/api/expense/categories", {
+      data: { id },
     });
 
-    if (!res.ok) {
+    if (res.status !== 200) {
       throw new Error("Failed to delete category");
     }
 
