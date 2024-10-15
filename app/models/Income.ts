@@ -29,4 +29,5 @@ const incomeSchema = new Schema<IIncome>(
 );
 
 const Income = models.Income || model<IIncome>("Income", incomeSchema);
+
 export default Income;

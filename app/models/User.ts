@@ -26,11 +26,10 @@ const userSchema = new Schema<IUser>(
     verificationCode: {
       type: String,
     },
-    // tempPassword: { type: String }, // Хэш временного пароля
-    // tempPasswordExpires: { type: Date },
   },
   { timestamps: true }
 );
 
 const User = models.User || model<IUser>("User", userSchema);
+
 export default User;
