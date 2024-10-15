@@ -1,3 +1,4 @@
+import axios from "axios";
 import { Category } from "@/interfaces";
 
 export const EditCategory = async (
@@ -15,19 +16,13 @@ export const EditCategory = async (
   if (!editingCategory) return;
 
   try {
-    const res = await fetch("/api/expense/categories", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        id: editingCategory._id,
-        name: newCategory,
-        description: newCategoryDescription,
-      }),
+    const res = await axios.put("/api/expense/categories", {
+      id: editingCategory._id,
+      name: newCategory,
+      description: newCategoryDescription,
     });
 
-    if (!res.ok) {
+    if (res.status !== 200) {
       throw new Error("Failed to edit category");
     }
 
