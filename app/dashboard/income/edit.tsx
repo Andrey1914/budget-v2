@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useRouter } from "next/router";
-
+import axios from "axios";
 import IncomeForm from "@/components/Income/IncomeForm";
 
 const EditIncome: React.FC = () => {
@@ -10,15 +10,13 @@ const EditIncome: React.FC = () => {
   const { id } = router.query;
 
   const handleSubmit = async (data: { amount: number }) => {
-    const response = await fetch(`/api/income/edit?id=${id}`, {
-      method: "PUT",
+    const res = await axios.put(`/api/income/edit?id=${id}`, data, {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(data),
     });
 
-    if (response.ok) {
+    if (res.status === 200) {
       router.push("/dashboard");
     } else {
       console.error("Failed to edit income");
