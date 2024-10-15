@@ -1,3 +1,4 @@
+import axios from "axios";
 import { getSession } from "next-auth/react";
 
 export const deleteExpense = async (id: string) => {
@@ -7,19 +8,18 @@ export const deleteExpense = async (id: string) => {
       throw new Error("No session available");
     }
 
-    const response = await fetch("/api/expense/delete", {
-      method: "DELETE",
+    const res = await axios.delete("/api/expense/delete", {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ id }),
+      data: { id },
     });
 
-    if (!response.ok) {
+    if (res.status !== 200) {
       throw new Error("Failed to delete expense");
     }
 
-    return response.ok;
+    return res.status;
   } catch (err) {
     console.error("Error during deletion:", err);
     throw err;
@@ -36,13 +36,16 @@ export const handleDelete = async (
     const success = await deleteExpense(id);
 
     if (success) {
-      // Remove the deleted expense from the state
       setExpenses(expenses.filter((expense) => expense._id !== id));
 
-      // Optionally update total expenses
-      const totalRes = await fetch("/api/expense/total");
-      const totalData = await totalRes.json();
-      setTotalExpense(totalData.total);
+      const totalRes = await axios.get("/api/expense/total");
+
+      if (totalRes.status === 200) {
+        const totalData = totalRes.data;
+        setTotalExpense(totalData.total);
+      } else {
+        throw new Error("Failed to fetch total expenses");
+      }
     }
   } catch (err) {
     console.error("Failed to delete expense", err);

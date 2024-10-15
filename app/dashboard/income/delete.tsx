@@ -1,3 +1,4 @@
+import axios from "axios";
 import { getSession } from "next-auth/react";
 
 export const deleteIncome = async (id: string) => {
@@ -7,19 +8,18 @@ export const deleteIncome = async (id: string) => {
       throw new Error("No session available");
     }
 
-    const response = await fetch("/api/income/delete", {
-      method: "DELETE",
+    const res = await axios.delete("/api/income/delete", {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ id }),
+      data: { id },
     });
 
-    if (!response.ok) {
+    if (res.status !== 200) {
       throw new Error("Failed to delete Income");
     }
 
-    return response.ok;
+    return res.status;
   } catch (err) {
     console.error("Error during deletion:", err);
     throw err;
@@ -36,13 +36,16 @@ export const handleDelete = async (
     const success = await deleteIncome(id);
 
     if (success) {
-      // Remove the deleted income from the state
       setIncomes(incomes.filter((income) => income._id !== id));
 
-      // Optionally update total income
-      const totalRes = await fetch("/api/income/total");
-      const totalData = await totalRes.json();
-      setTotalIncome(totalData.total);
+      const totalRes = await axios.get("/api/income/total");
+
+      if (totalRes.status === 200) {
+        const totalData = await totalRes.data;
+        setTotalIncome(totalData.total);
+      } else {
+        throw new Error("Failed to fetch total incomes");
+      }
     }
   } catch (err) {
     console.error("Failed to delete income", err);
