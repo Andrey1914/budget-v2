@@ -4,14 +4,17 @@ import React, { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import SnackbarNotification from "@/components/Notification/Snackbar";
+import { Oval } from "react-loader-spinner";
 
 import { Box, TextField, Button, Container } from "@mui/material";
 
 const Login: React.FC = () => {
+  const router = useRouter();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
   const [showSnackbar, setShowSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
@@ -21,6 +24,8 @@ const Login: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
+
     setError("");
 
     try {
@@ -50,6 +55,8 @@ const Login: React.FC = () => {
       setSnackbarMessage("Something went wrong");
       setSnackbarSeverity("error");
       setShowSnackbar(true);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -82,8 +89,23 @@ const Login: React.FC = () => {
               required
             />
           </Box>
-          <Button type="submit" variant="contained" color="primary" fullWidth>
-            Login
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            fullWidth
+            disabled={loading}
+          >
+            {loading ? (
+              <Oval
+                height="30"
+                width="30"
+                color="#1727b7"
+                secondaryColor="#6fb5e7"
+              />
+            ) : (
+              "Login"
+            )}
           </Button>
         </form>
 

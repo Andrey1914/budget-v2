@@ -94,7 +94,9 @@ const TaskForm: React.FC<TaskFormProps> = () => {
           />
         </div>
         {error && <p style={{ color: "red" }}>{error}</p>}
-        <Button type="submit">Save</Button>
+        <Button variant="outlined" type="submit">
+          Save
+        </Button>
       </Box>
       {showSnackbar && (
         <SnackbarNotification

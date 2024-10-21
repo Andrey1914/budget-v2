@@ -11,6 +11,8 @@ import {
   DeleteCategory,
 } from "@/app/dashboard/expense/handlers";
 
+import addExpense from "@/app/dashboard/expense/add";
+
 import {
   Box,
   TextField,
@@ -26,7 +28,9 @@ import {
 const ExpenseForm: React.FC<ExpenseFormProps> = ({ initialData }) => {
   const { data: session } = useSession();
 
-  const [amount, setAmount] = useState(initialData?.amount || "");
+  const [amount, setAmount] = useState<number | string>(
+    initialData?.amount || ""
+  );
   const [description, setDescription] = useState(
     initialData?.description || ""
   );
@@ -50,7 +54,6 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ initialData }) => {
     "success"
   );
 
-  // Загрузка категорий из базы данных
   useEffect(() => {
     const loadCategories = async () => {
       try {
@@ -73,38 +76,41 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ initialData }) => {
         return;
       }
 
-      const res = await fetch("/api/expense/add", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ amount, description, category, date }),
-      });
-
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.error || "Failed to add expense");
+      if (!amount || isNaN(Number(amount))) {
+        setError("Amount must be a valid number.");
+        return;
       }
 
-      setSnackbarMessage("Expense added successfully");
-      setSnackbarSeverity("success");
-      setShowSnackbar(true);
+      const parsedAmount = parseFloat(amount as string);
 
-      setAmount("");
-      setDescription("");
-      setCategory("");
-      setDate("");
-      setError("");
+      const res = await addExpense({
+        amount: parsedAmount,
+        description,
+        category,
+        date,
+      });
+
+      if (res.success) {
+        setSnackbarMessage(res.message);
+        setSnackbarSeverity("success");
+        setShowSnackbar(true);
+
+        setAmount("");
+        setDescription("");
+        setCategory("");
+        setDate("");
+        setError("");
+      } else {
+        throw new Error(res.message);
+      }
     } catch (error: any) {
       setError(error.message || "Failed to add expense");
-
       setSnackbarMessage("Failed to add expense");
       setSnackbarSeverity("error");
       setShowSnackbar(true);
     }
   };
 
-  // Добавление новой категории
   const handleAddCategory = async () => {
     await AddCategory(
       newCategory,
@@ -117,7 +123,6 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ initialData }) => {
     );
   };
 
-  // Функция для редактирования категории
   const handleEditCategory = async () => {
     await EditCategory(
       editingCategory,
@@ -131,7 +136,6 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ initialData }) => {
     );
   };
 
-  // Функция для удаления категории
   const handleDeleteCategory = async () => {
     await DeleteCategory(
       category,
@@ -144,7 +148,6 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ initialData }) => {
     );
   };
 
-  // Обработчик для открытия диалогового окна редактирования
   const handleOpenEditDialog = (category: Category) => {
     if (!category) {
       console.error("Selected category not found");
@@ -156,7 +159,6 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ initialData }) => {
     setOpenEditDialog(true);
   };
 
-  // Обработчик для закрытия диалогового окна редактирования
   const handleCloseEditDialog = () => {
     setOpenEditDialog(false);
     setNewCategory("");
@@ -205,7 +207,6 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ initialData }) => {
           <Button variant="outlined" onClick={() => setOpen(true)}>
             Add New Category
           </Button>
-          {/* Кнопки редактирования и удаления */}
           <div>
             {category && (
               <div style={{ marginTop: 16 }}>
@@ -270,64 +271,65 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ initialData }) => {
         />
       )}
 
-      <Dialog open={open} onClose={() => setOpen(false)}>
-        <DialogTitle>Add New Category</DialogTitle>
-        <DialogContent>
-          <TextField
-            id="new-category"
-            label="Category Name"
-            variant="outlined"
-            value={newCategory}
-            onChange={(e) => setNewCategory(e.target.value)}
-            required
-          />
-          <TextField
-            id="new-category-description"
-            label="Category Description"
-            variant="outlined"
-            value={newCategoryDescription}
-            onChange={(e) => setNewCategoryDescription(e.target.value)}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button variant="outlined" onClick={() => setOpen(false)}>
-            Cancel
-          </Button>
-          <Button variant="outlined" onClick={handleAddCategory}>
-            Add Category
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <div aria-hidden="false">
+        <Dialog open={open} onClose={() => setOpen(false)}>
+          <DialogTitle>Add New Category</DialogTitle>
+          <DialogContent>
+            <TextField
+              id="new-category"
+              label="Category Name"
+              variant="outlined"
+              value={newCategory}
+              onChange={(e) => setNewCategory(e.target.value)}
+              required
+            />
+            <TextField
+              id="new-category-description"
+              label="Category Description"
+              variant="outlined"
+              value={newCategoryDescription}
+              onChange={(e) => setNewCategoryDescription(e.target.value)}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button variant="outlined" onClick={() => setOpen(false)}>
+              Cancel
+            </Button>
+            <Button variant="outlined" onClick={handleAddCategory}>
+              Add Category
+            </Button>
+          </DialogActions>
+        </Dialog>
 
-      {/* Диалог для редактирования категории */}
-      <Dialog open={openEditDialog} onClose={handleCloseEditDialog}>
-        <DialogTitle>Edit Category</DialogTitle>
-        <DialogContent>
-          <TextField
-            id="edit-category"
-            label="Category Name"
-            variant="outlined"
-            value={newCategory}
-            onChange={(e) => setNewCategory(e.target.value)}
-            required
-          />
-          <TextField
-            id="edit-category-description"
-            label="Category Description"
-            variant="outlined"
-            value={newCategoryDescription}
-            onChange={(e) => setNewCategoryDescription(e.target.value)}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button variant="outlined" onClick={handleCloseEditDialog}>
-            Cancel
-          </Button>
-          <Button variant="outlined" onClick={handleEditCategory}>
-            Save Changes
-          </Button>
-        </DialogActions>
-      </Dialog>
+        <Dialog open={openEditDialog} onClose={handleCloseEditDialog}>
+          <DialogTitle>Edit Category</DialogTitle>
+          <DialogContent>
+            <TextField
+              id="edit-category"
+              label="Category Name"
+              variant="outlined"
+              value={newCategory}
+              onChange={(e) => setNewCategory(e.target.value)}
+              required
+            />
+            <TextField
+              id="edit-category-description"
+              label="Category Description"
+              variant="outlined"
+              value={newCategoryDescription}
+              onChange={(e) => setNewCategoryDescription(e.target.value)}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button variant="outlined" onClick={handleCloseEditDialog}>
+              Cancel
+            </Button>
+            <Button variant="outlined" onClick={handleEditCategory}>
+              Save Changes
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </div>
     </>
   );
 };

@@ -4,10 +4,11 @@ import ExpensesList from "@/components/Expense/ExpensesList";
 import IncomesList from "@/components/Income/IncomesList";
 import TasksList from "@/components/Tasks/TasksList";
 
-import { Container } from "@mui/material";
+import { Box, Container } from "@mui/material";
 import { useSession } from "next-auth/react";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { Oval } from "react-loader-spinner";
 
 const Dashboard: React.FC = () => {
   const { data: session, status } = useSession();
@@ -23,7 +24,9 @@ const Dashboard: React.FC = () => {
   }, [session, status, router]);
 
   if (status === "loading") {
-    return <p>Loading...</p>; // Можно улучшить лоадер
+    return (
+      <Oval height="80" width="80" color="#1727b7" secondaryColor="#6fb5e7" />
+    ); // Можно улучшить лоадер
   }
 
   if (!session || !session.user.isVerified) {

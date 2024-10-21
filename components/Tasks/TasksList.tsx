@@ -5,7 +5,8 @@ import { useSession } from "next-auth/react";
 import { Task } from "@/types";
 import EditTaskForm from "@/components/Tasks/EditTaskForm";
 
-import { Button } from "@mui/material";
+import { Delete, Edit } from "@mui/icons-material";
+import { Fab, List, ListItem, Paper, Checkbox } from "@mui/material";
 
 const TasksList: React.FC = () => {
   const { data: session } = useSession();
@@ -111,34 +112,56 @@ const TasksList: React.FC = () => {
         <div>
           <h2>Tasks</h2>
 
-          <ul>
+          <List style={{ width: "100%" }}>
             {tasks.map((item: Task) => (
-              <li key={item._id}>
-                <input
-                  type="checkbox"
-                  checked={Boolean(item.completed)}
-                  onChange={() =>
-                    handleCheckboxChange(item._id, item.completed)
-                  }
-                />
-                {item.title} - {item.content}
-                <Button
-                  variant="contained"
-                  onClick={() => handleEdit(item._id)}
-                  style={{ marginLeft: "10px" }}
+              <ListItem key={item._id}>
+                <Paper
+                  style={{
+                    padding: "1rem",
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    width: "100%",
+                  }}
                 >
-                  Edit
-                </Button>
-                <Button
-                  variant="contained"
-                  onClick={() => handleDelete(item._id)}
-                  style={{ marginLeft: "10px", color: "red" }}
-                >
-                  Delete
-                </Button>
-              </li>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      alignItems: "baseline",
+                      width: "70%",
+                    }}
+                  >
+                    <Checkbox
+                      checked={Boolean(item.completed)}
+                      onChange={() =>
+                        handleCheckboxChange(item._id, item.completed)
+                      }
+                    />
+                    <p>
+                      {item.title} - {item.content}
+                    </p>
+                  </div>
+                  <div>
+                    <Fab
+                      aria-label="edit"
+                      onClick={() => handleEdit(item._id)}
+                      style={{ marginLeft: "10px" }}
+                    >
+                      <Edit />
+                    </Fab>
+                    <Fab
+                      aria-label="delete"
+                      onClick={() => handleDelete(item._id)}
+                      style={{ marginLeft: "10px" }}
+                    >
+                      <Delete />
+                    </Fab>
+                  </div>
+                </Paper>
+              </ListItem>
             ))}
-          </ul>
+          </List>
         </div>
       </div>
       {editingTaskId && (

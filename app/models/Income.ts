@@ -3,11 +3,6 @@ import { IIncome } from "@/interfaces";
 
 const incomeSchema = new Schema<IIncome>(
   {
-    user: {
-      type: Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
     userId: {
       type: Schema.Types.ObjectId,
       required: true,

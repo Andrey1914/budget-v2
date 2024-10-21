@@ -1,6 +1,11 @@
 import { Schema, Document } from "mongoose";
 import { ObjectId } from "mongodb";
 
+export interface Session {
+  user: IUser;
+  expires: string;
+}
+
 // User interfaces
 export interface IUser extends Document {
   _id?: string;
@@ -10,8 +15,6 @@ export interface IUser extends Document {
   token?: string;
   isVerified: boolean;
   verificationCode?: string;
-  // tempPassword?: string;
-  // tempPasswordExpires?: Date;
 }
 
 export interface IVerifyResponse {
@@ -43,7 +46,7 @@ export interface EditExpenseFormProps {
   initialAmount: number;
   initialDescription: string;
   initialCategory: string;
-  onExpenseUpdated: () => void; // Коллбэк для обновления задач после редактирования
+  onExpenseUpdated: () => void;
 }
 
 export interface ExpenseFormProps {
@@ -124,11 +127,11 @@ export interface EditTaskFormProps {
   initialTitle: string;
   initialContent: string;
   initialCompleted: boolean;
-  onTaskUpdated: () => void; // Коллбэк для обновления задач после редактирования
+  onTaskUpdated: () => void;
 }
 
 export interface Transaction {
-  _id: ObjectId; // Или ObjectId, в зависимости от вашей реализации
+  _id: ObjectId;
   date: string;
   amount: number;
   type: "income" | "expense";

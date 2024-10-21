@@ -6,7 +6,8 @@ import { handleDelete } from "@/app/dashboard/income/delete";
 import { Income } from "@/types";
 import EditIncomeForm from "@/components/Income/EditIncomeForm";
 
-import { Button } from "@mui/material";
+import { Delete, Edit } from "@mui/icons-material";
+import { Fab, List, ListItem, Paper } from "@mui/material";
 
 const IncomesList: React.FC = () => {
   const { data: session } = useSession();
@@ -74,29 +75,48 @@ const IncomesList: React.FC = () => {
         <div>
           <h2>Incomes</h2>
           <p>Total Incomes for this month: {totalIncome}</p>
-          <ul>
+          <List style={{ width: "100%" }}>
             {income.map((item: Income) => (
-              <li key={item._id}>
-                {item.amount} - {item.description}
-                <Button
-                  variant="contained"
-                  onClick={() => handleEdit(item._id)}
-                  style={{ marginLeft: "10px" }}
+              <ListItem key={item._id}>
+                <Paper
+                  style={{
+                    padding: "1rem",
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    width: "100%",
+                  }}
                 >
-                  Edit
-                </Button>
-                <Button
-                  variant="contained"
-                  onClick={() =>
-                    handleDelete(item._id, income, setIncome, setTotalIncome)
-                  }
-                  style={{ marginLeft: "10px", color: "red" }}
-                >
-                  Delete
-                </Button>
-              </li>
+                  <p>
+                    {item.amount} - {item.description}
+                  </p>
+                  <div>
+                    <Fab
+                      aria-label="edit"
+                      onClick={() => handleEdit(item._id)}
+                      style={{ marginLeft: "10px" }}
+                    >
+                      <Edit />
+                    </Fab>
+                    <Fab
+                      aria-label="delete"
+                      onClick={() =>
+                        handleDelete(
+                          item._id,
+                          income,
+                          setIncome,
+                          setTotalIncome
+                        )
+                      }
+                      style={{ marginLeft: "10px" }}
+                    >
+                      <Delete />
+                    </Fab>
+                  </div>
+                </Paper>
+              </ListItem>
             ))}
-          </ul>
+          </List>
         </div>
       </div>
       {editingIncomeId && (

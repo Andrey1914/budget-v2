@@ -3,13 +3,20 @@
 import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { handleDelete } from "@/app/dashboard/expense/delete";
+import { fetchExpenses } from "@/app/dashboard/expense/get";
+import { refreshExpenses } from "@/app/dashboard/expense/refresh";
 import { Expense } from "@/types";
+import { Session } from "@/interfaces";
 import EditExpenseForm from "@/components/Expense/EditExpenseForm";
 
-import { Button } from "@mui/material";
+import { Delete, Edit } from "@mui/icons-material";
+import { Fab, List, ListItem, Paper } from "@mui/material";
 
 const ExpensesList: React.FC = () => {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession() as {
+    data: Session | null;
+    status: string;
+  };
   const [expense, setExpense] = useState<Expense[]>([]);
   const [totalExpense, setTotalExpense] = useState<number>(0);
   const [error, setError] = useState<string | null>(null);
@@ -17,49 +24,45 @@ const ExpensesList: React.FC = () => {
 
   useEffect(() => {
     if (session) {
-      const fetchData = async () => {
+      const loadData = async () => {
         try {
-          const expenseRes = await fetch("/api/expense/get", {
-            headers: {
-              Authorization: `Bearer ${session?.token}`,
-            },
-          });
+          const expensesData = await fetchExpenses(session);
 
-          if (!expenseRes.ok) {
-            throw new Error("Failed to fetch data");
-          }
+          setExpense(expensesData);
 
-          const expenseData: Expense[] = await expenseRes.json();
-          setExpense(expenseData);
-
-          const total = expenseData.reduce(
+          const total = expensesData.reduce(
             (acc: number, item: Expense) => acc + item.amount,
             0
           );
           setTotalExpense(total);
         } catch (err) {
+          console.error("Error fetching expenses:", err);
           setError((err as Error).message);
         }
       };
 
-      fetchData();
+      if (session) {
+        loadData();
+      }
     }
-  }, [session]);
+  }, [session, status]);
 
   const handleEdit = (id: string) => {
     setEditingExpenseId(id);
   };
 
-  const refreshExpenses = async () => {
-    if (session) {
-      const expenseRes = await fetch("/api/expense/get", {
-        headers: {
-          Authorization: `Bearer ${session?.token}`,
-        },
-      });
+  const reloadData = async () => {
+    if (!session) {
+      setError("Session or token is not available");
+      return;
+    }
 
-      const expensesData: Expense[] = await expenseRes.json();
+    try {
+      const expensesData = await refreshExpenses(session);
+
       setExpense(expensesData);
+    } catch (err) {
+      setError((err as Error).message);
     }
   };
 
@@ -74,35 +77,54 @@ const ExpensesList: React.FC = () => {
         <div>
           <h2>Expenses</h2>
           <p>Total Expenses for this month: {totalExpense}</p>{" "}
-          <ul>
+          <List style={{ width: "100%" }}>
             {expense.map((item: Expense) => (
-              <li key={item._id}>
-                {item.amount} - {item.description}
-                <Button
-                  variant="contained"
-                  onClick={() => handleEdit(item._id)}
-                  style={{ marginLeft: "10px" }}
+              <ListItem key={item._id}>
+                <Paper
+                  style={{
+                    padding: "1rem",
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    width: "100%",
+                  }}
                 >
-                  Edit
-                </Button>
-                <Button
-                  variant="contained"
-                  onClick={() =>
-                    handleDelete(item._id, expense, setExpense, setTotalExpense)
-                  }
-                  style={{ marginLeft: "10px", color: "red" }}
-                >
-                  Delete
-                </Button>
-              </li>
+                  <p>
+                    {item.amount} - {item.description}
+                  </p>
+                  <div>
+                    <Fab
+                      aria-label="edit"
+                      onClick={() => handleEdit(item._id)}
+                      style={{ marginLeft: "10px" }}
+                    >
+                      <Edit />
+                    </Fab>
+                    <Fab
+                      aria-label="delete"
+                      onClick={() =>
+                        handleDelete(
+                          item._id,
+                          expense,
+                          setExpense,
+                          setTotalExpense
+                        )
+                      }
+                      style={{ marginLeft: "10px" }}
+                    >
+                      <Delete />
+                    </Fab>
+                  </div>
+                </Paper>
+              </ListItem>
             ))}
-          </ul>
+          </List>
         </div>
       </div>
       {editingExpenseId && (
         <EditExpenseForm
           expenseId={editingExpenseId}
-          refreshExpenses={refreshExpenses}
+          refreshExpenses={reloadData}
           onClose={() => setEditingExpenseId(null)}
         />
       )}

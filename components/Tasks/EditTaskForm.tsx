@@ -98,10 +98,10 @@ const EditTaskForm = ({
           onChange={(e) => setDate(e.target.value)}
         />
       </div>
-      <Button variant="contained" type="submit" disabled={loading}>
+      <Button variant="outlined" type="submit" disabled={loading}>
         {loading ? "Saving..." : "Save"}
       </Button>
-      <Button variant="contained" type="button" onClick={onClose}>
+      <Button variant="outlined" type="button" onClick={onClose}>
         Cancel
       </Button>
     </Box>

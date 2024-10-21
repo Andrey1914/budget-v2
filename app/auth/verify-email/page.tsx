@@ -4,12 +4,13 @@ import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import { Oval } from "react-loader-spinner";
 import SnackbarNotification from "@/components/Notification/Snackbar";
 
 import { Box, TextField, Button, Container } from "@mui/material";
 
 const VerifyEmail: React.FC = () => {
-  const { data: session, update } = useSession();
+  const { data: session } = useSession();
   const router = useRouter();
   const [verificationCode, setVerificationCode] = useState("");
   const [loading, setLoading] = useState(false);
@@ -84,7 +85,16 @@ const VerifyEmail: React.FC = () => {
             fullWidth
             disabled={loading}
           >
-            {loading ? "Verifying..." : "Verify"}
+            {loading ? (
+              <Oval
+                height="30"
+                width="30"
+                color="#1727b7"
+                secondaryColor="#6fb5e7"
+              />
+            ) : (
+              "Verify"
+            )}
           </Button>
         </form>
 

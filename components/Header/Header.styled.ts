@@ -2,6 +2,8 @@ import { styled, Container } from "@mui/material";
 
 export const ContainerNavLinks = styled(Container)(({ theme }) => ({
   display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
 
   [theme.breakpoints.down("md")]: {
     flexDirection: "column-reverse",

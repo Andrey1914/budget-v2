@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import SnackbarNotification from "@/components/Notification/Snackbar";
+import { Oval } from "react-loader-spinner";
 
 import { Box, TextField, Button, Container } from "@mui/material";
 
@@ -102,7 +103,16 @@ const Register: React.FC = () => {
             fullWidth
             disabled={loading}
           >
-            {loading ? "Registering..." : "Register"}
+            {loading ? (
+              <Oval
+                height="30"
+                width="30"
+                color="#1727b7"
+                secondaryColor="#6fb5e7"
+              />
+            ) : (
+              "Registration"
+            )}
           </Button>
         </form>
 
