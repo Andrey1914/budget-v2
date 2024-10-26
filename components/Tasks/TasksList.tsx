@@ -4,81 +4,84 @@ import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { Task } from "@/types";
 import EditTaskForm from "@/components/Tasks/EditTaskForm";
+import { getTasks } from "@/app/dashboard/tasks/get";
+import { updateTaskStatus } from "@/app/dashboard/tasks/updateCheckbox";
+import { deleteTask } from "@/app/dashboard/tasks/delete";
+import { refreshTasksList } from "@/app/dashboard/tasks/refresh";
+
+import { Session } from "@/interfaces";
 
 import { Delete, Edit } from "@mui/icons-material";
-import { Fab, List, ListItem, Paper, Checkbox } from "@mui/material";
+import {
+  Fab,
+  List,
+  ListItem,
+  Paper,
+  Checkbox,
+  Typography,
+} from "@mui/material";
 
 const TasksList: React.FC = () => {
-  const { data: session } = useSession();
+  const { data: session } = useSession() as {
+    data: Session | null;
+  };
   const [tasks, setTasks] = useState<Task[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
+  const [unresolvedTasksCount, setUnresolvedTasksCount] = useState<number>(0);
 
   useEffect(() => {
     if (session) {
-      const fetchData = async () => {
+      const getTasksData = async () => {
         try {
-          const tasksRes = await fetch("/api/tasks/get", {
-            headers: {
-              Authorization: `Bearer ${session?.token}`,
-            },
-          });
-
-          if (!tasksRes.ok) {
-            throw new Error("Failed to fetch tasks");
-          }
-
-          const tasksData: Task[] = await tasksRes.json();
+          const tasksData = await getTasks(session);
 
           setTasks(tasksData);
+
+          setUnresolvedTasksCount(
+            tasksData.filter((task) => !task.completed).length
+          );
         } catch (err) {
           setError((err as Error).message);
         }
       };
 
-      fetchData();
+      getTasksData();
     }
   }, [session]);
 
   const handleCheckboxChange = async (id: string, completed: boolean) => {
+    if (!session) return;
+
     try {
-      const res = await fetch("/api/tasks/update", {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session?.token}`,
-        },
-        body: JSON.stringify({ id, completed: !completed }),
-      });
+      await updateTaskStatus(id, completed, session);
 
-      if (!res.ok) {
-        throw new Error("Failed to update task");
-      }
-
-      const updatedTasks = tasks.map((task) =>
-        task._id === id ? { ...task, completed: !completed } : task
+      setTasks((prevTasks) =>
+        prevTasks.map((task) =>
+          task._id === id ? { ...task, completed: !task.completed } : task
+        )
       );
-      setTasks(updatedTasks);
+
+      setUnresolvedTasksCount((prevCount) =>
+        completed ? prevCount + 1 : prevCount - 1
+      );
     } catch (err) {
       setError((err as Error).message);
     }
   };
 
   const handleDelete = async (id: string) => {
+    if (!session) return;
+
     try {
-      const res = await fetch(`/api/tasks/delete?id=${id}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${session?.token}`,
-        },
-      });
-
-      if (!res.ok) {
-        throw new Error("Failed to delete task");
-      }
-
+      await deleteTask(id, session);
       const updatedTasks = tasks.filter((task) => task._id !== id);
+
       setTasks(updatedTasks);
+
+      setUnresolvedTasksCount(
+        updatedTasks.filter((task) => !task.completed).length
+      );
     } catch (err) {
       setError((err as Error).message);
     }
@@ -89,15 +92,16 @@ const TasksList: React.FC = () => {
   };
 
   const refreshTasks = async () => {
-    if (session) {
-      const tasksRes = await fetch("/api/tasks/get", {
-        headers: {
-          Authorization: `Bearer ${session?.token}`,
-        },
-      });
+    if (!session) return;
 
-      const tasksData: Task[] = await tasksRes.json();
+    try {
+      const tasksData = await refreshTasksList(session);
       setTasks(tasksData);
+      setUnresolvedTasksCount(
+        tasksData.filter((task) => !task.completed).length
+      );
+    } catch (err) {
+      setError((err as Error).message);
     }
   };
 
@@ -110,57 +114,75 @@ const TasksList: React.FC = () => {
       <div>
         {error && <p style={{ color: "red" }}>{error}</p>}
         <div>
-          <h2>Tasks</h2>
+          <Typography variant="h2" component="h1">
+            Tasks
+          </Typography>
+
+          {unresolvedTasksCount > 0 && (
+            <Typography
+              variant="h4"
+              component="p"
+              style={{
+                padding: "0.8rem",
+                color: "white",
+                backgroundColor: "orange",
+                borderRadius: "0.3rem",
+              }}
+            >
+              You have {unresolvedTasksCount} unresolved tasks!
+            </Typography>
+          )}
 
           <List style={{ width: "100%" }}>
-            {tasks.map((item: Task) => (
-              <ListItem key={item._id}>
-                <Paper
-                  style={{
-                    padding: "1rem",
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    width: "100%",
-                  }}
-                >
-                  <div
+            {Array.isArray(tasks) &&
+              tasks.map((item: Task) => (
+                <ListItem key={item._id}>
+                  <Paper
                     style={{
+                      padding: "1rem",
                       display: "flex",
                       flexDirection: "row",
-                      alignItems: "baseline",
-                      width: "70%",
+                      justifyContent: "space-between",
+                      width: "100%",
                     }}
                   >
-                    <Checkbox
-                      checked={Boolean(item.completed)}
-                      onChange={() =>
-                        handleCheckboxChange(item._id, item.completed)
-                      }
-                    />
-                    <p>
-                      {item.title} - {item.content}
-                    </p>
-                  </div>
-                  <div>
-                    <Fab
-                      aria-label="edit"
-                      onClick={() => handleEdit(item._id)}
-                      style={{ marginLeft: "10px" }}
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        alignItems: "baseline",
+                        width: "70%",
+                      }}
                     >
-                      <Edit />
-                    </Fab>
-                    <Fab
-                      aria-label="delete"
-                      onClick={() => handleDelete(item._id)}
-                      style={{ marginLeft: "10px" }}
-                    >
-                      <Delete />
-                    </Fab>
-                  </div>
-                </Paper>
-              </ListItem>
-            ))}
+                      <Checkbox
+                        checked={Boolean(item.completed)}
+                        onChange={() =>
+                          handleCheckboxChange(item._id, item.completed)
+                        }
+                      />
+                      <p>
+                        {item.title} - {item.content}
+                      </p>
+                    </div>
+                    <div>
+                      <Fab
+                        aria-label="edit"
+                        onClick={() => handleEdit(item._id)}
+                        style={{ marginLeft: "10px" }}
+                      >
+                        <Edit />
+                      </Fab>
+                      <Fab
+                        aria-label="delete"
+                        onClick={() => handleDelete(item._id)}
+                        style={{ marginLeft: "10px" }}
+                      >
+                        <Delete />
+                      </Fab>
+                    </div>
+                  </Paper>
+                </ListItem>
+              ))}
           </List>
         </div>
       </div>

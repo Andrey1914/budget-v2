@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { SessionProvider } from "next-auth/react";
+// import { SessionProvider } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import axios from "axios";
@@ -32,19 +32,19 @@ const AddExpense: React.FC = () => {
   };
 
   return (
-    <SessionProvider>
-      <Box component="section">
-        <Container maxWidth="sm">
-          <div>
-            <Typography variant="h2" component="h1">
-              Add Expense
-            </Typography>
-            <ExpenseForm onSubmit={handleSubmit} />
-          </div>
-          <Link href="/dashboard">Back to Dashboard</Link>
-        </Container>
-      </Box>
-    </SessionProvider>
+    // <SessionProvider>
+    <Box component="section">
+      <Container maxWidth="sm">
+        <div>
+          <Typography variant="h2" component="h1">
+            Add Expense
+          </Typography>
+          <ExpenseForm onSubmit={handleSubmit} />
+        </div>
+        <Link href="/dashboard">Back to Dashboard</Link>
+      </Container>
+    </Box>
+    // </SessionProvider>
   );
 };
 

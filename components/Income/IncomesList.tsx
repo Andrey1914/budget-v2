@@ -3,14 +3,21 @@
 import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { handleDelete } from "@/app/dashboard/income/delete";
+import { getIncomes } from "@/app/dashboard/income/get";
+import { refreshIncomes } from "@/app/dashboard/income/refresh";
 import { Income } from "@/types";
+import { Session } from "@/interfaces";
 import EditIncomeForm from "@/components/Income/EditIncomeForm";
 
 import { Delete, Edit } from "@mui/icons-material";
-import { Fab, List, ListItem, Paper } from "@mui/material";
+import { Box, Fab, List, ListItem, Paper, Typography } from "@mui/material";
 
 const IncomesList: React.FC = () => {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession() as {
+    data: Session | null;
+    status: string;
+  };
+
   const [income, setIncome] = useState<any[]>([]);
   const [totalIncome, setTotalIncome] = useState<number>(0);
   const [error, setError] = useState<string | null>(null);
@@ -18,49 +25,45 @@ const IncomesList: React.FC = () => {
 
   useEffect(() => {
     if (session) {
-      const fetchData = async () => {
+      const getIncomesData = async () => {
         try {
-          const incomeRes = await fetch("/api/income/get", {
-            headers: {
-              Authorization: `Bearer ${session?.token}`,
-            },
-          });
+          const incomesData = await getIncomes(session);
 
-          if (!incomeRes.ok) {
-            throw new Error("Failed to fetch data");
-          }
+          setIncome(incomesData);
 
-          const incomeData: Income[] = await incomeRes.json();
-          setIncome(incomeData);
-
-          const total = incomeData.reduce(
+          const total = incomesData.reduce(
             (acc: number, item: Income) => acc + item.amount,
             0
           );
           setTotalIncome(total);
         } catch (err) {
+          console.error("Error fetching expenses:", err);
           setError((err as Error).message);
         }
       };
 
-      fetchData();
+      if (session) {
+        getIncomesData();
+      }
     }
-  }, [session]);
+  }, [session, status]);
 
   const handleEdit = (id: string) => {
     setEditingIncomeId(id);
   };
 
-  const refreshIncomes = async () => {
-    if (session) {
-      const incomeRes = await fetch("/api/income/get", {
-        headers: {
-          Authorization: `Bearer ${session?.token}`,
-        },
-      });
+  const reloadData = async () => {
+    if (!session) {
+      setError("Session or token is not available");
+      return;
+    }
 
-      const incomesData: Income[] = await incomeRes.json();
+    try {
+      const incomesData = await refreshIncomes(session);
+
       setIncome(incomesData);
+    } catch (err) {
+      setError((err as Error).message);
     }
   };
 
@@ -73,8 +76,23 @@ const IncomesList: React.FC = () => {
       <div>
         {error && <p style={{ color: "red" }}>{error}</p>}
         <div>
-          <h2>Incomes</h2>
-          <p>Total Incomes for this month: {totalIncome}</p>
+          <Box>
+            <Typography variant="h2" component="h1">
+              Incomes
+            </Typography>
+            <Typography
+              variant="h4"
+              component="p"
+              style={{
+                padding: "0.8rem",
+                color: "white",
+                backgroundColor: "orange",
+                borderRadius: "0.3rem",
+              }}
+            >
+              Total Incomes for this month: {totalIncome} PLN
+            </Typography>
+          </Box>
           <List style={{ width: "100%" }}>
             {income.map((item: Income) => (
               <ListItem key={item._id}>
@@ -119,10 +137,11 @@ const IncomesList: React.FC = () => {
           </List>
         </div>
       </div>
+
       {editingIncomeId && (
         <EditIncomeForm
           incomeId={editingIncomeId}
-          refreshIncomes={refreshIncomes}
+          refreshIncomes={reloadData}
           onClose={() => setEditingIncomeId(null)}
         />
       )}

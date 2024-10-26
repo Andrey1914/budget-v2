@@ -1,13 +1,7 @@
 import axios from "axios";
+import { ExpenseFormProps } from "@/interfaces";
 
-interface SubmitExpenseData {
-  amount: number;
-  description: string;
-  category: string;
-  date: string;
-}
-
-const addExpense = async (data: SubmitExpenseData) => {
+const addExpense = async (data: ExpenseFormProps["initialData"]) => {
   try {
     const res = await axios.post("/api/expense/add", data);
 

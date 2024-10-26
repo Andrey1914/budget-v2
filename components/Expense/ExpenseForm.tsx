@@ -12,6 +12,7 @@ import {
 } from "@/app/dashboard/expense/handlers";
 
 import addExpense from "@/app/dashboard/expense/add";
+import { Oval } from "react-loader-spinner";
 
 import {
   Box,
@@ -38,6 +39,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ initialData }) => {
   const [category, setCategory] = useState<string>("");
   const [date, setDate] = useState(initialData?.date || "");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const [categories, setCategories] = useState<Category[]>([]);
 
@@ -69,6 +71,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ initialData }) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
       if (!session) {
@@ -103,6 +106,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ initialData }) => {
       } else {
         throw new Error(res.message);
       }
+      setLoading(false);
     } catch (error: any) {
       setError(error.message || "Failed to add expense");
       setSnackbarMessage("Failed to add expense");
@@ -259,8 +263,17 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ initialData }) => {
           />
         </div>
         {error && <p style={{ color: "red" }}>{error}</p>}
-        <Button variant="outlined" type="submit">
-          Add Expense
+        <Button variant="outlined" type="submit" disabled={loading}>
+          {loading ? (
+            <Oval
+              height="30"
+              width="30"
+              color="#1727b7"
+              secondaryColor="#6fb5e7"
+            />
+          ) : (
+            "Add Expense"
+          )}
         </Button>
       </Box>
 

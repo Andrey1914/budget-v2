@@ -11,6 +11,8 @@ import {
   DeleteCategory,
 } from "@/app/dashboard/income/handlers";
 
+import addIncome from "@/app/dashboard/income/add";
+
 import {
   Box,
   TextField,
@@ -73,28 +75,33 @@ const IncomeForm: React.FC<IncomeFormProps> = ({ initialData }) => {
         return;
       }
 
-      const res = await fetch("/api/income/add", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ amount, description, category, date }),
-      });
-
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.error || "Failed to add income");
+      if (!amount || isNaN(Number(amount))) {
+        setError("Amount must be a valid number.");
+        return;
       }
 
-      setSnackbarMessage("Income added successfully");
-      setSnackbarSeverity("success");
-      setShowSnackbar(true);
+      const parsedAmount = parseFloat(amount as string);
 
-      setAmount("");
-      setDescription("");
-      setCategory("");
-      setDate("");
-      setError("");
+      const res = await addIncome({
+        amount: parsedAmount,
+        description,
+        category,
+        date,
+      });
+
+      if (res.success) {
+        setSnackbarMessage("Income added successfully");
+        setSnackbarSeverity("success");
+        setShowSnackbar(true);
+
+        setAmount("");
+        setDescription("");
+        setCategory("");
+        setDate("");
+        setError("");
+      } else {
+        throw new Error(res.message);
+      }
     } catch (error: any) {
       setError(error.message || "Failed to add income");
 

@@ -26,7 +26,7 @@ const Dashboard: React.FC = () => {
   if (status === "loading") {
     return (
       <Oval height="80" width="80" color="#1727b7" secondaryColor="#6fb5e7" />
-    ); // Можно улучшить лоадер
+    );
   }
 
   if (!session || !session.user.isVerified) {

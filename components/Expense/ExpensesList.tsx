@@ -10,7 +10,7 @@ import { Session } from "@/interfaces";
 import EditExpenseForm from "@/components/Expense/EditExpenseForm";
 
 import { Delete, Edit } from "@mui/icons-material";
-import { Fab, List, ListItem, Paper } from "@mui/material";
+import { Box, Fab, List, ListItem, Paper, Typography } from "@mui/material";
 
 const ExpensesList: React.FC = () => {
   const { data: session, status } = useSession() as {
@@ -75,8 +75,23 @@ const ExpensesList: React.FC = () => {
       <div>
         {error && <p style={{ color: "red" }}>{error}</p>}
         <div>
-          <h2>Expenses</h2>
-          <p>Total Expenses for this month: {totalExpense}</p>{" "}
+          <Box>
+            <Typography variant="h2" component="h1">
+              Expenses
+            </Typography>
+            <Typography
+              variant="h4"
+              component="p"
+              style={{
+                padding: "0.8rem",
+                color: "white",
+                backgroundColor: "orange",
+                borderRadius: "0.3rem",
+              }}
+            >
+              Total Expenses for this month: {totalExpense} PLN
+            </Typography>{" "}
+          </Box>
           <List style={{ width: "100%" }}>
             {expense.map((item: Expense) => (
               <ListItem key={item._id}>

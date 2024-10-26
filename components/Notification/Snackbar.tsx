@@ -19,16 +19,18 @@ const SnackbarNotification: React.FC<NotificationProps> = ({
   };
 
   return (
-    <Snackbar
-      open={open}
-      autoHideDuration={6000}
-      onClose={handleClose}
-      anchorOrigin={{ vertical: "top", horizontal: "center" }}
-    >
-      <Alert onClose={handleClose} severity={severity} sx={{ width: "100%" }}>
-        {message}
-      </Alert>
-    </Snackbar>
+    <>
+      <Snackbar
+        open={open}
+        autoHideDuration={6000}
+        onClose={handleClose}
+        anchorOrigin={{ vertical: "top", horizontal: "left" }}
+      >
+        <Alert onClose={handleClose} severity={severity} sx={{ width: "100%" }}>
+          {message}
+        </Alert>
+      </Snackbar>
+    </>
   );
 };
 

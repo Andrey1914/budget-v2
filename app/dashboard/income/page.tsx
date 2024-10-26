@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useRouter } from "next/navigation";
-import { SessionProvider } from "next-auth/react";
+// import { SessionProvider } from "next-auth/react";
 import Link from "next/link";
 import IncomeForm from "@/components/Income/IncomeForm";
 import axios from "axios";
@@ -31,19 +31,19 @@ const AddIncome: React.FC = () => {
   };
 
   return (
-    <SessionProvider>
-      <Box component="section">
-        <Container maxWidth="sm">
-          <div>
-            <Typography variant="h2" component="h1">
-              Add Income
-            </Typography>
-            <IncomeForm onSubmit={handleSubmit} />
-          </div>
-          <Link href="/dashboard">Back to Dashboard</Link>
-        </Container>
-      </Box>
-    </SessionProvider>
+    // <SessionProvider>
+    <Box component="section">
+      <Container maxWidth="sm">
+        <div>
+          <Typography variant="h2" component="h1">
+            Add Income
+          </Typography>
+          <IncomeForm onSubmit={handleSubmit} />
+        </div>
+        <Link href="/dashboard">Back to Dashboard</Link>
+      </Container>
+    </Box>
+    // </SessionProvider>
   );
 };
 

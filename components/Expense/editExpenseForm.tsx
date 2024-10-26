@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { editExpense } from "@/app/dashboard/expense/edit";
 
+import { Oval } from "react-loader-spinner";
 import { Box, TextField, Button } from "@mui/material";
 
 const EditExpenseForm = ({
@@ -39,23 +41,24 @@ const EditExpenseForm = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setError(null);
 
-    try {
-      const response = await axios.put(`/api/expense/edit`, {
-        id: expenseId,
-        amount,
-        description,
-        category,
-        date,
-      });
+    const result = await editExpense({
+      expenseId,
+      amount,
+      description,
+      category,
+      date,
+    });
+
+    if (result.success) {
       alert("Expense updated successfully");
-      refreshExpenses(response.data);
-      onClose(response.data);
-    } catch (err: any) {
-      setError(err.message || "Failed to update expense");
-    } finally {
-      setLoading(false);
+      refreshExpenses(result.data);
+      onClose(result.data);
+    } else {
+      setError(result.error);
     }
+    setLoading(false);
   };
 
   return (
@@ -114,7 +117,16 @@ const EditExpenseForm = ({
         />
       </div>
       <Button variant="outlined" type="submit" disabled={loading}>
-        {loading ? "Saving..." : "Save"}
+        {loading ? (
+          <Oval
+            height="30"
+            width="30"
+            color="#1727b7"
+            secondaryColor="#6fb5e7"
+          />
+        ) : (
+          "Save"
+        )}
       </Button>
       <Button variant="outlined" type="button" onClick={onClose}>
         Cancel

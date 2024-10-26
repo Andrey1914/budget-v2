@@ -3,19 +3,20 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+
 import SnackbarNotification from "@/components/Notification/Snackbar";
 import { Oval } from "react-loader-spinner";
 
 import { Box, TextField, Button, Container } from "@mui/material";
 
 const Register: React.FC = () => {
+  const router = useRouter();
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-
-  const router = useRouter();
 
   const [showSnackbar, setShowSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");

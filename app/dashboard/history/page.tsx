@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import axios from "axios";
 import { IIncome, IExpense } from "@/interfaces";
 import {
   Container,
@@ -15,6 +14,7 @@ import { ArrowBack } from "@mui/icons-material";
 import Link from "next/link";
 
 import FilterPanel from "@/components/FilterPanel/FilterPanel";
+import { fetchTransactions } from "@/app/dashboard/history/get";
 
 const HistoryPage = () => {
   const [selectedMonth, setSelectedMonth] = useState<number | "">(
@@ -27,38 +27,24 @@ const HistoryPage = () => {
 
   const isFirstRender = useRef(true);
 
-  const fetchTransactions = async (filters: {
-    month: number | "";
-    type: string;
-  }) => {
+  const handleFilterSubmit = async () => {
     try {
-      const { month, type } = filters;
-
-      const response = await axios.get("/api/transactions/filterTransactions", {
-        params: {
-          month: month !== "" ? month : undefined,
-          type: type !== "all" ? type : undefined,
-        },
+      const data = await fetchTransactions({
+        month: selectedMonth,
+        type: selectedType,
       });
 
-      console.log("Ответ от сервера:", response.data);
-
-      setTransactions(response.data.transactions);
-      setTotalSum(response.data.totalSum);
+      setTransactions(data.transactions);
+      setTotalSum(data.totalSum);
     } catch (error) {
       console.error("Ошибка при загрузке транзакций:", error);
     }
   };
 
-  const handleFilterSubmit = () => {
-    console.log(`Фильтрация по месяцу: ${selectedMonth}, тип: ${selectedType}`);
-
-    fetchTransactions({ month: selectedMonth, type: selectedType });
-  };
-
   useEffect(() => {
     if (isFirstRender.current) {
-      fetchTransactions({ month: selectedMonth, type: selectedType });
+      handleFilterSubmit();
+
       isFirstRender.current = false;
     }
   });
@@ -86,12 +72,13 @@ const HistoryPage = () => {
               padding: "0.8rem",
               color: "white",
               backgroundColor: "orange",
-              borderRadius: "0.5rem",
+              borderRadius: "0.3rem",
             }}
           >
             Total sum: {totalSum}
           </Typography>
         </Box>
+
         <List style={{ width: "100%" }}>
           {transactions.map((transaction) => (
             <ListItem key={transaction._id.toString()}>

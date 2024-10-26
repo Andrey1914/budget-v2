@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { editTask } from "@/app/dashboard/tasks/edit";
 
 import { Box, TextField, Button } from "@mui/material";
 
@@ -39,15 +40,11 @@ const EditTaskForm = ({
     setLoading(true);
 
     try {
-      const response = await axios.put(`/api/tasks/edit`, {
-        id: taskId,
-        title,
-        content,
-        date,
-      });
+      const updatedTask = await editTask(taskId, title, content, date);
+
       alert("Task updated successfully");
-      refreshTasks(response.data);
-      onClose(response.data);
+      refreshTasks(updatedTask);
+      onClose(updatedTask);
     } catch (err: any) {
       setError(err.message || "Failed to update task");
     } finally {

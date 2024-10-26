@@ -7,7 +7,6 @@ interface User {
   id: string;
   name: string;
   email: string;
-  // любые другие поля пользователя
 }
 
 interface AuthResponse {
@@ -20,8 +19,8 @@ export const useAuth = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await axios.get<AuthResponse>("/api/auth/profile");
-        setUser(response.data.user);
+        const res = await axios.get<AuthResponse>("/api/auth/profile");
+        setUser(res.data.user);
       } catch (error) {
         console.error("Error fetching user:", error);
       }
@@ -32,11 +31,11 @@ export const useAuth = () => {
 
   const login = async (email: string, password: string) => {
     try {
-      const response = await axios.post<AuthResponse>("/api/auth/login", {
+      const res = await axios.post<AuthResponse>("/api/auth/login", {
         email,
         password,
       });
-      setUser(response.data.user);
+      setUser(res.data.user);
     } catch (error) {
       console.error("Error logging in:", error);
     }
@@ -48,12 +47,12 @@ export const useAuth = () => {
     password: string
   ) => {
     try {
-      const response = await axios.post<AuthResponse>("/api/auth/register", {
+      const res = await axios.post<AuthResponse>("/api/auth/register", {
         username,
         email,
         password,
       });
-      setUser(response.data.user);
+      setUser(res.data.user);
     } catch (error) {
       console.error("Error registering:", error);
     }

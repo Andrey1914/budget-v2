@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { useSession } from "next-auth/react";
 import { TaskFormProps } from "@/interfaces";
+import { addTask } from "@/app/dashboard/tasks/add";
 import SnackbarNotification from "@/components/Notification/Snackbar";
 
 import { Box, TextField, Button } from "@mui/material";
@@ -28,33 +29,20 @@ const TaskForm: React.FC<TaskFormProps> = () => {
     }
 
     try {
-      const res = await fetch("/api/tasks/add", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ title: title || "", content: content || "" }),
-      });
+      await addTask(title, content);
 
-      if (!res.ok) {
-        const data = await res.json();
-        setError(data.error || "Failed to add task");
+      setTitle("");
+      setContent("");
+      setError("");
 
-        setSnackbarMessage("Failed to add task");
-        setSnackbarSeverity("error");
-        setShowSnackbar(true);
-      } else {
-        setTitle("");
-        setContent("");
-        setError("");
-
-        setSnackbarMessage("Task added successfully");
-        setSnackbarSeverity("success");
-        setShowSnackbar(true);
-      }
+      setSnackbarMessage("Task added successfully");
+      setSnackbarSeverity("success");
+      setShowSnackbar(true);
     } catch (error) {
-      setError("An unexpected error occurred.");
-      setSnackbarMessage("An unexpected error occurred");
+      const errorMessage = (error as Error).message || "Failed to add task";
+      setError(errorMessage);
+
+      setSnackbarMessage(errorMessage);
       setSnackbarSeverity("error");
       setShowSnackbar(true);
     }
