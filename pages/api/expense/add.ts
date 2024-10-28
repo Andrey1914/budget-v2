@@ -15,7 +15,7 @@ const addExpense = async (req: NextApiRequest, res: NextApiResponse) => {
       }
 
       const { amount, description, category, date } = req.body;
-      if (!amount || !description || !category || !date) {
+      if (!amount || !category || !date) {
         return res.status(400).json({ error: "Missing required fields" });
       }
 
@@ -33,7 +33,7 @@ const addExpense = async (req: NextApiRequest, res: NextApiResponse) => {
       const expense = await db.collection("expense").insertOne({
         userId: userId,
         amount: parseFloat(amount),
-        description,
+        description: description || "",
         category,
         date: expenseDate,
         createdAt: new Date(),

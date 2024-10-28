@@ -13,7 +13,6 @@ const expenseSchema = new Schema<IExpense>(
     },
     description: {
       type: String,
-      required: true,
     },
     date: {
       type: Date,

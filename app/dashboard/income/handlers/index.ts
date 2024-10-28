@@ -1,4 +1,4 @@
-export { fetchCategories } from "./get";
-export { AddCategory } from "./add";
-export { EditCategory } from "./edit";
-export { DeleteCategory } from "./delete";
+export { fetchCategories } from "./category/get";
+export { AddCategory } from "./category/add";
+export { EditCategory } from "./category/edit";
+export { DeleteCategory } from "./category/delete";

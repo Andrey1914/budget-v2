@@ -11,19 +11,10 @@ import {
   DeleteCategory,
 } from "@/app/dashboard/income/handlers";
 
-import addIncome from "@/app/dashboard/income/add";
+import { validateFormsTransactions } from "@/utils/validateForm";
 
-import {
-  Box,
-  TextField,
-  Select,
-  MenuItem,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-} from "@mui/material";
+import addIncome from "@/app/dashboard/income/add";
+import TransactionForm from "@/components/TransactionForm/TransactionForm";
 
 const IncomeForm: React.FC<IncomeFormProps> = ({ initialData }) => {
   const { data: session } = useSession();
@@ -36,6 +27,7 @@ const IncomeForm: React.FC<IncomeFormProps> = ({ initialData }) => {
   const [category, setCategory] = useState<string>("");
   const [date, setDate] = useState(initialData?.date || "");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const [categories, setCategories] = useState<Category[]>([]);
 
@@ -46,13 +38,15 @@ const IncomeForm: React.FC<IncomeFormProps> = ({ initialData }) => {
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
   const [openEditDialog, setOpenEditDialog] = useState(false);
 
+  const [popoverMessage, setPopoverMessage] = useState("");
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+
   const [showSnackbar, setShowSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">(
     "success"
   );
 
-  // Загрузка категорий из базы данных
   useEffect(() => {
     const loadCategories = async () => {
       try {
@@ -68,6 +62,7 @@ const IncomeForm: React.FC<IncomeFormProps> = ({ initialData }) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
       if (!session) {
@@ -75,10 +70,23 @@ const IncomeForm: React.FC<IncomeFormProps> = ({ initialData }) => {
         return;
       }
 
-      if (!amount || isNaN(Number(amount))) {
-        setError("Amount must be a valid number.");
+      if (
+        !validateFormsTransactions(
+          amount,
+          description,
+          category,
+          date,
+          setPopoverMessage,
+          setAnchorEl
+        )
+      ) {
         return;
       }
+
+      setLoading(true);
+
+      setPopoverMessage("");
+      setAnchorEl(null);
 
       const parsedAmount = parseFloat(amount as string);
 
@@ -98,7 +106,6 @@ const IncomeForm: React.FC<IncomeFormProps> = ({ initialData }) => {
         setDescription("");
         setCategory("");
         setDate("");
-        setError("");
       } else {
         throw new Error(res.message);
       }
@@ -108,50 +115,11 @@ const IncomeForm: React.FC<IncomeFormProps> = ({ initialData }) => {
       setSnackbarMessage("Failed to add income");
       setSnackbarSeverity("error");
       setShowSnackbar(true);
+    } finally {
+      setLoading(false);
     }
   };
 
-  // Add function
-  const handleAddCategory = async () => {
-    await AddCategory(
-      newCategory,
-      newCategoryDescription,
-      setCategories,
-      setNewCategory,
-      setNewCategoryDescription,
-      setOpen,
-      fetchCategories
-    );
-  };
-
-  // Функция для редактирования категории
-  const handleEditCategory = async () => {
-    await EditCategory(
-      editingCategory,
-      newCategory,
-      newCategoryDescription,
-      setCategories,
-      setSnackbarMessage,
-      setSnackbarSeverity,
-      setShowSnackbar,
-      handleCloseEditDialog
-    );
-  };
-
-  // Функция для удаления категории
-  const handleDeleteCategory = async () => {
-    await DeleteCategory(
-      category,
-      category,
-      setCategory,
-      setCategories,
-      setSnackbarMessage,
-      setSnackbarSeverity,
-      setShowSnackbar
-    );
-  };
-
-  // Обработчик для открытия диалогового окна редактирования
   const handleOpenEditDialog = (category: Category) => {
     if (!category) {
       console.error("Selected category not found");
@@ -163,7 +131,6 @@ const IncomeForm: React.FC<IncomeFormProps> = ({ initialData }) => {
     setOpenEditDialog(true);
   };
 
-  // Обработчик для закрытия диалогового окна редактирования
   const handleCloseEditDialog = () => {
     setOpenEditDialog(false);
     setNewCategory("");
@@ -173,101 +140,68 @@ const IncomeForm: React.FC<IncomeFormProps> = ({ initialData }) => {
 
   return (
     <>
-      <Box
-        component="form"
-        sx={{ "& > :not(style)": { m: 2, width: "25ch" } }}
-        noValidate
-        autoComplete="off"
+      <TransactionForm
+        amount={amount}
+        setAmount={setAmount}
+        category={category}
+        setCategory={setCategory}
+        description={description}
+        setDescription={setDescription}
+        date={date}
+        setDate={setDate}
+        loading={loading}
         onSubmit={handleSubmit}
-      >
-        <div>
-          <TextField
-            id="income-amount"
-            label="Amount"
-            variant="outlined"
-            autoFocus={true}
-            type="number"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <Select
-            id="category"
-            value={category}
-            onChange={(e) => setCategory(e.target.value as string)}
-            required
-            displayEmpty
-          >
-            <MenuItem value="" disabled>
-              Select Category
-            </MenuItem>
-            {categories?.map((category) => (
-              <MenuItem key={category._id} value={category._id}>
-                {category.name}
-              </MenuItem>
-            ))}
-          </Select>
-          <Button variant="outlined" onClick={() => setOpen(true)}>
-            Add New Category
-          </Button>
-          {/* Кнопки редактирования и удаления */}
-          <div>
-            {category && (
-              <div style={{ marginTop: 16 }}>
-                <Button
-                  variant="outlined"
-                  onClick={() =>
-                    handleOpenEditDialog(
-                      categories.find((cat) => cat._id === category)!
-                    )
-                  }
-                >
-                  Edit Category
-                </Button>
-                <Button
-                  variant="outlined"
-                  onClick={() => {
-                    handleDeleteCategory();
-                    setCategory("");
-                  }}
-                >
-                  Delete Category
-                </Button>
-              </div>
-            )}
-          </div>
-        </div>
-        <div>
-          <TextField
-            id="income-description"
-            multiline
-            rows={4}
-            color="primary"
-            label="Description"
-            variant="outlined"
-            type="text"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <TextField
-            id="income-date"
-            variant="outlined"
-            type="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-            required
-          />
-        </div>
-        {error && <p style={{ color: "red" }}>{error}</p>}
-        <Button variant="outlined" type="submit">
-          Add Income
-        </Button>
-      </Box>
+        categories={categories}
+        newCategory={newCategory}
+        newCategoryDescription={newCategoryDescription}
+        setNewCategory={setNewCategory}
+        setNewCategoryDescription={setNewCategoryDescription}
+        handleAddCategory={() =>
+          AddCategory(
+            newCategory,
+            newCategoryDescription,
+            setCategories,
+            setNewCategory,
+            setNewCategoryDescription,
+            setOpen,
+            fetchCategories
+          )
+        }
+        handleEditCategory={() =>
+          EditCategory(
+            editingCategory,
+            newCategory,
+            newCategoryDescription,
+            setCategories,
+            setSnackbarMessage,
+            setSnackbarSeverity,
+            setShowSnackbar,
+            handleCloseEditDialog
+          )
+        }
+        handleOpenEditDialog={handleOpenEditDialog}
+        handleDeleteCategory={async () =>
+          await DeleteCategory(
+            category,
+            category,
+            setCategory,
+            setCategories,
+            setSnackbarMessage,
+            setSnackbarSeverity,
+            setShowSnackbar
+          )
+        }
+        openAddDialog={open}
+        setOpenAddDialog={setOpen}
+        openEditDialog={openEditDialog}
+        setOpenEditDialog={setOpenEditDialog}
+        editingCategory={editingCategory}
+        handleCloseEditDialog={handleCloseEditDialog}
+        open={Boolean(anchorEl)}
+        anchorEl={anchorEl}
+        message={popoverMessage}
+        onClose={() => setAnchorEl(null)}
+      />
 
       {showSnackbar && (
         <SnackbarNotification
@@ -275,67 +209,6 @@ const IncomeForm: React.FC<IncomeFormProps> = ({ initialData }) => {
           severity={snackbarSeverity}
         />
       )}
-
-      <div aria-hidden="false">
-        <Dialog open={open} onClose={() => setOpen(false)}>
-          <DialogTitle>Add New Category</DialogTitle>
-          <DialogContent>
-            <TextField
-              id="new-category"
-              label="Category Name"
-              variant="outlined"
-              value={newCategory}
-              onChange={(e) => setNewCategory(e.target.value)}
-              required
-            />
-            <TextField
-              id="new-category-description"
-              label="Category Description"
-              variant="outlined"
-              value={newCategoryDescription}
-              onChange={(e) => setNewCategoryDescription(e.target.value)}
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button variant="outlined" onClick={() => setOpen(false)}>
-              Cancel
-            </Button>
-            <Button variant="outlined" onClick={handleAddCategory}>
-              Add Category
-            </Button>
-          </DialogActions>
-        </Dialog>
-
-        {/* Диалог для редактирования категории */}
-        <Dialog open={openEditDialog} onClose={handleCloseEditDialog}>
-          <DialogTitle>Edit Category</DialogTitle>
-          <DialogContent>
-            <TextField
-              id="edit-category"
-              label="Category Name"
-              variant="outlined"
-              value={newCategory}
-              onChange={(e) => setNewCategory(e.target.value)}
-              required
-            />
-            <TextField
-              id="edit-category-description"
-              label="Category Description"
-              variant="outlined"
-              value={newCategoryDescription}
-              onChange={(e) => setNewCategoryDescription(e.target.value)}
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button variant="outlined" onClick={handleCloseEditDialog}>
-              Cancel
-            </Button>
-            <Button variant="outlined" onClick={handleEditCategory}>
-              Save Changes
-            </Button>
-          </DialogActions>
-        </Dialog>
-      </div>
     </>
   );
 };

@@ -11,20 +11,10 @@ import {
   DeleteCategory,
 } from "@/app/dashboard/expense/handlers";
 
-import addExpense from "@/app/dashboard/expense/add";
-import { Oval } from "react-loader-spinner";
+import { validateFormsTransactions } from "@/utils/validateForm";
 
-import {
-  Box,
-  TextField,
-  Select,
-  MenuItem,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-} from "@mui/material";
+import addExpense from "@/app/dashboard/expense/add";
+import TransactionForm from "@/components/TransactionForm/TransactionForm";
 
 const ExpenseForm: React.FC<ExpenseFormProps> = ({ initialData }) => {
   const { data: session } = useSession();
@@ -49,6 +39,9 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ initialData }) => {
 
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
   const [openEditDialog, setOpenEditDialog] = useState(false);
+
+  const [popoverMessage, setPopoverMessage] = useState("");
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
   const [showSnackbar, setShowSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
@@ -79,10 +72,23 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ initialData }) => {
         return;
       }
 
-      if (!amount || isNaN(Number(amount))) {
-        setError("Amount must be a valid number.");
+      if (
+        !validateFormsTransactions(
+          amount,
+          description,
+          category,
+          date,
+          setPopoverMessage,
+          setAnchorEl
+        )
+      ) {
         return;
       }
+
+      setLoading(true);
+
+      setPopoverMessage("");
+      setAnchorEl(null);
 
       const parsedAmount = parseFloat(amount as string);
 
@@ -102,54 +108,18 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ initialData }) => {
         setDescription("");
         setCategory("");
         setDate("");
-        setError("");
       } else {
         throw new Error(res.message);
       }
-      setLoading(false);
     } catch (error: any) {
       setError(error.message || "Failed to add expense");
+
       setSnackbarMessage("Failed to add expense");
       setSnackbarSeverity("error");
       setShowSnackbar(true);
+    } finally {
+      setLoading(false);
     }
-  };
-
-  const handleAddCategory = async () => {
-    await AddCategory(
-      newCategory,
-      newCategoryDescription,
-      setCategories,
-      setNewCategory,
-      setNewCategoryDescription,
-      setOpen,
-      fetchCategories
-    );
-  };
-
-  const handleEditCategory = async () => {
-    await EditCategory(
-      editingCategory,
-      newCategory,
-      newCategoryDescription,
-      setCategories,
-      setSnackbarMessage,
-      setSnackbarSeverity,
-      setShowSnackbar,
-      handleCloseEditDialog
-    );
-  };
-
-  const handleDeleteCategory = async () => {
-    await DeleteCategory(
-      category,
-      category,
-      setCategory,
-      setCategories,
-      setSnackbarMessage,
-      setSnackbarSeverity,
-      setShowSnackbar
-    );
   };
 
   const handleOpenEditDialog = (category: Category) => {
@@ -172,110 +142,68 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ initialData }) => {
 
   return (
     <>
-      <Box
-        component="form"
-        sx={{ "& > :not(style)": { m: 2, width: "25ch" } }}
-        noValidate
-        autoComplete="off"
+      <TransactionForm
+        amount={amount}
+        setAmount={setAmount}
+        category={category}
+        setCategory={setCategory}
+        description={description}
+        setDescription={setDescription}
+        date={date}
+        setDate={setDate}
+        loading={loading}
         onSubmit={handleSubmit}
-      >
-        <div>
-          <TextField
-            id="expense-amount"
-            label="Amount"
-            variant="outlined"
-            autoFocus={true}
-            type="number"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <Select
-            id="category"
-            value={category}
-            onChange={(e) => setCategory(e.target.value as string)}
-            required
-            displayEmpty
-          >
-            <MenuItem value="" disabled>
-              Select Category
-            </MenuItem>
-            {categories?.map((category) => (
-              <MenuItem key={category._id} value={category._id}>
-                {category.name}
-              </MenuItem>
-            ))}
-          </Select>
-          <Button variant="outlined" onClick={() => setOpen(true)}>
-            Add New Category
-          </Button>
-          <div>
-            {category && (
-              <div style={{ marginTop: 16 }}>
-                <Button
-                  variant="outlined"
-                  onClick={() =>
-                    handleOpenEditDialog(
-                      categories.find((cat) => cat._id === category)!
-                    )
-                  }
-                >
-                  Edit Category
-                </Button>
-                <Button
-                  variant="outlined"
-                  onClick={() => {
-                    handleDeleteCategory();
-                    setCategory("");
-                  }}
-                >
-                  Delete Category
-                </Button>
-              </div>
-            )}
-          </div>
-        </div>
-
-        <div>
-          <TextField
-            id="expense-description"
-            multiline
-            rows={4}
-            color="primary"
-            label="Description"
-            variant="outlined"
-            type="text"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <TextField
-            id="expense-date"
-            variant="outlined"
-            type="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-            required
-          />
-        </div>
-        {error && <p style={{ color: "red" }}>{error}</p>}
-        <Button variant="outlined" type="submit" disabled={loading}>
-          {loading ? (
-            <Oval
-              height="30"
-              width="30"
-              color="#1727b7"
-              secondaryColor="#6fb5e7"
-            />
-          ) : (
-            "Add Expense"
-          )}
-        </Button>
-      </Box>
+        categories={categories}
+        newCategory={newCategory}
+        newCategoryDescription={newCategoryDescription}
+        setNewCategory={setNewCategory}
+        setNewCategoryDescription={setNewCategoryDescription}
+        handleAddCategory={() =>
+          AddCategory(
+            newCategory,
+            newCategoryDescription,
+            setCategories,
+            setNewCategory,
+            setNewCategoryDescription,
+            setOpen,
+            fetchCategories
+          )
+        }
+        handleEditCategory={() =>
+          EditCategory(
+            editingCategory,
+            newCategory,
+            newCategoryDescription,
+            setCategories,
+            setSnackbarMessage,
+            setSnackbarSeverity,
+            setShowSnackbar,
+            handleCloseEditDialog
+          )
+        }
+        handleOpenEditDialog={handleOpenEditDialog}
+        handleDeleteCategory={async () =>
+          await DeleteCategory(
+            category,
+            category,
+            setCategory,
+            setCategories,
+            setSnackbarMessage,
+            setSnackbarSeverity,
+            setShowSnackbar
+          )
+        }
+        openAddDialog={open}
+        setOpenAddDialog={setOpen}
+        openEditDialog={openEditDialog}
+        setOpenEditDialog={setOpenEditDialog}
+        editingCategory={editingCategory}
+        handleCloseEditDialog={handleCloseEditDialog}
+        open={Boolean(anchorEl)}
+        anchorEl={anchorEl}
+        message={popoverMessage}
+        onClose={() => setAnchorEl(null)}
+      />
 
       {showSnackbar && (
         <SnackbarNotification
@@ -283,66 +211,6 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ initialData }) => {
           severity={snackbarSeverity}
         />
       )}
-
-      <div aria-hidden="false">
-        <Dialog open={open} onClose={() => setOpen(false)}>
-          <DialogTitle>Add New Category</DialogTitle>
-          <DialogContent>
-            <TextField
-              id="new-category"
-              label="Category Name"
-              variant="outlined"
-              value={newCategory}
-              onChange={(e) => setNewCategory(e.target.value)}
-              required
-            />
-            <TextField
-              id="new-category-description"
-              label="Category Description"
-              variant="outlined"
-              value={newCategoryDescription}
-              onChange={(e) => setNewCategoryDescription(e.target.value)}
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button variant="outlined" onClick={() => setOpen(false)}>
-              Cancel
-            </Button>
-            <Button variant="outlined" onClick={handleAddCategory}>
-              Add Category
-            </Button>
-          </DialogActions>
-        </Dialog>
-
-        <Dialog open={openEditDialog} onClose={handleCloseEditDialog}>
-          <DialogTitle>Edit Category</DialogTitle>
-          <DialogContent>
-            <TextField
-              id="edit-category"
-              label="Category Name"
-              variant="outlined"
-              value={newCategory}
-              onChange={(e) => setNewCategory(e.target.value)}
-              required
-            />
-            <TextField
-              id="edit-category-description"
-              label="Category Description"
-              variant="outlined"
-              value={newCategoryDescription}
-              onChange={(e) => setNewCategoryDescription(e.target.value)}
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button variant="outlined" onClick={handleCloseEditDialog}>
-              Cancel
-            </Button>
-            <Button variant="outlined" onClick={handleEditCategory}>
-              Save Changes
-            </Button>
-          </DialogActions>
-        </Dialog>
-      </div>
     </>
   );
 };

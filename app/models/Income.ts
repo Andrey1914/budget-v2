@@ -13,7 +13,6 @@ const incomeSchema = new Schema<IIncome>(
     },
     description: {
       type: String,
-      required: true,
     },
     date: {
       type: Date,
