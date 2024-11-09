@@ -19,20 +19,27 @@ const filterTransactions = async (
     return res.status(401).json({ error: "Unauthorized" });
   }
 
-  const { type, month, page = 1, limit = 10 } = req.query;
-  console.log("Параметры запроса:", { type, month, page, limit });
+  const { type, month, page = 1, limit = 500 } = req.query;
+
+  // console.log("Параметры запроса:", { type, month, page, limit });
 
   const userId = new ObjectId(token.sub);
+
+  console.log(userId);
 
   const client = await clientPromise;
   const db = client.db("budget-v2");
 
-  console.log("Параметр month:", month);
+  // console.log("Параметр month:", month);
 
   const currentYear = new Date().getFullYear();
-  console.log("Исходный параметр month:", month);
+
+  // console.log("Исходный параметр month:", month);
 
   let selectedMonth: number | null = null;
+  let totalIncome = 0;
+  let totalExpense = 0;
+
   if (month) {
     if (month === "all") {
       selectedMonth = null;
@@ -40,7 +47,7 @@ const filterTransactions = async (
       selectedMonth = parseInt(month as string);
     }
   }
-  console.log("Числовое значение month:", selectedMonth);
+  // console.log("Числовое значение month:", selectedMonth);
 
   const startOfMonth = selectedMonth
     ? new Date(Date.UTC(currentYear, selectedMonth - 1, 1, 0, 0, 0))
@@ -49,11 +56,7 @@ const filterTransactions = async (
     ? new Date(Date.UTC(currentYear, selectedMonth, 0, 23, 59, 59))
     : new Date();
 
-  // Пагинация
   const skip = (parseInt(page as string) - 1) * parseInt(limit as string);
-
-  // console.log("Фильтр по месяцам:", { startOfMonth, endOfMonth }); // Для отладки
-
   try {
     let transactions: any = [];
     let totalSum = 0;
@@ -66,16 +69,30 @@ const filterTransactions = async (
         }),
       };
 
-      console.log("Запрос на доходы:", incomeQuery);
+      // console.log("Запрос на доходы:", incomeQuery);
 
-      // Фильтруем доходы
       const incomeTransactions = await db
         .collection("income")
-        .find(incomeQuery)
-
-        .skip(skip)
-        .limit(parseInt(limit as string))
+        .aggregate([
+          { $match: incomeQuery },
+          {
+            $lookup: {
+              from: "income-categories",
+              localField: "category",
+              foreignField: "_id",
+              as: "categoryDetails",
+            },
+          },
+          { $unwind: "$categoryDetails" },
+          { $skip: skip },
+          { $limit: parseInt(limit as string) },
+        ])
         .toArray();
+
+      console.log(
+        "Результаты запроса с aggregate для доходов:",
+        incomeTransactions
+      );
 
       const incomeTotal = await db
         .collection("income")
@@ -85,17 +102,21 @@ const filterTransactions = async (
           { $group: { _id: null, total: { $sum: "$amount" } } },
         ])
         .toArray();
-      console.log(
-        "Итоговая сумма доходов:",
-        incomeTotal.length > 0 ? incomeTotal[0].total : 0
-      );
 
-      console.log("Найденные доходы:", incomeTransactions);
+      // console.log(
+      //   "Итоговая сумма доходов:",
+      //   incomeTotal.length > 0 ? incomeTotal[0].total : 0
+      // );
+
+      // console.log("Найденные доходы:", incomeTransactions);
 
       transactions = transactions.concat(incomeTransactions);
+
       totalSum += incomeTotal.length > 0 ? incomeTotal[0].total : 0;
 
-      console.log("Общая сумма:", totalSum);
+      totalIncome = incomeTotal.length > 0 ? incomeTotal[0].total : 0;
+
+      // console.log("Общая сумма:", totalSum);
     }
 
     if (type === "expense" || type === "both" || !type) {
@@ -106,18 +127,30 @@ const filterTransactions = async (
         }),
       };
 
-      console.log("Запрос на расходы:", expenseQuery);
+      // console.log("Запрос на расходы:", expenseQuery);
 
-      // Фильтруем расходы
       const expenseTransactions = await db
         .collection("expense")
-        .find(expenseQuery)
-
-        .skip(skip)
-        .limit(parseInt(limit as string))
+        .aggregate([
+          { $match: expenseQuery },
+          {
+            $lookup: {
+              from: "expense-categories",
+              localField: "category",
+              foreignField: "_id",
+              as: "categoryDetails",
+            },
+          },
+          { $unwind: "$categoryDetails" },
+          { $skip: skip },
+          { $limit: parseInt(limit as string) },
+        ])
         .toArray();
 
-      console.log("Найденные расходы:", expenseTransactions);
+      // console.log(
+      //   "Результаты запроса с aggregate для расходы:",
+      //   expenseTransactions
+      // );
 
       const expenseTotal = await db
         .collection("expense")
@@ -128,17 +161,20 @@ const filterTransactions = async (
         ])
         .toArray();
 
-      console.log(
-        "Итоговая сумма расходов:",
-        expenseTotal.length > 0 ? expenseTotal[0].total : 0
-      );
+      // console.log(
+      //   "Итоговая сумма расходов:",
+      //   expenseTotal.length > 0 ? expenseTotal[0].total : 0
+      // );
 
       transactions = transactions.concat(expenseTransactions);
 
       totalSum += expenseTotal.length > 0 ? expenseTotal[0].total : 0;
 
-      console.log("Общая сумма:", totalSum);
+      totalExpense = expenseTotal.length > 0 ? expenseTotal[0].total : 0;
+      // console.log("Общая сумма:", totalSum);
     }
+
+    const balance = totalIncome - totalExpense;
 
     transactions.sort(
       (a: any, b: any) =>
@@ -148,6 +184,9 @@ const filterTransactions = async (
     res.status(200).json({
       transactions,
       totalSum,
+      totalIncome,
+      totalExpense,
+      balance,
       currentPage: parseInt(page as string),
       limit: parseInt(limit as string),
     });

@@ -37,8 +37,10 @@ export interface IExpense extends Document {
   _id: Schema.Types.ObjectId;
   userId: Schema.Types.ObjectId;
   amount: number;
+  category: Schema.Types.ObjectId | string;
   description: string;
   date: Date;
+  categoryDetails?: Category;
 }
 
 export interface EditExpenseFormProps {
@@ -69,8 +71,10 @@ export interface IIncome extends Document {
   _id: Schema.Types.ObjectId;
   userId: Schema.Types.ObjectId;
   amount: number;
+  category: Schema.Types.ObjectId | string;
   description: string;
   date: Date;
+  categoryDetails?: Category;
 }
 
 export interface EditIncomeFormProps {

@@ -27,7 +27,7 @@ const ExpensesList: React.FC = () => {
       const loadData = async () => {
         try {
           const expensesData = await fetchExpenses(session);
-
+          console.log("Expenses data fom expense list:", expensesData);
           setExpense(expensesData);
 
           const total = expensesData.reduce(
@@ -59,8 +59,14 @@ const ExpensesList: React.FC = () => {
 
     try {
       const expensesData = await refreshExpenses(session);
-
       setExpense(expensesData);
+
+      const total = expensesData.reduce(
+        (acc: number, item: Expense) => acc + item.amount,
+        0
+      );
+
+      setTotalExpense(total);
     } catch (err) {
       setError((err as Error).message);
     }

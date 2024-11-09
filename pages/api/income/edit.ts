@@ -29,6 +29,9 @@ const editIncome = async (req: NextApiRequest, res: NextApiResponse) => {
       return res.status(400).json({ error: "Amount must be a number" });
     }
 
+    const categoryId =
+      typeof category === "string" ? new ObjectId(category) : category;
+
     try {
       const result = await db.collection("income").updateOne(
         { _id: new ObjectId(id), userId: userId },
@@ -36,7 +39,7 @@ const editIncome = async (req: NextApiRequest, res: NextApiResponse) => {
           $set: {
             amount: parsedAmount,
             description,
-            category,
+            category: categoryId,
             updatedAt: new Date(),
           },
         }

@@ -24,17 +24,21 @@ const addExpense = async (req: NextApiRequest, res: NextApiResponse) => {
       }
 
       const userId = new ObjectId(token);
+      console.log(userId);
 
       const client = await clientPromise;
       const db = client.db("budget-v2");
 
       const expenseDate = new Date(date);
 
+      const categoryId =
+        typeof category === "string" ? new ObjectId(category) : category;
+
       const expense = await db.collection("expense").insertOne({
         userId: userId,
         amount: parseFloat(amount),
         description: description || "",
-        category,
+        category: categoryId,
         date: expenseDate,
         createdAt: new Date(),
       });

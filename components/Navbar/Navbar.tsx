@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Oval } from "react-loader-spinner";
 
-import { Box, Fab } from "@mui/material";
+import { Box, Container, Fab, Typography } from "@mui/material";
 import { Logout, Login, AppRegistration } from "@mui/icons-material";
 import theme from "@/app/styles/theme";
 
@@ -60,23 +60,52 @@ const Navbar: React.FC = () => {
   }
 
   return (
-    <Box
-      component="nav"
-      style={{ display: "flex", flexDirection: "row", gap: "1rem" }}
-    >
-      <Link href="/dashboard/income">Incomes</Link>
-      <Link href="/dashboard/expense">Expenses</Link>
-      <Link href="/dashboard/tasks">Tasks</Link>
-      <Link href="/dashboard/history">History</Link>
-
-      <h3>{session.user.name}</h3>
-      <Fab
-        color="primary"
-        onClick={() => signOut({ callbackUrl: "/auth/login" })}
+    <>
+      <Container
+        component="nav"
+        maxWidth="md"
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
       >
-        <Logout />
-      </Fab>
-    </Box>
+        <Box
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+
+            gap: "1rem",
+          }}
+        >
+          <Link href="/dashboard/income">Incomes</Link>
+          <Link href="/dashboard/expense">Expenses</Link>
+          <Link href="/dashboard/tasks">Tasks</Link>
+          <Link href="/dashboard/history">History</Link>
+          <Link href="/dashboard/analytics">Analytics</Link>
+        </Box>
+        <Box
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+
+            gap: "2rem",
+          }}
+        >
+          <Typography variant="h6" component="p">
+            {session.user.name}
+          </Typography>
+          <Fab
+            color="primary"
+            onClick={() => signOut({ callbackUrl: "/auth/login" })}
+          >
+            <Logout />
+          </Fab>
+        </Box>
+      </Container>
+    </>
   );
 };
 

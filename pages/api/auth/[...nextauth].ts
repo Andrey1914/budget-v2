@@ -32,8 +32,6 @@ export default NextAuth({
           throw new Error("Invalid email or password");
         }
 
-        //--------------Added--------------------
-        //---------------------------------------
         if (!user.isVerified) {
           throw new Error("Email not verified. Please verify your email.");
         }
@@ -63,10 +61,6 @@ export default NextAuth({
         if (!isPasswordValid) {
           throw new Error("Invalid email or password");
         }
-
-        //-------------added-----------------
-
-        //-----------------------------------
 
         return {
           id: user._id.toString(),

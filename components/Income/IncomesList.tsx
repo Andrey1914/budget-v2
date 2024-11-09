@@ -37,7 +37,7 @@ const IncomesList: React.FC = () => {
           );
           setTotalIncome(total);
         } catch (err) {
-          console.error("Error fetching expenses:", err);
+          console.error("Error fetching incomes:", err);
           setError((err as Error).message);
         }
       };
@@ -62,6 +62,13 @@ const IncomesList: React.FC = () => {
       const incomesData = await refreshIncomes(session);
 
       setIncome(incomesData);
+
+      const total = incomesData.reduce(
+        (acc: number, item: Income) => acc + item.amount,
+        0
+      );
+
+      setTotalIncome(total);
     } catch (err) {
       setError((err as Error).message);
     }

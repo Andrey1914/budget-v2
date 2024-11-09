@@ -10,7 +10,7 @@ import { ContainerNavLinks } from "@/components/Header/Header.styled";
 const Header: React.FC = () => {
   return (
     <header style={{ padding: "2rem 0", borderBottom: "1px solid #000" }}>
-      <ContainerNavLinks maxWidth="sm">
+      <ContainerNavLinks maxWidth="lg">
         <Link
           href="/dashboard"
           style={{

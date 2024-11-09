@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-// import { SessionProvider } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import axios from "axios";
@@ -32,7 +31,6 @@ const AddExpense: React.FC = () => {
   };
 
   return (
-    // <SessionProvider>
     <Box component="section">
       <Container maxWidth="sm">
         <div>
@@ -44,7 +42,6 @@ const AddExpense: React.FC = () => {
         <Link href="/dashboard">Back to Dashboard</Link>
       </Container>
     </Box>
-    // </SessionProvider>
   );
 };
 

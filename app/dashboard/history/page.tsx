@@ -9,6 +9,9 @@ import {
   ListItem,
   Paper,
   Typography,
+  Button,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import { ArrowBack } from "@mui/icons-material";
 import Link from "next/link";
@@ -25,6 +28,10 @@ const HistoryPage = () => {
   const [transactions, setTransactions] = useState<IIncome[] | IExpense[]>([]);
   const [totalSum, setTotalSum] = useState<number>(0);
 
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [limit, setLimit] = useState<number>(10);
+  const [totalTransactions, setTotalTransactions] = useState<number>(0);
+
   const isFirstRender = useRef(true);
 
   const handleFilterSubmit = async () => {
@@ -32,10 +39,13 @@ const HistoryPage = () => {
       const data = await fetchTransactions({
         month: selectedMonth,
         type: selectedType,
+        page: currentPage,
+        limit: limit,
       });
 
       setTransactions(data.transactions);
       setTotalSum(data.totalSum);
+      setTotalTransactions(data.transactions.length);
     } catch (error) {
       console.error("Ошибка при загрузке транзакций:", error);
     }
@@ -47,7 +57,14 @@ const HistoryPage = () => {
 
       isFirstRender.current = false;
     }
-  });
+  }, [currentPage, limit, selectedMonth, selectedType]);
+
+  const paginatedTransactions = transactions.slice(
+    (currentPage - 1) * limit,
+    currentPage * limit
+  );
+
+  const totalPages = Math.ceil(totalTransactions / limit);
 
   return (
     <main>
@@ -80,7 +97,7 @@ const HistoryPage = () => {
         </Box>
 
         <List style={{ width: "100%" }}>
-          {transactions.map((transaction) => (
+          {paginatedTransactions.map((transaction) => (
             <ListItem key={transaction._id.toString()}>
               <Paper
                 style={{
@@ -99,6 +116,41 @@ const HistoryPage = () => {
             </ListItem>
           ))}
         </List>
+
+        <Box sx={{ display: "flex", justifyContent: "space-between", mt: 2 }}>
+          <Button
+            variant="contained"
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+          >
+            Назад
+          </Button>
+          <Typography>
+            Страница {currentPage} из {totalPages}
+          </Typography>
+          <Button
+            variant="contained"
+            onClick={() =>
+              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+            }
+            disabled={currentPage === totalPages}
+          >
+            Вперед
+          </Button>
+        </Box>
+
+        <Box sx={{ mt: 2 }}>
+          <label>Записей на страницу: </label>
+          <Select
+            value={limit}
+            onChange={(e) => setLimit(Number(e.target.value))}
+          >
+            <MenuItem value={5}>5</MenuItem>
+            <MenuItem value={10}>10</MenuItem>
+            <MenuItem value={20}>20</MenuItem>
+          </Select>
+        </Box>
+
         <Link href="/dashboard">
           <ArrowBack /> Back to Dashboard
         </Link>

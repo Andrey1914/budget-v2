@@ -1,6 +1,6 @@
 import Brevo from "sib-api-v3-sdk";
 
-const baseUrl = process.env.NEXTAUTH_URL;
+// const baseUrl = process.env.NEXTAUTH_URL;
 
 const sendConfirmationEmail = async (
   email: string,
