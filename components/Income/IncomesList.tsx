@@ -10,7 +10,7 @@ import { Session } from "@/interfaces";
 import EditIncomeForm from "@/components/Income/EditIncomeForm";
 
 import { Delete, Edit } from "@mui/icons-material";
-import { Box, Fab, List, ListItem, Paper, Typography } from "@mui/material";
+import { Box, List, ListItem, Paper, Typography } from "@mui/material";
 
 const IncomesList: React.FC = () => {
   const { data: session, status } = useSession() as {
@@ -79,71 +79,61 @@ const IncomesList: React.FC = () => {
   }
 
   return (
-    <div>
-      <div>
-        {error && <p style={{ color: "red" }}>{error}</p>}
-        <div>
-          <Box>
-            <Typography variant="h2" component="h1">
-              Incomes
-            </Typography>
-            <Typography
-              variant="h4"
-              component="p"
+    <>
+      {error && <p style={{ color: "red" }}>{error}</p>}
+      <Box sx={{ p: 4 }}>
+        <Typography variant="h3" component="h2">
+          Incomes
+        </Typography>
+      </Box>
+      <Box sx={{ p: 3, backgroundColor: "orange", borderRadius: "0.3rem" }}>
+        <Typography
+          variant="h4"
+          component="p"
+          style={{
+            color: "white",
+          }}
+        >
+          Total Incomes for this month: {totalIncome} PLN
+        </Typography>
+      </Box>
+
+      <List
+        style={{
+          width: "100%",
+          display: "flex",
+          flexDirection: "column",
+          gap: 4,
+        }}
+      >
+        {income.map((item: Income) => (
+          <ListItem key={item._id} style={{ padding: 0 }}>
+            <Paper
               style={{
-                padding: "0.8rem",
-                color: "white",
-                backgroundColor: "orange",
-                borderRadius: "0.3rem",
+                padding: 9,
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+                width: "100%",
               }}
             >
-              Total Incomes for this month: {totalIncome} PLN
-            </Typography>
-          </Box>
-          <List style={{ width: "100%" }}>
-            {income.map((item: Income) => (
-              <ListItem key={item._id}>
-                <Paper
-                  style={{
-                    padding: "1rem",
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    width: "100%",
-                  }}
-                >
-                  <p>
-                    {item.amount} - {item.description}
-                  </p>
-                  <div>
-                    <Fab
-                      aria-label="edit"
-                      onClick={() => handleEdit(item._id)}
-                      style={{ marginLeft: "10px" }}
-                    >
-                      <Edit />
-                    </Fab>
-                    <Fab
-                      aria-label="delete"
-                      onClick={() =>
-                        handleDelete(
-                          item._id,
-                          income,
-                          setIncome,
-                          setTotalIncome
-                        )
-                      }
-                      style={{ marginLeft: "10px" }}
-                    >
-                      <Delete />
-                    </Fab>
-                  </div>
-                </Paper>
-              </ListItem>
-            ))}
-          </List>
-        </div>
-      </div>
+              <Typography variant="h6" component="p">
+                {item.amount} - {item.description}
+              </Typography>
+              <Box sx={{ display: "flex", gap: 3 }}>
+                <Edit onClick={() => handleEdit(item._id)} />
+
+                <Delete
+                  onClick={() =>
+                    handleDelete(item._id, income, setIncome, setTotalIncome)
+                  }
+                />
+              </Box>
+            </Paper>
+          </ListItem>
+        ))}
+      </List>
 
       {editingIncomeId && (
         <EditIncomeForm
@@ -152,7 +142,7 @@ const IncomesList: React.FC = () => {
           onClose={() => setEditingIncomeId(null)}
         />
       )}
-    </div>
+    </>
   );
 };
 

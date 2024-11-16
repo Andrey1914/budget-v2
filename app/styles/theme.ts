@@ -30,7 +30,7 @@ const theme = createTheme({
   //     width: "width 0.3s ease-in-out",
   //   },
 
-  spacing: [0, 4, 8, 16, 32, 64, 128, 256, 300],
+  spacing: [0, 4, 8, 16, 24, 32, 64, 128, 190, 256, 300],
   breakpoints: {
     values: {
       xs: 0,

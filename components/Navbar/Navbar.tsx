@@ -1,25 +1,42 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Oval } from "react-loader-spinner";
 
-import { Box, Container, Fab, Typography } from "@mui/material";
-import { Logout, Login, AppRegistration } from "@mui/icons-material";
+import {
+  Box,
+  Container,
+  Fab,
+  Typography,
+  IconButton,
+  Drawer,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  useMediaQuery,
+} from "@mui/material";
+import {
+  Menu,
+  Logout,
+  Login,
+  AppRegistration,
+  Home,
+} from "@mui/icons-material";
 import theme from "@/app/styles/theme";
 
 const Navbar: React.FC = () => {
   const { data: session, status } = useSession();
   const router = useRouter();
 
-  console.log("Session:", session);
-  console.log("Status:", status);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   useEffect(() => {
     if (status === "unauthenticated") {
-      // router.push("/auth/login");
       router.push("/landing");
     }
   }, [status, router]);
@@ -42,23 +59,84 @@ const Navbar: React.FC = () => {
       />
     );
 
-  if (!session || !session.user.isVerified) {
-    return (
-      <Box
-        component="nav"
-        style={{ display: "flex", flexDirection: "row", gap: "2rem" }}
+  const links = [
+    { href: "/landing", icon: <Home /> },
+    { href: "/dashboard", label: "Dashboard" },
+    { href: "/dashboard/income", label: "Incomes" },
+    { href: "/dashboard/expense", label: "Expenses" },
+    { href: "/dashboard/tasks", label: "Tasks" },
+    { href: "/dashboard/history", label: "History" },
+    { href: "/dashboard/analytics", label: "Analytics" },
+    { href: "/dashboard/reviews", label: "Reviews" },
+  ];
+
+  const renderLinks = () =>
+    links.map((link) => (
+      <Link
+        key={link.href}
+        href={link.href}
+        style={{
+          textDecoration: "none",
+          color: "inherit",
+        }}
       >
-        <Link href="/auth/login" style={{ display: "flex", gap: "0.5rem" }}>
-          <Login />
-          Login
-        </Link>
-        <Link href="/auth/register" style={{ display: "flex", gap: "0.5rem" }}>
-          <AppRegistration />
-          Registration
-        </Link>
-      </Box>
-    );
-  }
+        <ListItem>
+          {link.icon && <ListItemIcon>{link.icon}</ListItemIcon>}
+          <ListItemText primary={link.label} />
+        </ListItem>
+      </Link>
+    ));
+
+  const renderAuthLinks = () => (
+    <>
+      <Link
+        href="/landing"
+        style={{
+          textDecoration: "none",
+          color: "inherit",
+        }}
+      >
+        <ListItem>
+          <ListItemIcon>
+            <Home />
+          </ListItemIcon>
+          <ListItemText primary="Home" />
+        </ListItem>
+      </Link>
+      <Link
+        href="/auth/login"
+        style={{
+          textDecoration: "none",
+          color: "inherit",
+        }}
+      >
+        <ListItem>
+          <ListItemIcon>
+            <Login />
+          </ListItemIcon>
+          <ListItemText primary="Login" />
+        </ListItem>
+      </Link>
+      <Link
+        href="/auth/register"
+        style={{
+          textDecoration: "none",
+          color: "inherit",
+        }}
+      >
+        <ListItem>
+          <ListItemIcon>
+            <AppRegistration />
+          </ListItemIcon>
+          <ListItemText primary="Registration" />
+        </ListItem>
+      </Link>
+    </>
+  );
+
+  const handleDrawerToggle = () => {
+    setDrawerOpen(!drawerOpen);
+  };
 
   return (
     <>
@@ -71,43 +149,104 @@ const Navbar: React.FC = () => {
           alignItems: "center",
         }}
       >
-        <Box
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-
-            gap: "1rem",
-          }}
-        >
-          <Link href="/landing">Home</Link>
-          <Link href="/dashboard">Dashboard</Link>
-          <Link href="/dashboard/income">Incomes</Link>
-          <Link href="/dashboard/expense">Expenses</Link>
-          <Link href="/dashboard/tasks">Tasks</Link>
-          <Link href="/dashboard/history">History</Link>
-          <Link href="/dashboard/analytics">Analytics</Link>
-          <Link href="/dashboard/reviews">Reviews</Link>
-        </Box>
-        <Box
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-
-            gap: "2rem",
-          }}
-        >
-          <Typography variant="h6" component="p">
-            {session.user.name}
-          </Typography>
-          <Fab
-            color="primary"
-            onClick={() => signOut({ callbackUrl: "/auth/login" })}
+        {isMobile ? (
+          <>
+            <IconButton
+              color="inherit"
+              aria-label="menu"
+              onClick={handleDrawerToggle}
+            >
+              <Menu />
+            </IconButton>
+            <Drawer
+              anchor="left"
+              open={drawerOpen}
+              onClose={handleDrawerToggle}
+            >
+              <Box
+                sx={{
+                  width: 250,
+                  padding: "1rem",
+                }}
+                role="presentation"
+                onClick={handleDrawerToggle}
+              >
+                {session && session.user.isVerified ? (
+                  <>
+                    <Typography
+                      variant="h6"
+                      component="p"
+                      style={{ marginBottom: "1rem" }}
+                    >
+                      {session.user.name}
+                    </Typography>
+                    <List>{renderLinks()}</List>
+                    <List>
+                      <ListItem
+                        onClick={() => signOut({ callbackUrl: "/landing" })}
+                      >
+                        <ListItemIcon>
+                          <Logout />
+                        </ListItemIcon>
+                        <ListItemText primary="Logout" />
+                      </ListItem>
+                    </List>
+                  </>
+                ) : (
+                  <List>{renderAuthLinks()}</List>
+                )}
+              </Box>
+            </Drawer>
+          </>
+        ) : (
+          <Box
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              gap: "1rem",
+            }}
           >
-            <Logout />
-          </Fab>
-        </Box>
+            {session && session.user.isVerified ? (
+              <>
+                <Typography
+                  variant="h6"
+                  component="p"
+                  style={{ marginRight: "2rem" }}
+                >
+                  {session.user.name}
+                </Typography>
+                {links.map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    style={{
+                      textDecoration: "none",
+                      color: "inherit",
+                    }}
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+                <Fab
+                  color="primary"
+                  onClick={() => signOut({ callbackUrl: "/landing" })}
+                >
+                  <Logout />
+                </Fab>
+              </>
+            ) : (
+              <>
+                <Link href="/auth/login" style={{ textDecoration: "none" }}>
+                  Login
+                </Link>
+                <Link href="/auth/register" style={{ textDecoration: "none" }}>
+                  Register
+                </Link>
+              </>
+            )}
+          </Box>
+        )}
       </Container>
     </>
   );

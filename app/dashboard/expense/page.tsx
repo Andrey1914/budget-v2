@@ -2,7 +2,6 @@
 
 import React from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import axios from "axios";
 import ExpenseForm from "@/components/Expense/ExpenseForm";
 
@@ -39,7 +38,6 @@ const AddExpense: React.FC = () => {
           </Typography>
           <ExpenseForm onSubmit={handleSubmit} />
         </div>
-        <Link href="/dashboard">Back to Dashboard</Link>
       </Container>
     </Box>
   );

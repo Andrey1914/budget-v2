@@ -4,7 +4,7 @@ import ExpensesList from "@/components/Expense/ExpensesList";
 import IncomesList from "@/components/Income/IncomesList";
 import TasksList from "@/components/Tasks/TasksList";
 
-import { Box, Container } from "@mui/material";
+import { Box, Container, Typography } from "@mui/material";
 import { useSession } from "next-auth/react";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -35,13 +35,15 @@ const Dashboard: React.FC = () => {
 
   return (
     <main>
-      <Container maxWidth="sm">
-        <h1>Welcome to Finance App, {session.user.name}</h1>
+      <Box sx={{ p: 4 }}>
+        <Typography variant="h4" component="h1">
+          Welcome to Finance App, {session.user.name}
+        </Typography>
 
         <IncomesList />
         <ExpensesList />
         <TasksList />
-      </Container>
+      </Box>
     </main>
   );
 };

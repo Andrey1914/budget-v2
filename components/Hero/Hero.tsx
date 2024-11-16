@@ -1,63 +1,50 @@
 "use client";
 
 import React from "react";
-import { Container, Typography, Button, Box } from "@mui/material";
-import Link from "next/link";
-import hero from "../../public/finance-background.png";
+import { useRouter } from "next/navigation";
+
+import { Button } from "@mui/material";
+import {
+  HeroSection,
+  HeroContainer,
+  HeroTitle,
+  HeroBackdrop,
+  HeroSubTitle,
+} from "@/components/Hero/Hero.styled";
 
 const Hero: React.FC = () => {
+  const router = useRouter();
+
+  const handleNavigation = () => {
+    router.push("/auth/register");
+  };
+
   return (
-    <Box
-      component="section"
-      style={{
-        backgroundImage: `url(${hero.src})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        height: "75vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        color: "white",
-        textAlign: "center",
-        padding: "2rem",
-      }}
-    >
-      <Container style={{ position: "relative", top: "190px" }}>
-        <Box
+    <HeroSection>
+      <HeroContainer>
+        <HeroBackdrop
           sx={{
-            padding: "2rem",
-            backdropFilter: "blur(10px)",
-            backgroundColor: "rgba(0, 0, 0, 0.3)",
             boxShadow: 3,
           }}
         >
-          <Typography
-            variant="h2"
-            component="h1"
-            style={{
-              fontWeight: "bold",
-              marginBottom: "1rem",
-              color: "#eaeaea",
-            }}
-          >
+          <HeroTitle variant="h1">
             Manage your finances easily and simply!
-          </Typography>
-          <Typography
-            variant="h4"
-            component="h2"
-            style={{ marginBottom: "2rem", color: "#e2e2e2" }}
-          >
+          </HeroTitle>
+          <HeroSubTitle variant="h2">
             Use our app to track your incomes and expenses. An easy way to
             control your budget.
-          </Typography>
-          <Link href="/auth/register" passHref>
-            <Button variant="contained" size="large" color="primary">
-              Get Started
-            </Button>
-          </Link>
-        </Box>
-      </Container>
-    </Box>
+          </HeroSubTitle>
+          <Button
+            variant="contained"
+            size="large"
+            color="primary"
+            onClick={handleNavigation}
+          >
+            Get Started
+          </Button>
+        </HeroBackdrop>
+      </HeroContainer>
+    </HeroSection>
   );
 };
 

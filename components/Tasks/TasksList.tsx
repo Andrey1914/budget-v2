@@ -13,6 +13,7 @@ import { Session } from "@/interfaces";
 
 import { Delete, Edit } from "@mui/icons-material";
 import {
+  Box,
   Fab,
   List,
   ListItem,
@@ -110,82 +111,69 @@ const TasksList: React.FC = () => {
   }
 
   return (
-    <div>
-      <div>
-        {error && <p style={{ color: "red" }}>{error}</p>}
-        <div>
-          <Typography variant="h2" component="h1">
-            Tasks
+    <>
+      {error && <p style={{ color: "red" }}>{error}</p>}
+      <Box sx={{ p: 4 }}>
+        <Typography variant="h3" component="h2">
+          Tasks
+        </Typography>
+      </Box>
+
+      <Box sx={{ p: 3, backgroundColor: "orange", borderRadius: "0.3rem" }}>
+        {unresolvedTasksCount > 0 && (
+          <Typography
+            variant="h4"
+            component="p"
+            style={{
+              color: "white",
+            }}
+          >
+            You have {unresolvedTasksCount} unresolved tasks!
           </Typography>
+        )}
+      </Box>
 
-          {unresolvedTasksCount > 0 && (
-            <Typography
-              variant="h4"
-              component="p"
-              style={{
-                padding: "0.8rem",
-                color: "white",
-                backgroundColor: "orange",
-                borderRadius: "0.3rem",
-              }}
-            >
-              You have {unresolvedTasksCount} unresolved tasks!
-            </Typography>
-          )}
+      <List
+        style={{
+          width: "100%",
+          display: "flex",
+          flexDirection: "column",
+          gap: 4,
+        }}
+      >
+        {Array.isArray(tasks) &&
+          tasks.map((item: Task) => (
+            <ListItem key={item._id} style={{ padding: 0 }}>
+              <Paper
+                style={{
+                  padding: 9,
+                  display: "flex",
+                  alignItems: "center",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  width: "100%",
+                }}
+              >
+                <Checkbox
+                  checked={Boolean(item.completed)}
+                  onChange={() =>
+                    handleCheckboxChange(item._id, item.completed)
+                  }
+                />
+                <Typography variant="h6" component="p">
+                  {item.title} - {item.content}
+                </Typography>
 
-          <List style={{ width: "100%" }}>
-            {Array.isArray(tasks) &&
-              tasks.map((item: Task) => (
-                <ListItem key={item._id}>
-                  <Paper
-                    style={{
-                      padding: "1rem",
-                      display: "flex",
-                      flexDirection: "row",
-                      justifyContent: "space-between",
-                      width: "100%",
-                    }}
-                  >
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        alignItems: "baseline",
-                        width: "70%",
-                      }}
-                    >
-                      <Checkbox
-                        checked={Boolean(item.completed)}
-                        onChange={() =>
-                          handleCheckboxChange(item._id, item.completed)
-                        }
-                      />
-                      <p>
-                        {item.title} - {item.content}
-                      </p>
-                    </div>
-                    <div>
-                      <Fab
-                        aria-label="edit"
-                        onClick={() => handleEdit(item._id)}
-                        style={{ marginLeft: "10px" }}
-                      >
-                        <Edit />
-                      </Fab>
-                      <Fab
-                        aria-label="delete"
-                        onClick={() => handleDelete(item._id)}
-                        style={{ marginLeft: "10px" }}
-                      >
-                        <Delete />
-                      </Fab>
-                    </div>
-                  </Paper>
-                </ListItem>
-              ))}
-          </List>
-        </div>
-      </div>
+                <Box sx={{ display: "flex", gap: 3 }}>
+                  <Edit onClick={() => handleEdit(item._id)} />
+
+                  <Delete onClick={() => handleDelete(item._id)} />
+                </Box>
+              </Paper>
+            </ListItem>
+          ))}
+      </List>
+
       {editingTaskId && (
         <EditTaskForm
           taskId={editingTaskId}
@@ -193,7 +181,7 @@ const TasksList: React.FC = () => {
           onClose={() => setEditingTaskId(null)}
         />
       )}
-    </div>
+    </>
   );
 };
 

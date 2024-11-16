@@ -10,7 +10,7 @@ import { Session } from "@/interfaces";
 import EditExpenseForm from "@/components/Expense/EditExpenseForm";
 
 import { Delete, Edit } from "@mui/icons-material";
-import { Box, Fab, List, ListItem, Paper, Typography } from "@mui/material";
+import { Box, List, ListItem, Paper, Typography } from "@mui/material";
 
 const ExpensesList: React.FC = () => {
   const { data: session, status } = useSession() as {
@@ -77,71 +77,61 @@ const ExpensesList: React.FC = () => {
   }
 
   return (
-    <div>
-      <div>
-        {error && <p style={{ color: "red" }}>{error}</p>}
-        <div>
-          <Box>
-            <Typography variant="h2" component="h1">
-              Expenses
-            </Typography>
-            <Typography
-              variant="h4"
-              component="p"
+    <>
+      {error && <p style={{ color: "red" }}>{error}</p>}
+      <Box sx={{ p: 4 }}>
+        <Typography variant="h3" component="h2">
+          Expenses
+        </Typography>
+      </Box>
+      <Box sx={{ p: 3, backgroundColor: "orange", borderRadius: "0.3rem" }}>
+        <Typography
+          variant="h4"
+          component="p"
+          style={{
+            color: "white",
+          }}
+        >
+          Total Expenses for this month: {totalExpense} PLN
+        </Typography>
+      </Box>
+
+      <List
+        style={{
+          width: "100%",
+          display: "flex",
+          flexDirection: "column",
+          gap: 4,
+        }}
+      >
+        {expense.map((item: Expense) => (
+          <ListItem key={item._id} style={{ padding: 0 }}>
+            <Paper
               style={{
-                padding: "0.8rem",
-                color: "white",
-                backgroundColor: "orange",
-                borderRadius: "0.3rem",
+                padding: 9,
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+                width: "100%",
               }}
             >
-              Total Expenses for this month: {totalExpense} PLN
-            </Typography>{" "}
-          </Box>
-          <List style={{ width: "100%" }}>
-            {expense.map((item: Expense) => (
-              <ListItem key={item._id}>
-                <Paper
-                  style={{
-                    padding: "1rem",
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    width: "100%",
-                  }}
-                >
-                  <p>
-                    {item.amount} - {item.description}
-                  </p>
-                  <div>
-                    <Fab
-                      aria-label="edit"
-                      onClick={() => handleEdit(item._id)}
-                      style={{ marginLeft: "10px" }}
-                    >
-                      <Edit />
-                    </Fab>
-                    <Fab
-                      aria-label="delete"
-                      onClick={() =>
-                        handleDelete(
-                          item._id,
-                          expense,
-                          setExpense,
-                          setTotalExpense
-                        )
-                      }
-                      style={{ marginLeft: "10px" }}
-                    >
-                      <Delete />
-                    </Fab>
-                  </div>
-                </Paper>
-              </ListItem>
-            ))}
-          </List>
-        </div>
-      </div>
+              <Typography variant="h6" component="p">
+                {item.amount} - {item.description}
+              </Typography>
+              <Box sx={{ display: "flex", gap: 3 }}>
+                <Edit onClick={() => handleEdit(item._id)} />
+
+                <Delete
+                  onClick={() =>
+                    handleDelete(item._id, expense, setExpense, setTotalExpense)
+                  }
+                />
+              </Box>
+            </Paper>
+          </ListItem>
+        ))}
+      </List>
       {editingExpenseId && (
         <EditExpenseForm
           expenseId={editingExpenseId}
@@ -149,7 +139,7 @@ const ExpensesList: React.FC = () => {
           onClose={() => setEditingExpenseId(null)}
         />
       )}
-    </div>
+    </>
   );
 };
 

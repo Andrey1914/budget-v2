@@ -3,12 +3,9 @@
 import React from "react";
 import { useRouter } from "next/navigation";
 
-import Link from "next/link";
-
 import TaskForm from "@/components/Tasks/TasksForm";
 import { addTask } from "@/app/dashboard/tasks/add";
 
-import { ArrowBack } from "@mui/icons-material";
 import { Box, Container, Typography } from "@mui/material";
 
 const AddTask: React.FC = () => {
@@ -33,9 +30,6 @@ const AddTask: React.FC = () => {
           </Typography>
           <TaskForm onSubmit={handleSubmit} />
         </div>
-        <Link href="/dashboard">
-          <ArrowBack /> Back to Dashboard
-        </Link>
       </Container>
     </Box>
   );

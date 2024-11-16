@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
-import Link from "next/link";
 import { useSession } from "next-auth/react";
 
 import { Session, IExpense, IIncome } from "@/interfaces";
@@ -12,8 +11,7 @@ import BalanceComparison from "@/components/BalanceComparison/BalanceComparison"
 import CategoryChart from "@/components/Analytics/Analytics";
 import FilterPanel from "@/components/FilterPanel/FilterPanel";
 
-import { ArrowBack } from "@mui/icons-material";
-import { Box, Container, Typography } from "@mui/material";
+import { Box, Container } from "@mui/material";
 
 const AnalyticsPage: React.FC = () => {
   const { data: session } = useSession();
@@ -87,9 +85,6 @@ const AnalyticsPage: React.FC = () => {
           <div>
             <p>Total sum: {totalSum}</p>
           </div>
-          <Link href="/dashboard">
-            <ArrowBack /> Back to Dashboard
-          </Link>
         </Container>
       </Box>
     </>

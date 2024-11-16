@@ -13,8 +13,6 @@ import {
   Select,
   MenuItem,
 } from "@mui/material";
-import { ArrowBack } from "@mui/icons-material";
-import Link from "next/link";
 
 import FilterPanel from "@/components/FilterPanel/FilterPanel";
 import { fetchTransactions } from "@/app/dashboard/history/get";
@@ -150,10 +148,6 @@ const HistoryPage = () => {
             <MenuItem value={20}>20</MenuItem>
           </Select>
         </Box>
-
-        <Link href="/dashboard">
-          <ArrowBack /> Back to Dashboard
-        </Link>
       </Container>
     </main>
   );
