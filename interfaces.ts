@@ -140,3 +140,12 @@ export interface Transaction {
   amount: number;
   type: "income" | "expense";
 }
+
+export interface IReview extends Document {
+  _id: Schema.Types.ObjectId;
+  userId: Schema.Types.ObjectId;
+  username: string;
+  rating: number;
+  text: string;
+  createdAt: Date;
+}

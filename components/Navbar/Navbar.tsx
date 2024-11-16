@@ -19,7 +19,8 @@ const Navbar: React.FC = () => {
 
   useEffect(() => {
     if (status === "unauthenticated") {
-      router.push("/auth/login");
+      // router.push("/auth/login");
+      router.push("/landing");
     }
   }, [status, router]);
 
@@ -79,11 +80,14 @@ const Navbar: React.FC = () => {
             gap: "1rem",
           }}
         >
+          <Link href="/landing">Home</Link>
+          <Link href="/dashboard">Dashboard</Link>
           <Link href="/dashboard/income">Incomes</Link>
           <Link href="/dashboard/expense">Expenses</Link>
           <Link href="/dashboard/tasks">Tasks</Link>
           <Link href="/dashboard/history">History</Link>
           <Link href="/dashboard/analytics">Analytics</Link>
+          <Link href="/dashboard/reviews">Reviews</Link>
         </Box>
         <Box
           style={{

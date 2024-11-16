@@ -84,6 +84,7 @@ export default NextAuth({
       if (user) {
         token.id = user.id;
         token.token = user.token;
+        token.name = user.name;
         token.isVerified = user.isVerified;
       }
       return token;
@@ -92,6 +93,7 @@ export default NextAuth({
       if (session?.user) {
         session.user.id = token.id as string;
         session.user.token = token.token as string;
+        session.user.name = token.name as string;
         session.user.isVerified = token.isVerified as boolean;
       }
       return session;
