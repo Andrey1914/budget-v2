@@ -16,6 +16,7 @@ import { MainContainer } from "@/app/styles/Container";
 import Hero from "@/components/Hero/Hero";
 import Advantages from "@/components/Advantages/Advantages";
 import ReviewsCarousel from "@/components/ReviewsCarousel/ReviewsCarousel";
+import FAQ from "@/components/faq/FAQ";
 
 const Landing: React.FC = () => {
   const { data: session, status } = useSession();
@@ -65,10 +66,10 @@ const Landing: React.FC = () => {
       <Box>
         <Box sx={{ p: 4 }}>
           <Typography variant="h4" gutterBottom>
-            Добро пожаловать в наше приложение!
+            We hope you enjoy our app!
           </Typography>
           <Typography variant="body1" gutterBottom>
-            Оставьте свой отзыв и помогите нам стать лучше!
+            Leave your feedback and help us become better!{" "}
           </Typography>
         </Box>
 
@@ -93,7 +94,7 @@ const Landing: React.FC = () => {
               color="primary"
               onClick={handleReviewClick}
             >
-              Оставить отзыв
+              send feedback
             </Button>
 
             <Link href="reviews">all reviews</Link>
@@ -104,7 +105,10 @@ const Landing: React.FC = () => {
       {/* FAQ */}
       <Box sx={{ p: 4 }}>
         <Typography variant="h5">FAQ</Typography>
-        <Typography>Часто задаваемые вопросы</Typography>
+        {/* <Typography variant="body1">Часто задаваемые вопросы</Typography> */}
+        <Box sx={{ pt: 4 }}>
+          <FAQ />
+        </Box>
       </Box>
 
       {/* Призыв к действию */}
