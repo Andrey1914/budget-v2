@@ -7,7 +7,7 @@ import { getIncomes } from "@/app/dashboard/income/get";
 import { refreshIncomes } from "@/app/dashboard/income/refresh";
 import { Income } from "@/types";
 import { Session } from "@/interfaces";
-import EditIncomeForm from "@/components/Income/1EditIncomeForm";
+import EditIncomeForm from "@/components/Income/EditIncomeForm";
 
 import { Delete, Edit } from "@mui/icons-material";
 import { Box, List, ListItem, Paper, Typography } from "@mui/material";
