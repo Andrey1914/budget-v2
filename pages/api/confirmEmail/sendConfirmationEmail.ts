@@ -9,6 +9,8 @@ const sendConfirmationEmail = async (
   const client = Brevo.ApiClient.instance;
   const apiKey = client.authentications["api-key"];
   apiKey.apiKey = process.env.BREVO_API_KEY!;
+  const SENDER_EMAIL = process.env.BREEVO_SENDER_EMAIL;
+  const SENDER_NAME = process.env.BREEVO_SENDER_NAME;
 
   const emailApi = new Brevo.TransactionalEmailsApi();
 
@@ -16,7 +18,7 @@ const sendConfirmationEmail = async (
 
   const sendSmtpEmail = {
     to: [{ email }],
-    sender: { email: "anlikajw@gmail.com", name: "Andrei" },
+    sender: { email: SENDER_EMAIL, name: SENDER_NAME },
     subject: "Подтвердите вашу почту",
     htmlContent: `
       <p>Ваш код подтверждения: <strong>${verificationCode}</strong></p>
