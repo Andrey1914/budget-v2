@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { IIncome, IExpense } from "@/interfaces";
 import {
   Container,
@@ -32,7 +32,7 @@ const HistoryPage = () => {
 
   const isFirstRender = useRef(true);
 
-  const handleFilterSubmit = async () => {
+  const handleFilterSubmit = useCallback(async () => {
     try {
       const data = await fetchTransactions({
         month: selectedMonth,
@@ -47,7 +47,7 @@ const HistoryPage = () => {
     } catch (error) {
       console.error("Ошибка при загрузке транзакций:", error);
     }
-  };
+  }, [selectedMonth, selectedType, currentPage, limit]);
 
   useEffect(() => {
     if (isFirstRender.current) {
@@ -55,7 +55,7 @@ const HistoryPage = () => {
 
       isFirstRender.current = false;
     }
-  }, [currentPage, limit, selectedMonth, selectedType]);
+  }, [handleFilterSubmit]);
 
   const paginatedTransactions = transactions.slice(
     (currentPage - 1) * limit,
