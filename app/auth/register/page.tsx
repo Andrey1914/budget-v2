@@ -61,7 +61,8 @@ const Register: React.FC = () => {
   return (
     <Box component="section">
       <Container maxWidth="sm">
-        <h1>Register</h1>
+        <h1>Registration</h1>
+        <p>The verification code will be sent to your email!</p>
         {error && <p style={{ color: "red" }}>{error}</p>}
         <form onSubmit={handleSubmit}>
           <Box mb={2}>
