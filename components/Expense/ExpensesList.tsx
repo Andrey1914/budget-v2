@@ -7,7 +7,8 @@ import { fetchExpenses } from "@/app/dashboard/expense/get";
 import { refreshExpenses } from "@/app/dashboard/expense/refresh";
 import { Expense } from "@/types";
 import { Session } from "@/interfaces";
-import EditExpenseForm from "@/components/Expense/EditExpenseForm";
+// import EditExpenseForm from "@/components/Expense/EditExpenseForm";
+import EditExpenseForm from "./EditExpenseForm";
 
 import { Delete, Edit } from "@mui/icons-material";
 import { Box, List, ListItem, Paper, Typography } from "@mui/material";
