@@ -21,6 +21,8 @@ const login = async (req: NextApiRequest, res: NextApiResponse) => {
       return res.status(401).json({ error: "Invalid email or password" });
     }
 
+    console.log("Результат bcrypt.compare:", isPasswordValid);
+
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET!, {
       expiresIn: "1h",
     });

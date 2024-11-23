@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import SnackbarNotification from "@/components/Notification/Snackbar";
 import { Oval } from "react-loader-spinner";
 
@@ -34,6 +35,8 @@ const Login: React.FC = () => {
         email,
         password,
       });
+
+      console.log(res);
 
       if (res?.error) {
         setError(res.error);
@@ -108,6 +111,9 @@ const Login: React.FC = () => {
             )}
           </Button>
         </form>
+        <Box sx={{ p: 4, textAlign: "center" }}>
+          <Link href="/auth/reset-password">Забыли пароль?</Link>
+        </Box>
 
         {showSnackbar && (
           <SnackbarNotification
