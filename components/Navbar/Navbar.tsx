@@ -238,10 +238,10 @@ const Navbar: React.FC = () => {
             ) : (
               <>
                 <Link href="/auth/login" style={{ textDecoration: "none" }}>
-                  Login
+                  Sign In
                 </Link>
                 <Link href="/auth/register" style={{ textDecoration: "none" }}>
-                  Register
+                  Sign Up
                 </Link>
               </>
             )}

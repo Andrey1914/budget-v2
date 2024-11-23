@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { validateFormLogin } from "@/utils/validators/validateFormLogin";
 import SnackbarNotification from "@/components/Notification/Snackbar";
 import { Oval } from "react-loader-spinner";
 
@@ -28,6 +29,23 @@ const Login: React.FC = () => {
     setLoading(true);
 
     setError("");
+
+    const isFormValid = validateFormLogin(
+      email,
+      password,
+      setSnackbarMessage,
+      (element) => {
+        setShowSnackbar(true);
+        if (element)
+          element.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    );
+
+    if (!isFormValid) {
+      setSnackbarSeverity("error");
+      setLoading(false);
+      return;
+    }
 
     try {
       const res = await signIn("credentials", {

@@ -11,7 +11,7 @@ import {
   DeleteCategory,
 } from "@/app/dashboard/expense/handlers";
 
-import { validateFormsTransactions } from "@/utils/validateForm";
+import { validateFormsTransactions } from "@/utils/validators/validateFormTransactions";
 
 import addExpense from "@/app/dashboard/expense/add";
 import TransactionForm from "@/components/TransactionForm/TransactionForm";

@@ -11,7 +11,7 @@ import {
   DeleteCategory,
 } from "@/app/dashboard/income/handlers";
 
-import { validateFormsTransactions } from "@/utils/validateForm";
+import { validateFormsTransactions } from "@/utils/validators/validateFormTransactions";
 
 import addIncome from "@/app/dashboard/income/add";
 import TransactionForm from "@/components/TransactionForm/TransactionForm";
