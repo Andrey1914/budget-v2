@@ -8,12 +8,7 @@ export const validateFormChangePassword = (
   setAnchorEl: (element: HTMLElement | null) => void
 ): boolean => {
   if (
-    !validateFieldPassword(
-      newPassword,
-      setPopoverMessage,
-      setAnchorEl,
-      "newPassword"
-    ) ||
+    !validateFieldPassword(newPassword, setPopoverMessage, setAnchorEl) ||
     !validateFieldPasswordsMatch(
       newPassword,
       confirmPassword,
