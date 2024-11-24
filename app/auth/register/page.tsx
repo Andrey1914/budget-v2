@@ -18,7 +18,11 @@ import {
   Container,
   Popover,
   Typography,
+  IconButton,
+  InputAdornment,
 } from "@mui/material";
+
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 const Register: React.FC = () => {
   const router = useRouter();
@@ -28,6 +32,7 @@ const Register: React.FC = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const [showSnackbar, setShowSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
@@ -37,6 +42,10 @@ const Register: React.FC = () => {
 
   const [popoverMessage, setPopoverMessage] = useState("");
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+
+  const handleTogglePasswordVisibility = () => {
+    setShowPassword((prev) => !prev);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -135,7 +144,7 @@ const Register: React.FC = () => {
             <TextField
               id="password"
               label="Password"
-              type="password"
+              type={showPassword ? "text" : "password"}
               variant="outlined"
               fullWidth
               value={password}
@@ -144,6 +153,21 @@ const Register: React.FC = () => {
                 validateFieldPassword(password, setPopoverMessage, setAnchorEl)
               }
               required
+              slotProps={{
+                input: {
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        onClick={handleTogglePasswordVisibility}
+                        edge="end"
+                        aria-label="toggle password visibility"
+                      >
+                        {showPassword ? <Visibility /> : <VisibilityOff />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                },
+              }}
             />
           </Box>
           <Button

@@ -20,7 +20,11 @@ import {
   Container,
   Popover,
   Typography,
+  IconButton,
+  InputAdornment,
 } from "@mui/material";
+
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 const ResetPasswordPage: React.FC = () => {
   const router = useRouter();
@@ -28,6 +32,7 @@ const ResetPasswordPage: React.FC = () => {
   const [email, setEmail] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -40,6 +45,10 @@ const ResetPasswordPage: React.FC = () => {
 
   const [popoverMessage, setPopoverMessage] = useState("");
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+
+  const handleTogglePasswordVisibility = () => {
+    setShowPassword((prev) => !prev);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -138,7 +147,7 @@ const ResetPasswordPage: React.FC = () => {
             <TextField
               id="password"
               label="New password"
-              type="password"
+              type={showPassword ? "text" : "password"}
               variant="outlined"
               fullWidth
               value={newPassword}
@@ -151,13 +160,28 @@ const ResetPasswordPage: React.FC = () => {
                 )
               }
               required
+              slotProps={{
+                input: {
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        onClick={handleTogglePasswordVisibility}
+                        edge="end"
+                        aria-label="toggle password visibility"
+                      >
+                        {showPassword ? <Visibility /> : <VisibilityOff />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                },
+              }}
             />
           </Box>
           <Box mb={2}>
             <TextField
               id="confirm-password"
               label="Confirm new password"
-              type="password"
+              type={showPassword ? "text" : "password"}
               variant="outlined"
               fullWidth
               value={confirmPassword}
@@ -171,6 +195,21 @@ const ResetPasswordPage: React.FC = () => {
                 )
               }
               required
+              slotProps={{
+                input: {
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        onClick={handleTogglePasswordVisibility}
+                        edge="end"
+                        aria-label="toggle password visibility"
+                      >
+                        {showPassword ? <Visibility /> : <VisibilityOff />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                },
+              }}
             />
           </Box>
           <Button

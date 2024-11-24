@@ -13,7 +13,7 @@ const ReviewsCarousel: React.FC = () => {
   useEffect(() => {
     const fetchLatestReviews = async () => {
       const response = await axios.get<IReview[]>("/api/review/getAll?limit=5");
-      console.log(response);
+      // console.log(response);
 
       setLatestReviews(response.data);
     };
