@@ -2,12 +2,25 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+
+import { validateFormChangePassword } from "@/utils/validators/validateFormChangePassword";
+import validateFieldEmail from "@/utils/validators/validateFieldEmail";
+import validateFieldPassword from "@/utils/validators/validateFieldPassword";
+import validateFieldPasswordsMatch from "@/utils/validators/validateFieldPasswordMatch";
+
 import { Oval } from "react-loader-spinner";
 import SnackbarNotification from "@/components/Notification/Snackbar";
 
 import axios from "axios";
 
-import { Box, TextField, Button, Container } from "@mui/material";
+import {
+  Box,
+  TextField,
+  Button,
+  Container,
+  Popover,
+  Typography,
+} from "@mui/material";
 
 const ResetPasswordPage: React.FC = () => {
   const router = useRouter();
@@ -25,6 +38,9 @@ const ResetPasswordPage: React.FC = () => {
     "success"
   );
 
+  const [popoverMessage, setPopoverMessage] = useState("");
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -41,6 +57,24 @@ const ResetPasswordPage: React.FC = () => {
     }
 
     setLoading(true);
+
+    const isFormValid = validateFormChangePassword(
+      email,
+      newPassword,
+      confirmPassword,
+      setSnackbarMessage,
+      (element) => {
+        setShowSnackbar(true);
+        if (element)
+          element.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    );
+
+    if (!isFormValid) {
+      setSnackbarSeverity("error");
+      setLoading(false);
+      return;
+    }
 
     try {
       const { data } = await axios.post("/api/forgotPassword/forgotPassword", {
@@ -88,33 +122,54 @@ const ResetPasswordPage: React.FC = () => {
         <form onSubmit={handleSubmit}>
           <Box mb={2}>
             <TextField
+              id="email"
               label="Email"
               variant="outlined"
               fullWidth
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              onBlur={() =>
+                validateFieldEmail(email, setPopoverMessage, setAnchorEl)
+              }
               required
             />
           </Box>
           <Box mb={2}>
             <TextField
+              id="password"
               label="New password"
               type="password"
               variant="outlined"
               fullWidth
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
+              onBlur={() =>
+                validateFieldPassword(
+                  newPassword,
+                  setPopoverMessage,
+                  setAnchorEl
+                )
+              }
               required
             />
           </Box>
           <Box mb={2}>
             <TextField
+              id="confirm-password"
               label="Confirm new password"
               type="password"
               variant="outlined"
               fullWidth
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
+              onBlur={() =>
+                validateFieldPasswordsMatch(
+                  newPassword,
+                  confirmPassword,
+                  setPopoverMessage,
+                  setAnchorEl
+                )
+              }
               required
             />
           </Box>
@@ -137,6 +192,20 @@ const ResetPasswordPage: React.FC = () => {
             )}
           </Button>
         </form>
+
+        <Popover
+          open={Boolean(popoverMessage)}
+          anchorEl={anchorEl}
+          onClose={() => setPopoverMessage("")}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "left",
+          }}
+        >
+          <Typography sx={{ padding: "10px", color: "red" }}>
+            {popoverMessage}
+          </Typography>
+        </Popover>
 
         {message && <p>{message}</p>}
 

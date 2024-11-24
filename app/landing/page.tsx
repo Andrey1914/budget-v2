@@ -39,8 +39,8 @@ const Landing: React.FC = () => {
       </Box>
 
       {/* Основные функции */}
-      <Box sx={{ p: 4 }}>
-        <Grid2 container spacing={3}>
+      <Box sx={{ p: 4, backgroundColor: "rgba(0, 0, 0, 0.67)" }}>
+        <Grid2 container spacing={3} justifyContent="center">
           <Grid2 sx={{ width: { xs: "100%", sm: "33%" } }} component="div">
             <Paper elevation={3} sx={{ padding: 3 }}>
               <Typography variant="h6">Функция 1</Typography>
@@ -57,6 +57,12 @@ const Landing: React.FC = () => {
             <Paper elevation={3} sx={{ padding: 3 }}>
               <Typography variant="h6">Функция 3</Typography>
               <Typography>Описание функции 3</Typography>
+            </Paper>
+          </Grid2>
+          <Grid2 sx={{ width: { xs: "100%", sm: "33%" } }} component="div">
+            <Paper elevation={3} sx={{ padding: 3 }}>
+              <Typography variant="h6">Функция 4</Typography>
+              <Typography>Описание функции 4</Typography>
             </Paper>
           </Grid2>
         </Grid2>

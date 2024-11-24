@@ -1,5 +1,3 @@
-// import validator from "validator";
-
 const validateFieldPasswordsMatch = (
   password: string,
   confirmPassword: string,
@@ -8,7 +6,7 @@ const validateFieldPasswordsMatch = (
 ): boolean => {
   if (password !== confirmPassword) {
     setPopoverMessage("Passwords do not match.");
-    setAnchorEl(document.getElementById("confirmPassword"));
+    setAnchorEl(document.getElementById("confirm-password"));
     return false;
   }
   return true;
