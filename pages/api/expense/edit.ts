@@ -46,7 +46,7 @@ const editExpense = async (req: NextApiRequest, res: NextApiResponse) => {
       );
 
       if (result.matchedCount === 0) {
-        return res.status(404).json({ error: "Task not found" });
+        return res.status(404).json({ error: "Еxpense not found" });
       }
 
       res.status(200).json(result);

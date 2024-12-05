@@ -64,8 +64,9 @@ export default NextAuth({
 
         return {
           id: user._id.toString(),
-          email: user.email,
           name: user.name,
+          email: user.email,
+          image: user.image,
           token: user.token,
           isVerified: user.isVerified,
         };
@@ -83,17 +84,40 @@ export default NextAuth({
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
-        token.token = user.token;
         token.name = user.name;
+        token.image = user.image;
+        token.token = user.token;
         token.isVerified = user.isVerified;
+      } else {
+        const client = await clientPromise;
+        const db = client.db("budget-v2");
+
+        const dbUser = await db
+          .collection("users")
+          .findOne({ email: token.email });
+
+        if (dbUser) {
+          token.name = dbUser.name;
+          token.image = dbUser.image;
+        }
       }
       return token;
     },
+    //   if (user) {
+    //     token.id = user.id;
+    //     token.name = user.name;
+    //     token.image = user.image;
+    //     token.token = user.token;
+    //     token.isVerified = user.isVerified;
+    //   }
+    //   return token;
+    // },
     async session({ session, token }) {
       if (session?.user) {
         session.user.id = token.id as string;
-        session.user.token = token.token as string;
         session.user.name = token.name as string;
+        session.user.image = token.image as string;
+        session.user.token = token.token as string;
         session.user.isVerified = token.isVerified as boolean;
       }
       return session;

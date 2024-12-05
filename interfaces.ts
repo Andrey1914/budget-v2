@@ -11,6 +11,7 @@ export interface IUser extends Document {
   _id?: string;
   name: string;
   email: string;
+  image: string;
   password: string;
   token?: string;
   isVerified: boolean;
@@ -145,6 +146,7 @@ export interface IReview extends Document {
   _id: Schema.Types.ObjectId;
   userId: Schema.Types.ObjectId;
   username: string;
+  avatar?: string;
   rating: number;
   text: string;
   createdAt: Date;

@@ -10,7 +10,28 @@ const getAllReviews = async (req: NextApiRequest, res: NextApiResponse) => {
     try {
       const reviews = await db.collection("reviews").find({}).toArray();
 
-      res.status(200).json(reviews);
+      const reviewsWithAvatars = await Promise.all(
+        reviews.map(async (review) => {
+          const user = await db
+            .collection("users")
+            .findOne({ _id: review.userId });
+
+          if (!user) {
+            console.error(
+              `User not found for review with userId: ${review.userId}`
+            );
+          }
+
+          const avatar = user ? user.image : null;
+
+          return {
+            ...review,
+            avatar,
+          };
+        })
+      );
+
+      res.status(200).json(reviewsWithAvatars);
     } catch (error) {
       console.error("Ошибка при получении всех отзывов:", error);
 

@@ -9,6 +9,7 @@ const secret = process.env.JWT_SECRET;
 const addReview = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "POST") {
     const token = await getToken({ req, secret });
+
     if (!token) {
       return res.status(401).json({ error: "Unauthorized" });
     }
@@ -18,6 +19,7 @@ const addReview = async (req: NextApiRequest, res: NextApiResponse) => {
     const userId = new ObjectId(token.sub);
 
     const username = token.name || "Anonymous";
+
     console.log(username);
 
     const client = await clientPromise;

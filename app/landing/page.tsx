@@ -17,6 +17,7 @@ import Hero from "@/components/Hero/Hero";
 import Advantages from "@/components/Advantages/Advantages";
 import ReviewsCarousel from "@/components/ReviewsCarousel/ReviewsCarousel";
 import FAQ from "@/components/faq/FAQ";
+import AverageRating from "@/components/Review/AverageRating";
 
 const Landing: React.FC = () => {
   const { data: session, status } = useSession();
@@ -77,6 +78,7 @@ const Landing: React.FC = () => {
           <Typography variant="body1" gutterBottom>
             Leave your feedback and help us become better!{" "}
           </Typography>
+          <AverageRating />
         </Box>
 
         <Container maxWidth="md" style={{ backgroundColor: "#dcdbdb" }}>

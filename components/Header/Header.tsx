@@ -6,7 +6,6 @@ import { useSession } from "next-auth/react";
 
 import Navbar from "@/components/Navbar/Navbar";
 import { useMediaQuery, useTheme } from "@mui/material";
-import { SavingsTwoTone } from "@mui/icons-material";
 
 import { ContainerNavLinks } from "@/components/Header/Header.styled";
 
@@ -30,7 +29,6 @@ const Header: React.FC = () => {
               padding: "0.5rem",
             }}
           >
-            <SavingsTwoTone fontSize="large" />
             Finance App
           </Link>
         )}

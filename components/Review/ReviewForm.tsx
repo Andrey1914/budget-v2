@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 import { Box, TextField, Button, Rating, Typography } from "@mui/material";
-import axios from "axios";
 import SnackbarNotification from "@/components/Notification/Snackbar";
 
 interface ReviewFormProps {
-  // isAuthenticated: boolean;
+  onAddReview: (newReview: { rating: number | null; text: string }) => void;
 }
 
-const ReviewForm: React.FC<ReviewFormProps> = () => {
+const ReviewForm: React.FC<ReviewFormProps> = ({ onAddReview }) => {
   const [rating, setRating] = useState<number | null>(3);
   const [text, setText] = useState<string>("");
   const [error, setError] = useState<string>("");
@@ -20,26 +19,25 @@ const ReviewForm: React.FC<ReviewFormProps> = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const newReview = { rating, text };
+
     try {
-      await axios.post("/api/review/add", { rating, text });
+      onAddReview(newReview);
+
       setRating(3);
       setText("");
       setError("");
 
-      setSnackbarMessage("Review added successfully");
+      setSnackbarMessage("Отзыв успешно добавлен");
       setSnackbarSeverity("success");
       setShowSnackbar(true);
-
-      // alert("Отзыв отправлен!");
     } catch (error) {
-      const errorMessage = (error as Error).message || "Failed to add review";
-      setError(errorMessage);
-
+      const errorMessage =
+        (error as Error).message || "Не удалось добавить отзыв";
       setSnackbarMessage(errorMessage);
       setSnackbarSeverity("error");
       setShowSnackbar(true);
-      // console.error(error);
-      // alert("Ошибка при отправке отзыва");
     }
   };
 
@@ -71,6 +69,7 @@ const ReviewForm: React.FC<ReviewFormProps> = () => {
           Отправить отзыв
         </Button>
       </Box>
+
       {showSnackbar && (
         <SnackbarNotification
           message={snackbarMessage}

@@ -5,7 +5,7 @@ import "swiper/css/autoplay";
 import { IReview } from "@/interfaces";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Box, Typography, Rating } from "@mui/material";
+import { Box, Typography, Rating, Avatar } from "@mui/material";
 
 const ReviewsCarousel: React.FC = () => {
   const [latestReviews, setLatestReviews] = useState<IReview[]>([]);
@@ -29,7 +29,19 @@ const ReviewsCarousel: React.FC = () => {
     >
       {latestReviews.map((review) => (
         <SwiperSlide key={review._id.toString()}>
-          <Box sx={{ p: 3, textAlign: "center" }}>
+          <Box
+            sx={{
+              p: 3,
+              display: "flex",
+              alignItems: "center",
+              flexDirection: "column",
+            }}
+          >
+            <Avatar
+              src={review.avatar}
+              alt={review.username}
+              sx={{ width: 40, height: 40, marginRight: 2 }}
+            />
             <Typography variant="subtitle1">{review.username}</Typography>
             <Rating value={review.rating} readOnly />
             <Typography variant="body1">{review.text}</Typography>

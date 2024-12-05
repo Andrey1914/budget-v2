@@ -15,6 +15,7 @@ import { validateFormsTransactions } from "@/utils/validators/validateFormTransa
 
 import addIncome from "@/app/dashboard/income/add";
 import TransactionForm from "@/components/TransactionForm/TransactionForm";
+import { Container } from "@mui/material";
 
 const IncomeForm: React.FC<IncomeFormProps> = ({ initialData }) => {
   const { data: session } = useSession();
@@ -139,7 +140,7 @@ const IncomeForm: React.FC<IncomeFormProps> = ({ initialData }) => {
   };
 
   return (
-    <>
+    <Container maxWidth="sm">
       <TransactionForm
         amount={amount}
         setAmount={setAmount}
@@ -209,7 +210,7 @@ const IncomeForm: React.FC<IncomeFormProps> = ({ initialData }) => {
           severity={snackbarSeverity}
         />
       )}
-    </>
+    </Container>
   );
 };
 

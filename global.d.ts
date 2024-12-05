@@ -8,3 +8,6 @@ declare module "react-intersection-observer";
 // declare module "react-intersection-observer" {
 //   export const useInView: any;
 // }
+declare module "cloudinary";
+declare module "multer";
+declare module "ws";

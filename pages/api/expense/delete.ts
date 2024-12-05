@@ -108,7 +108,6 @@ const deleteExpense = async (req: NextApiRequest, res: NextApiResponse) => {
     const result = await db.collection("expense").deleteOne({
       _id: new ObjectId(id),
       userId: new ObjectId(userId),
-      // userId: userId,
     });
     console.log("Delete result:", result);
 

@@ -9,7 +9,6 @@ import { Oval } from "react-loader-spinner";
 import {
   Box,
   Container,
-  Fab,
   Typography,
   IconButton,
   Drawer,
@@ -27,6 +26,7 @@ import {
   Home,
 } from "@mui/icons-material";
 import theme from "@/app/styles/theme";
+import UserMenu from "@/components/UserMenu/UserMenu";
 
 const Navbar: React.FC = () => {
   const { data: session, status } = useSession();
@@ -60,11 +60,14 @@ const Navbar: React.FC = () => {
     );
 
   const links = [
-    { href: "/landing", icon: <Home /> },
+    { href: "/landing", label: "Home", icon: <Home /> },
     { href: "/dashboard", label: "Dashboard" },
     { href: "/dashboard/income", label: "Incomes" },
     { href: "/dashboard/expense", label: "Expenses" },
     { href: "/dashboard/tasks", label: "Tasks" },
+  ];
+
+  const mobileLinks = [
     { href: "/dashboard/history", label: "History" },
     { href: "/dashboard/analytics", label: "Analytics" },
     { href: "/dashboard/reviews", label: "Reviews" },
@@ -82,6 +85,22 @@ const Navbar: React.FC = () => {
       >
         <ListItem>
           {link.icon && <ListItemIcon>{link.icon}</ListItemIcon>}
+          <ListItemText primary={link.label} />
+        </ListItem>
+      </Link>
+    ));
+
+  const renderMobileLinks = () =>
+    mobileLinks.map((link) => (
+      <Link
+        key={link.href}
+        href={link.href}
+        style={{
+          textDecoration: "none",
+          color: "inherit",
+        }}
+      >
+        <ListItem>
           <ListItemText primary={link.label} />
         </ListItem>
       </Link>
@@ -140,15 +159,7 @@ const Navbar: React.FC = () => {
 
   return (
     <>
-      <Container
-        component="nav"
-        maxWidth="md"
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
+      <Container component="nav" maxWidth="md">
         {isMobile ? (
           <>
             <IconButton
@@ -173,14 +184,18 @@ const Navbar: React.FC = () => {
               >
                 {session && session.user.isVerified ? (
                   <>
-                    <Typography
-                      variant="h6"
-                      component="p"
-                      style={{ marginBottom: "1rem" }}
-                    >
-                      {session.user.name}
-                    </Typography>
+                    <Box sx={{ display: "flex", gap: 4, alignItems: "center" }}>
+                      <Typography variant="h6" component="p">
+                        {session.user.name}
+                      </Typography>
+
+                      <UserMenu
+                        userName={session?.user?.name ?? null}
+                        userImage={session?.user?.image ?? null}
+                      />
+                    </Box>
                     <List>{renderLinks()}</List>
+                    <List>{renderMobileLinks()}</List>
                     <List>
                       <ListItem
                         onClick={() => signOut({ callbackUrl: "/landing" })}
@@ -202,48 +217,48 @@ const Navbar: React.FC = () => {
           <Box
             style={{
               display: "flex",
-              justifyContent: "center",
+              justifyContent: "space-between",
               alignItems: "center",
-              gap: "1rem",
             }}
           >
             {session && session.user.isVerified ? (
               <>
-                <Typography
-                  variant="h6"
-                  component="p"
-                  style={{ marginRight: "2rem" }}
-                >
-                  {session.user.name}
-                </Typography>
-                {links.map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    style={{
-                      textDecoration: "none",
-                      color: "inherit",
-                    }}
-                  >
-                    {link.label}
-                  </Link>
-                ))}
-                <Fab
-                  color="primary"
-                  onClick={() => signOut({ callbackUrl: "/landing" })}
-                >
-                  <Logout />
-                </Fab>
+                <Box sx={{ display: "flex", gap: 4 }}>
+                  {links.map((link) => (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      style={{
+                        textDecoration: "none",
+                        color: "inherit",
+                      }}
+                    >
+                      {link.label}
+                    </Link>
+                  ))}
+                </Box>
+                <Box sx={{ display: "flex", alignItems: "center", gap: 4 }}>
+                  <Typography variant="h6" component="p">
+                    {session.user.name}
+                  </Typography>
+                  <UserMenu
+                    userName={session?.user?.name ?? null}
+                    userImage={session?.user?.image ?? null}
+                  />
+                </Box>
               </>
             ) : (
-              <>
+              <Box sx={{ display: "flex", gap: 4 }}>
+                <Link href="/landing" style={{ textDecoration: "none" }}>
+                  Home
+                </Link>
                 <Link href="/auth/login" style={{ textDecoration: "none" }}>
                   Sign In
                 </Link>
                 <Link href="/auth/register" style={{ textDecoration: "none" }}>
                   Sign Up
                 </Link>
-              </>
+              </Box>
             )}
           </Box>
         )}
