@@ -16,7 +16,10 @@ const FAQ: React.FC = () => {
   return (
     <Box component="section">
       {faqData.map((section, sectionIndex) => (
-        <Accordion key={sectionIndex}>
+        <Accordion
+          key={sectionIndex}
+          sx={{ backgroundColor: "rgba(250, 254, 238, 0.67)" }}
+        >
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <Typography variant="h6">{section.question}</Typography>
           </AccordionSummary>
@@ -24,10 +27,15 @@ const FAQ: React.FC = () => {
             {section.subItems &&
               section.subItems.map((item, itemIndex) => (
                 <Accordion key={itemIndex}>
-                  <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                  <AccordionSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    sx={{ backgroundColor: "rgba(250, 254, 238, 0.67)" }}
+                  >
                     <Typography>{item.question}</Typography>
                   </AccordionSummary>
-                  <AccordionDetails>
+                  <AccordionDetails
+                    sx={{ backgroundColor: "rgba(250, 254, 238, 0.67)" }}
+                  >
                     <Typography>{item.answer}</Typography>
                   </AccordionDetails>
                 </Accordion>
@@ -40,42 +48,3 @@ const FAQ: React.FC = () => {
 };
 
 export default FAQ;
-
-// import React from 'react';
-// import { Accordion, AccordionDetails, AccordionSummary, Typography } from '@mui/material';
-// import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-// import { FAQItem, faqData } from './faqData'; // Импортируем данные
-
-// // Функция для рендеринга вложенных аккордеонов
-// const renderSubAccordion = (subItems: FAQItem[]) => {
-//   return subItems.map((subItem, index) => (
-//     <Accordion key={index}>
-//       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-//         <Typography>{subItem.question}</Typography>
-//       </AccordionSummary>
-//       <AccordionDetails>
-//         <Typography>{subItem.answer}</Typography>
-//       </AccordionDetails>
-//     </Accordion>
-//   ));
-// };
-
-// const FAQ: React.FC = () => {
-//   return (
-//     <div>
-//       {faqData.map((item, index) => (
-//         <Accordion key={index}>
-//           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-//             <Typography>{item.question}</Typography>
-//           </AccordionSummary>
-//           <AccordionDetails>
-//             <Typography>{item.answer}</Typography>
-//             {item.subItems && <div>{renderSubAccordion(item.subItems)}</div>}
-//           </AccordionDetails>
-//         </Accordion>
-//       ))}
-//     </div>
-//   );
-// };
-
-// export default FAQ;

@@ -1,22 +1,43 @@
 import { Box, Select, MenuItem, Button } from "@mui/material";
 
 interface FilterPanelProps {
+  selectedYear: number | "";
   selectedMonth: number | "";
   selectedType: string;
+  onYearChange: (year: number | "") => void;
   onMonthChange: (month: number | "") => void;
   onTypeChange: (type: string) => void;
   onApplyFilters: () => void;
 }
 
 const FilterPanel: React.FC<FilterPanelProps> = ({
+  selectedYear,
   selectedMonth,
   selectedType,
+  onYearChange,
   onMonthChange,
   onTypeChange,
   onApplyFilters,
 }) => {
+  const currentYear = new Date().getFullYear();
+  const years = Array.from({ length: 10 }, (_, i) => currentYear - i);
+
   return (
     <Box sx={{ display: "flex", flexDirection: "row", gap: "1rem", p: 5 }}>
+      <Select
+        value={selectedYear}
+        onChange={(e) => onYearChange(e.target.value as number)}
+        displayEmpty
+        sx={{ minWidth: 120 }}
+      >
+        <MenuItem value="">Все годы</MenuItem>
+        {years.map((year) => (
+          <MenuItem key={year} value={year}>
+            {year}
+          </MenuItem>
+        ))}
+      </Select>
+
       <Select
         value={selectedMonth}
         onChange={(e) => onMonthChange(e.target.value as number)}

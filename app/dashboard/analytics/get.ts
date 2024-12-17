@@ -2,12 +2,13 @@ import axios from "axios";
 import { IIncome, IExpense } from "@/interfaces";
 
 interface FilterParams {
+  year: number | "";
   month: number | "";
   type: string;
 }
 
 export const fetchAnalyticsData = async (filters: FilterParams) => {
-  const { month, type } = filters;
+  const { year, month, type } = filters;
 
   try {
     const res = await axios.get<{
@@ -17,6 +18,7 @@ export const fetchAnalyticsData = async (filters: FilterParams) => {
       totalExpense: number;
     }>("/api/transactions/filterTransactions", {
       params: {
+        year: year !== "" ? year : undefined,
         month: month !== "" ? month : undefined,
         type: type !== "all" ? type : undefined,
       },

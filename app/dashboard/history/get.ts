@@ -2,6 +2,7 @@ import axios from "axios";
 import { IIncome, IExpense } from "@/interfaces";
 
 interface FilterParams {
+  year: number | "";
   month: number | "";
   type: string;
   page: number;
@@ -9,7 +10,7 @@ interface FilterParams {
 }
 
 export const fetchTransactions = async (filters: FilterParams) => {
-  const { month, type, page, limit } = filters;
+  const { year, month, type, page, limit } = filters;
 
   try {
     const res = await axios.get<{
@@ -17,8 +18,11 @@ export const fetchTransactions = async (filters: FilterParams) => {
       totalSum: number;
     }>("/api/transactions/filterTransactions", {
       params: {
+        year: year !== "" ? year : undefined,
         month: month !== "" ? month : undefined,
         type: type !== "all" ? type : undefined,
+        page,
+        limit,
       },
     });
 

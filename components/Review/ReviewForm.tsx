@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Box, TextField, Button, Rating, Typography } from "@mui/material";
+import { Send } from "@mui/icons-material";
 import SnackbarNotification from "@/components/Notification/Snackbar";
 
 interface ReviewFormProps {
@@ -44,14 +45,14 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ onAddReview }) => {
   return (
     <>
       <Box component="form">
-        <Typography variant="h6">Оцените наше приложение</Typography>
+        <Typography variant="h6">Please, rate our app.</Typography>
         <Rating
           name="rating"
           value={rating}
           onChange={(event, newValue) => setRating(newValue)}
         />
         <TextField
-          label="Ваш отзыв"
+          label="Type your feedback here..."
           multiline
           rows={4}
           value={text}
@@ -66,7 +67,8 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ onAddReview }) => {
           onClick={handleSubmit}
           sx={{ mt: 2 }}
         >
-          Отправить отзыв
+          <Send sx={{ mr: 2 }} />
+          Send feedback
         </Button>
       </Box>
 

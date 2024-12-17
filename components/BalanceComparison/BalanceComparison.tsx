@@ -1,10 +1,5 @@
 import { Box, Typography } from "@mui/material";
-
-interface BalanceComparisonProps {
-  totalIncome: number;
-  totalExpense: number;
-  // balance: number;
-}
+import { BalanceComparisonProps } from "@/interfaces";
 
 const BalanceComparison: React.FC<BalanceComparisonProps> = ({
   totalIncome,

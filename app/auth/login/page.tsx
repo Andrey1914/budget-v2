@@ -79,7 +79,7 @@ const Login: React.FC = () => {
   };
 
   return (
-    <Box component="section" style={{ padding: "2rem 0" }}>
+    <Box component="section" title="login" style={{ padding: "2rem 0" }}>
       <Container maxWidth="sm">
         <h1>You need to register or logged in.</h1>
 

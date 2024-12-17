@@ -23,8 +23,8 @@ const getExpenses = async (req: NextApiRequest, res: NextApiResponse) => {
     Date.UTC(new Date().getFullYear(), new Date().getMonth() + 1, 0, 23, 59, 59)
   );
 
-  console.log("Start Date:", startDate.toISOString());
-  console.log("End Date:", endDate.toISOString());
+  // console.log("Start Date:", startDate.toISOString());
+  // console.log("End Date:", endDate.toISOString());
 
   try {
     const expenses = await db

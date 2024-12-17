@@ -7,6 +7,7 @@ import {
   Button,
   TextField,
 } from "@mui/material";
+
 import { IReview } from "@/interfaces";
 
 interface ReviewListProps {
@@ -59,6 +60,7 @@ const ReviewsList: React.FC<ReviewListProps> = ({
             py: 1,
             p: 2,
             backgroundColor: index % 2 === 0 ? "grey.100" : "#dcdbdb",
+            borderRadius: 1,
           }}
         >
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
@@ -69,11 +71,22 @@ const ReviewsList: React.FC<ReviewListProps> = ({
             />
             <Typography variant="subtitle1">{review.username}</Typography>
           </Box>
-          <Rating value={review.rating} readOnly />
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            <Rating value={review.rating} readOnly />
+            <Typography variant="body2" sx={{ fontSize: "14px" }}>
+              {review.rating.toFixed(1)}
+            </Typography>
+          </Box>
           <Typography variant="body1">{review.text}</Typography>
 
           {onEditReview && editingReviewId === review._id.toString() ? (
-            <>
+            <Box
+              sx={{
+                p: 2,
+                backgroundColor: index % 2 === 0 ? "#dcdbdb" : "grey.100",
+                borderRadius: 1,
+              }}
+            >
               <Rating
                 name={`edit-rating-${review._id}`}
                 value={editedRating}
@@ -93,38 +106,38 @@ const ReviewsList: React.FC<ReviewListProps> = ({
                   color="primary"
                   onClick={() => handleSaveClick(review._id.toString())}
                 >
-                  Сохранить
+                  Save
                 </Button>
                 <Button
                   variant="outlined"
                   color="secondary"
                   onClick={handleCancelClick}
                 >
-                  Отменить
+                  Cancel
                 </Button>
               </Box>
-            </>
+            </Box>
           ) : (
-            <>
+            <Box sx={{ mt: 2, display: "flex", gap: 1 }}>
               {onEditReview && (
                 <Button
-                  variant="text"
+                  variant="contained"
                   color="primary"
                   onClick={() => handleEditClick(review)}
                 >
-                  Редактировать
+                  Edit
                 </Button>
               )}
               {onDeleteReview && (
                 <Button
-                  variant="text"
+                  variant="outlined"
                   color="error"
                   onClick={() => handleDeleteClick(review._id.toString())}
                 >
-                  Удалить
+                  Delete
                 </Button>
               )}
-            </>
+            </Box>
           )}
         </Box>
       ))}

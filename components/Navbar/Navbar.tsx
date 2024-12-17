@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { signOut, useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import { Oval } from "react-loader-spinner";
 
@@ -31,6 +31,7 @@ import UserMenu from "@/components/UserMenu/UserMenu";
 const Navbar: React.FC = () => {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const pathname = usePathname();
 
   const [drawerOpen, setDrawerOpen] = useState(false);
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -73,6 +74,8 @@ const Navbar: React.FC = () => {
     { href: "/dashboard/reviews", label: "Reviews" },
   ];
 
+  const isActive = (href: string) => pathname === href;
+
   const renderLinks = () =>
     links.map((link) => (
       <Link
@@ -80,10 +83,14 @@ const Navbar: React.FC = () => {
         href={link.href}
         style={{
           textDecoration: "none",
-          color: "inherit",
+          color: isActive(link.href) ? "#0066ff" : "inherit",
         }}
       >
-        <ListItem>
+        <ListItem
+          sx={{
+            borderBottom: isActive(link.href) ? "2px solid #0066ff" : "none",
+          }}
+        >
           {link.icon && <ListItemIcon>{link.icon}</ListItemIcon>}
           <ListItemText primary={link.label} />
         </ListItem>
@@ -97,10 +104,14 @@ const Navbar: React.FC = () => {
         href={link.href}
         style={{
           textDecoration: "none",
-          color: "inherit",
+          color: isActive(link.href) ? "#0066ff" : "inherit",
         }}
       >
-        <ListItem>
+        <ListItem
+          sx={{
+            borderBottom: isActive(link.href) ? "2px solid #0066ff" : "none",
+          }}
+        >
           <ListItemText primary={link.label} />
         </ListItem>
       </Link>
@@ -112,10 +123,14 @@ const Navbar: React.FC = () => {
         href="/landing"
         style={{
           textDecoration: "none",
-          color: "inherit",
+          color: isActive("/landing") ? "#0066ff" : "inherit",
         }}
       >
-        <ListItem>
+        <ListItem
+          sx={{
+            borderBottom: isActive("/landing") ? "2px solid #0066ff" : "none",
+          }}
+        >
           <ListItemIcon>
             <Home />
           </ListItemIcon>
@@ -126,10 +141,16 @@ const Navbar: React.FC = () => {
         href="/auth/login"
         style={{
           textDecoration: "none",
-          color: "inherit",
+          color: isActive("/auth/login") ? "#0066ff" : "inherit",
         }}
       >
-        <ListItem>
+        <ListItem
+          sx={{
+            borderBottom: isActive("/auth/login")
+              ? "2px solid #0066ff"
+              : "none",
+          }}
+        >
           <ListItemIcon>
             <Login />
           </ListItemIcon>
@@ -140,10 +161,16 @@ const Navbar: React.FC = () => {
         href="/auth/register"
         style={{
           textDecoration: "none",
-          color: "inherit",
+          color: isActive("/auth/register") ? "#0066ff" : "inherit",
         }}
       >
-        <ListItem>
+        <ListItem
+          sx={{
+            borderBottom: isActive("/auth/register")
+              ? "2px solid #0066ff"
+              : "none",
+          }}
+        >
           <ListItemIcon>
             <AppRegistration />
           </ListItemIcon>
@@ -230,7 +257,11 @@ const Navbar: React.FC = () => {
                       href={link.href}
                       style={{
                         textDecoration: "none",
-                        color: "inherit",
+                        color: isActive(link.href) ? "#0066ff" : "inherit",
+                        borderBottom: isActive(link.href)
+                          ? "2px solid #0066ff"
+                          : "none",
+                        paddingBottom: "4px",
                       }}
                     >
                       {link.label}
@@ -249,13 +280,43 @@ const Navbar: React.FC = () => {
               </>
             ) : (
               <Box sx={{ display: "flex", gap: 4 }}>
-                <Link href="/landing" style={{ textDecoration: "none" }}>
+                <Link
+                  href="/landing"
+                  style={{
+                    textDecoration: "none",
+                    color: isActive("/landing") ? "#0066ff" : "inherit",
+                    borderBottom: isActive("/landing")
+                      ? "2px solid #0066ff"
+                      : "none",
+                    paddingBottom: "4px",
+                  }}
+                >
                   Home
                 </Link>
-                <Link href="/auth/login" style={{ textDecoration: "none" }}>
+                <Link
+                  href="/auth/login"
+                  style={{
+                    textDecoration: "none",
+                    color: isActive("/auth/login") ? "#0066ff" : "inherit",
+                    borderBottom: isActive("/auth/login")
+                      ? "2px solid #0066ff"
+                      : "none",
+                    paddingBottom: "4px",
+                  }}
+                >
                   Sign In
                 </Link>
-                <Link href="/auth/register" style={{ textDecoration: "none" }}>
+                <Link
+                  href="/auth/register"
+                  style={{
+                    textDecoration: "none",
+                    color: isActive("/auth/register") ? "#0066ff" : "inherit",
+                    borderBottom: isActive("/auth/register")
+                      ? "2px solid #0066ff"
+                      : "none",
+                    paddingBottom: "4px",
+                  }}
+                >
                   Sign Up
                 </Link>
               </Box>

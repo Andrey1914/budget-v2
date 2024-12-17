@@ -10,7 +10,7 @@ const Home: React.FC = () => {
   const { data: session } = useSession();
 
   return (
-    <Container maxWidth="lg">{session ? <Dashboard /> : <Landing />}</Container>
+    <Container maxWidth="md">{session ? <Dashboard /> : <Landing />}</Container>
   );
 };
 

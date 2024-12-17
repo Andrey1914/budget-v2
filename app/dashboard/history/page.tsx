@@ -18,6 +18,9 @@ import FilterPanel from "@/components/FilterPanel/FilterPanel";
 import { fetchTransactions } from "@/app/dashboard/history/get";
 
 const HistoryPage = () => {
+  const [selectedYear, setSelectedYear] = useState<number | "">(
+    new Date().getFullYear()
+  );
   const [selectedMonth, setSelectedMonth] = useState<number | "">(
     new Date().getMonth() + 1
   );
@@ -35,6 +38,7 @@ const HistoryPage = () => {
   const handleFilterSubmit = useCallback(async () => {
     try {
       const data = await fetchTransactions({
+        year: selectedYear,
         month: selectedMonth,
         type: selectedType,
         page: currentPage,
@@ -47,7 +51,7 @@ const HistoryPage = () => {
     } catch (error) {
       console.error("Ошибка при загрузке транзакций:", error);
     }
-  }, [selectedMonth, selectedType, currentPage, limit]);
+  }, [selectedYear, selectedMonth, selectedType, currentPage, limit]);
 
   useEffect(() => {
     if (isFirstRender.current) {
@@ -69,8 +73,10 @@ const HistoryPage = () => {
       <Container maxWidth="sm">
         <div>
           <FilterPanel
+            selectedYear={selectedYear}
             selectedMonth={selectedMonth}
             selectedType={selectedType}
+            onYearChange={setSelectedYear}
             onMonthChange={setSelectedMonth}
             onTypeChange={setSelectedType}
             onApplyFilters={handleFilterSubmit}

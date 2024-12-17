@@ -154,15 +154,17 @@ const TasksList: React.FC = () => {
                   width: "100%",
                 }}
               >
-                <Checkbox
-                  checked={Boolean(item.completed)}
-                  onChange={() =>
-                    handleCheckboxChange(item._id, item.completed)
-                  }
-                />
-                <Typography variant="h6" component="p">
-                  {item.title} - {item.content}
-                </Typography>
+                <Box sx={{ display: "flex", alignItems: "center" }}>
+                  <Checkbox
+                    checked={Boolean(item.completed)}
+                    onChange={() =>
+                      handleCheckboxChange(item._id, item.completed)
+                    }
+                  />
+                  <Typography variant="h6" component="p">
+                    {item.title} - {item.content}
+                  </Typography>
+                </Box>
 
                 <Box sx={{ display: "flex", gap: 3 }}>
                   <Edit onClick={() => handleEdit(item._id)} />

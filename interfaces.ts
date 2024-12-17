@@ -151,3 +151,10 @@ export interface IReview extends Document {
   text: string;
   createdAt: Date;
 }
+
+export interface BalanceComparisonProps {
+  totalIncome: number;
+  totalExpense: number;
+  carryOverBalance?: number;
+  // balance: number;
+}

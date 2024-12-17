@@ -16,6 +16,9 @@ import { Box, Container } from "@mui/material";
 const AnalyticsPage: React.FC = () => {
   const { data: session } = useSession();
 
+  const [selectedYear, setSelectedYear] = useState<number | "">(
+    new Date().getFullYear()
+  );
   const [selectedMonth, setSelectedMonth] = useState<number | "">(
     new Date().getMonth() + 1
   );
@@ -30,6 +33,7 @@ const AnalyticsPage: React.FC = () => {
   const handleFilterSubmit = useCallback(async () => {
     try {
       const data = await fetchAnalyticsData({
+        year: selectedYear,
         month: selectedMonth,
         type: selectedType,
       });
@@ -42,7 +46,7 @@ const AnalyticsPage: React.FC = () => {
     } catch (error) {
       console.error("Ошибка при загрузке аналитических данных:", error);
     }
-  }, [selectedMonth, selectedType]);
+  }, [selectedYear, selectedMonth, selectedType]);
 
   useEffect(() => {
     if (session) {
@@ -66,8 +70,10 @@ const AnalyticsPage: React.FC = () => {
           />
 
           <FilterPanel
+            selectedYear={selectedYear}
             selectedMonth={selectedMonth}
             selectedType={selectedType}
+            onYearChange={setSelectedYear}
             onMonthChange={setSelectedMonth}
             onTypeChange={setSelectedType}
             onApplyFilters={handleFilterSubmit}

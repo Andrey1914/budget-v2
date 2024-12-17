@@ -28,7 +28,7 @@ const AllReviewsPage: React.FC = () => {
       <Box sx={{ py: 4 }}>
         <Box sx={{ p: 2, backgroundColor: "#dcdbdb" }}>
           <Typography variant="h5" gutterBottom>
-            Все отзывы.
+            All reviews.
           </Typography>
           <AverageRating />
           <ReviewsList reviews={reviews} />

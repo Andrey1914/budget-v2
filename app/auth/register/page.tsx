@@ -100,7 +100,7 @@ const Register: React.FC = () => {
   };
 
   return (
-    <Box component="section">
+    <Box component="section" title="registration" style={{ padding: "2rem 0" }}>
       <Container maxWidth="sm">
         <h1>Registration</h1>
         <p>The verification code will be sent to your email!</p>

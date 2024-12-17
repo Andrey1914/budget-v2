@@ -11,7 +11,7 @@ export const HeroContainer = styled(Container)(({ theme }) => ({
   },
 }));
 
-export const HeroSection = styled("section")(({ theme }) => ({
+export const HeroSection = styled("div")(({ theme }) => ({
   backgroundImage: `url(${hero.src})`,
   backgroundSize: "cover",
   backgroundPosition: "center",
