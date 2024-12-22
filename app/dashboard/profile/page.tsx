@@ -74,14 +74,14 @@ const ProfilePage = () => {
     }
   }, [session]);
 
-  // useEffect(() => {
-  //   if (session) {
-  //     setSessionData(session);
-  //     setName(session.user.name || "");
-  //     setEmail(session.user.email || "");
-  //     setAvatar(session.user.image || "");
-  //   }
-  // }, [session]);
+  useEffect(() => {
+    if (session) {
+      setSessionData(session);
+      setName(session.user.name || "");
+      setEmail(session.user.email || "");
+      setAvatar(session.user.image || "");
+    }
+  }, [session]);
 
   console.log(session);
 
@@ -177,6 +177,42 @@ const ProfilePage = () => {
     }
   };
 
+  const handleDeleteAvatar = async () => {
+    setLoadingAvatar(true);
+
+    try {
+      const response = await axios.delete("/api/profile/deleteAvatar");
+
+      if (response.status === 200) {
+        setAvatar("");
+        setSnackbarMessage("Avatar deleted successfully");
+        setSnackbarSeverity("success");
+        setShowSnackbar(true);
+
+        if (sessionData) {
+          const updatedSession: Session = {
+            ...sessionData,
+            user: {
+              ...sessionData.user,
+              image: "",
+            },
+          };
+          setSessionData(updatedSession);
+          if (updateSession) {
+            await updateSession(updatedSession);
+          }
+        }
+      }
+    } catch (error: any) {
+      setSnackbarMessage("Failed to delete avatar");
+      setSnackbarSeverity("error");
+      setShowSnackbar(true);
+      console.error("Error deleting avatar:", error);
+    } finally {
+      setLoadingAvatar(false);
+    }
+  };
+
   return (
     <main>
       <Container maxWidth="md">
@@ -225,6 +261,25 @@ const ProfilePage = () => {
               />
             </Button>
           </Box>
+          <Box sx={{ display: "flex", justifyContent: "center", pb: 5 }}>
+            <Button
+              variant="outlined"
+              color="error"
+              onClick={handleDeleteAvatar}
+              disabled={loadingAvatar}
+            >
+              {loadingAvatar ? (
+                <Oval
+                  height="20"
+                  width="20"
+                  color="#1727b7"
+                  secondaryColor="#6fb5e7"
+                />
+              ) : (
+                "Delete Avatar"
+              )}
+            </Button>
+          </Box>
           <Container maxWidth="xs">
             <TextField
               label="Name"
@@ -242,17 +297,8 @@ const ProfilePage = () => {
               disabled
             />
             <Typography variant="body1" sx={{ mt: 2 }}>
-              Profile created on:{" "}
-              <strong>
-                {createdAt || (
-                  <Oval
-                    height="20"
-                    width="20"
-                    color="#1727b7"
-                    secondaryColor="#6fb5e7"
-                  />
-                )}
-              </strong>
+              Profile created on:
+              <strong>{createdAt || "Loading..."}</strong>
             </Typography>
             <Box
               sx={{

@@ -4,7 +4,7 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { Container, Box, Typography, Button } from "@mui/material";
+import { Box, Typography, Button } from "@mui/material";
 import { Send } from "@mui/icons-material";
 import { MainContainer } from "@/app/styles/Container";
 import Hero from "@/components/Hero/Hero";
