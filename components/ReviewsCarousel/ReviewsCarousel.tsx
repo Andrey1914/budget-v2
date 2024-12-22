@@ -7,12 +7,21 @@ import { IReview } from "@/interfaces";
 import "swiper/css/effect-coverflow";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Box, Typography, Rating, Avatar } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Rating,
+  Avatar,
+  useTheme,
+  useMediaQuery,
+} from "@mui/material";
 
 SwiperCore.use([Autoplay, EffectCoverflow]);
 
 const ReviewsCarousel: React.FC = () => {
   const [latestReviews, setLatestReviews] = useState<IReview[]>([]);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   useEffect(() => {
     const fetchLatestReviews = async () => {
@@ -29,18 +38,18 @@ const ReviewsCarousel: React.FC = () => {
       coverflowEffect={{
         rotate: 0, // Поворот вокруг оси (не нужен для текста)
         depth: 200, // Глубина: определяет удаление соседних слайдов
-        stretch: 50, // Расстояние между слайдами
+        stretch: isMobile ? 10 : 50, // Расстояние между слайдами
         modifier: 1, // Увеличение эффекта
         slideShadows: true, // Тени (можно оставить false для минимализма)
       }}
       centeredSlides={true}
-      slidesPerView={3}
+      slidesPerView={isMobile ? 2 : 3}
       spaceBetween={10}
       modules={[Autoplay]}
       autoplay={{ delay: 3000, disableOnInteraction: false }}
       loop={true}
       style={{
-        height: "130px",
+        height: isMobile ? "auto" : "130px",
         overflow: "visible",
       }}
     >
@@ -58,28 +67,44 @@ const ReviewsCarousel: React.FC = () => {
 
               boxShadow: "2px 2px 5px rgba(0, 0, 0, 0.1)",
               borderRadius: 4,
-              height: "100%",
+              height: isMobile ? "90%" : "100%",
+              margin: isMobile ? "0 auto" : "unset",
             }}
           >
-            <Box sx={{ display: "flex", p: 2 }}>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: isMobile ? "column" : "row",
+                p: 2,
+                alignItems: isMobile ? "center" : "flex-start",
+                textAlign: isMobile ? "center" : "left",
+              }}
+            >
               <Avatar
                 src={review.avatar}
                 alt={review.username}
                 sx={{
-                  width: 50,
-                  height: 50,
-                  marginRight: 2,
+                  width: isMobile ? 40 : 50,
+                  height: isMobile ? 40 : 50,
+                  marginBottom: isMobile ? 1 : 0,
+                  marginRight: isMobile ? 0 : 2,
                 }}
               />
               <Box>
-                <Typography variant="subtitle1" sx={{ textAlign: "left" }}>
+                <Typography
+                  variant="subtitle1"
+                  sx={{
+                    textAlign: isMobile ? "center" : "left",
+                    fontSize: isMobile ? "14px" : "16px",
+                  }}
+                >
                   {review.username}
                 </Typography>
                 <Box
                   sx={{
                     display: "flex",
                     alignItems: "center",
-                    justifyContent: "center",
+                    justifyContent: isMobile ? "center" : "flex-start",
                   }}
                 >
                   <Rating value={review.rating} readOnly />
@@ -108,6 +133,7 @@ const ReviewsCarousel: React.FC = () => {
                   overflow: "hidden",
                   WebkitLineClamp: 3,
                   WebkitBoxOrient: "vertical",
+                  fontSize: isMobile ? "12px" : "14px",
                 }}
               >
                 {review.text}

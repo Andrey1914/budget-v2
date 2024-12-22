@@ -57,14 +57,9 @@ const Landing: React.FC = () => {
           <AverageRating />
         </Box>
 
-        <Container
-          maxWidth="md"
-          style={{
-            padding: "30px",
-          }}
-        >
+        <Box>
           <ReviewsCarousel />
-        </Container>
+        </Box>
 
         <Box sx={{ p: 4 }}>
           <Box
