@@ -40,6 +40,7 @@ const ProfilePage = () => {
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [avatar, setAvatar] = useState<string>("");
+  const [createdAt, setCreatedAt] = useState<string>("");
 
   const [error, setError] = useState("");
   const [loadingSave, setLoadingSave] = useState(false);
@@ -52,13 +53,35 @@ const ProfilePage = () => {
   );
 
   useEffect(() => {
-    if (session) {
-      setSessionData(session);
-      setName(session.user.name || "");
-      setEmail(session.user.email || "");
-      setAvatar(session.user.image || "");
+    const fetchProfile = async () => {
+      try {
+        const response = await axios.get("/api/profile/get", {
+          params: { email: session?.user.email },
+        });
+
+        const { name, image, createdAt: userCreatedAt } = response.data;
+        setName(name || "");
+        setAvatar(image || "");
+        setCreatedAt(new Date(userCreatedAt).toLocaleDateString());
+      } catch (error) {
+        console.error("Error fetching profile data:", error);
+      }
+    };
+
+    if (session?.user.email) {
+      setEmail(session.user.email);
+      fetchProfile();
     }
   }, [session]);
+
+  // useEffect(() => {
+  //   if (session) {
+  //     setSessionData(session);
+  //     setName(session.user.name || "");
+  //     setEmail(session.user.email || "");
+  //     setAvatar(session.user.image || "");
+  //   }
+  // }, [session]);
 
   console.log(session);
 
@@ -98,9 +121,6 @@ const ProfilePage = () => {
         );
         setSnackbarSeverity("success");
         setShowSnackbar(true);
-        // alert("Profile updated successfully!");
-
-        // router.refresh();
       }
     } catch (error: any) {
       setError(error.message || "Failed to add expense");
@@ -134,7 +154,6 @@ const ProfilePage = () => {
         if (secureUrl) {
           setAvatar(secureUrl);
 
-          // Установка сообщения для Snackbar
           setSnackbarMessage(
             response.data?.message || "Avatar uploaded successfully!"
           );
@@ -147,7 +166,6 @@ const ProfilePage = () => {
     } catch (error: any) {
       console.error("Error uploading avatar:", error.response?.data || error);
 
-      // Установка сообщения об ошибке
       setSnackbarMessage(
         error.response?.data?.error ||
           "Failed to upload avatar. Please try again."
@@ -223,6 +241,19 @@ const ProfilePage = () => {
               margin="normal"
               disabled
             />
+            <Typography variant="body1" sx={{ mt: 2 }}>
+              Profile created on:{" "}
+              <strong>
+                {createdAt || (
+                  <Oval
+                    height="20"
+                    width="20"
+                    color="#1727b7"
+                    secondaryColor="#6fb5e7"
+                  />
+                )}
+              </strong>
+            </Typography>
             <Box
               sx={{
                 display: "flex",
