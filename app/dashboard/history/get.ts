@@ -1,13 +1,5 @@
 import axios from "axios";
-import { IIncome, IExpense } from "@/interfaces";
-
-interface FilterParams {
-  year: number | "";
-  month: number | "";
-  type: string;
-  page: number;
-  // limit: number;
-}
+import { IIncome, IExpense, FilterParams } from "@/interfaces";
 
 export const fetchTransactions = async (filters: FilterParams) => {
   // const { year, month, type, page, limit } = filters;

@@ -20,7 +20,7 @@ const EditTaskForm = ({
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchTask = async () => {
+    const getTaskById = async () => {
       try {
         const response = await axios.get(`/api/tasks/${taskId}`);
         const { title, content, date } = response.data;
@@ -32,7 +32,7 @@ const EditTaskForm = ({
       }
     };
 
-    fetchTask();
+    getTaskById();
   }, [taskId]);
 
   const handleSubmit = async (e: React.FormEvent) => {

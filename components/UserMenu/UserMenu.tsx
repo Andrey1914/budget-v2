@@ -18,10 +18,7 @@ import {
 
 import theme from "@/app/styles/theme";
 
-interface UserMenuProps {
-  userName: string | null;
-  userImage?: string | null;
-}
+import { UserMenuProps } from "@/interfaces";
 
 const UserMenu: React.FC<UserMenuProps> = ({ userName, userImage }) => {
   const router = useRouter();

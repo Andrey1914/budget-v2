@@ -7,18 +7,7 @@ import {
   TextField,
   Button,
 } from "@mui/material";
-import { Category } from "@/interfaces";
-
-interface EditCategoryDialogProps {
-  open: boolean;
-  onClose: () => void;
-  editingCategory: Category | null;
-  newCategory: string;
-  newCategoryDescription: string;
-  setNewCategory: (value: string) => void;
-  setNewCategoryDescription: (value: string) => void;
-  handleEditCategory: () => Promise<void>;
-}
+import { EditCategoryDialogProps } from "@/interfaces";
 
 const EditCategoryDialog: React.FC<EditCategoryDialogProps> = ({
   open,

@@ -1,14 +1,5 @@
 import { Box, Select, MenuItem, Button } from "@mui/material";
-
-interface FilterPanelProps {
-  selectedYear: number | "";
-  selectedMonth: number | "";
-  selectedType: string;
-  onYearChange: (year: number | "") => void;
-  onMonthChange: (month: number | "") => void;
-  onTypeChange: (type: string) => void;
-  onApplyFilters: () => void;
-}
+import { FilterPanelProps } from "@/interfaces";
 
 const FilterPanel: React.FC<FilterPanelProps> = ({
   selectedYear,

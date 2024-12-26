@@ -1,28 +1,8 @@
 import React from "react";
 import { Select, MenuItem, Button, FormControl } from "@mui/material";
-import { Category } from "@/interfaces";
+import { CategorySelectProps } from "@/interfaces";
 import AddCategoryDialog from "@/components/Category/Add";
 import EditCategoryDialog from "@/components/Category/Edit";
-
-interface CategorySelectProps {
-  categories: Category[];
-  category: string;
-  setCategory: (value: string) => void;
-  newCategory: string;
-  newCategoryDescription: string;
-  setNewCategory: (value: string) => void;
-  setNewCategoryDescription: (value: string) => void;
-  handleAddCategory: () => Promise<void>;
-  handleEditCategory: () => Promise<void>;
-  handleOpenEditDialog: (category: Category) => void;
-  handleDeleteCategory: () => Promise<void>;
-  openAddDialog: boolean;
-  setOpenAddDialog: (value: boolean) => void;
-  openEditDialog: boolean;
-  setOpenEditDialog: (value: boolean) => void;
-  editingCategory: Category | null;
-  handleCloseEditDialog: () => void;
-}
 
 const SelectCategory: React.FC<CategorySelectProps> = ({
   categories,

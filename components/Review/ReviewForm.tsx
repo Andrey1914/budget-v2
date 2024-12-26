@@ -2,10 +2,7 @@ import React, { useState } from "react";
 import { Box, TextField, Button, Rating, Typography } from "@mui/material";
 import { Send } from "@mui/icons-material";
 import SnackbarNotification from "@/components/Notification/Snackbar";
-
-interface ReviewFormProps {
-  onAddReview: (newReview: { rating: number | null; text: string }) => void;
-}
+import { ReviewFormProps } from "@/interfaces";
 
 const ReviewForm: React.FC<ReviewFormProps> = ({ onAddReview }) => {
   const [rating, setRating] = useState<number | null>(3);

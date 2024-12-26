@@ -22,7 +22,7 @@ const EditExpenseForm = ({
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchExpense = async () => {
+    const getExpenseById = async () => {
       try {
         const response = await axios.get(`/api/expense/${expenseId}`);
         const { amount, description, category, date } = response.data;
@@ -35,7 +35,7 @@ const EditExpenseForm = ({
       }
     };
 
-    fetchExpense();
+    getExpenseById();
   }, [expenseId]);
 
   const handleSubmit = async (e: React.FormEvent) => {

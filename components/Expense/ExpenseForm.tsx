@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 import { ExpenseFormProps, Category } from "@/interfaces";
 import SnackbarNotification from "@/components/Notification/Snackbar";
 import {
-  fetchCategories,
+  getCategories,
   AddCategory,
   EditCategory,
   DeleteCategory,
@@ -56,7 +56,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ initialData }) => {
   useEffect(() => {
     const loadCategories = async () => {
       try {
-        const data = await fetchCategories();
+        const data = await getCategories();
         setCategories(data);
       } catch (error) {
         console.error("Failed to load categories", error);
@@ -174,7 +174,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ initialData }) => {
             setNewCategory,
             setNewCategoryDescription,
             setOpen,
-            fetchCategories
+            getCategories
           )
         }
         handleEditCategory={() =>

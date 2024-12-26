@@ -17,7 +17,9 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@/interfaces": ["./interfaces/index.ts"],
+      "@/interfaces/*": ["./interfaces/*"]
     },
     "types": ["next", "next-auth", "next-auth/jwt"],
     "isolatedModules": true

@@ -7,7 +7,7 @@ import axios from "axios";
 import { IncomeFormProps, Category } from "@/interfaces";
 import SnackbarNotification from "@/components/Notification/Snackbar";
 import {
-  fetchCategories,
+  getCategories,
   AddCategory,
   EditCategory,
   DeleteCategory,
@@ -54,35 +54,10 @@ const IncomeForm: React.FC<IncomeFormProps> = ({ initialData }) => {
     "success"
   );
 
-  // useEffect(() => {
-  //   const fetchCurrencies = async () => {
-  //     try {
-  //       const response = await axios.get(
-  //         "https://openexchangerates.org/api/currencies.json"
-  //         // {
-  //         //   headers: {
-  //         //     Authorization: `Bearer YOUR_API_KEY`,
-  //         //   },
-  //         // }
-  //       );
-  //       const currenciesList = Object.keys(response.data).map((key) => ({
-  //         code: key,
-  //         name: response.data[key],
-  //       }));
-  //       setCurrencies(currenciesList); // Устанавливаем валюты
-  //     } catch (error) {
-  //       console.error("Error fetching currencies:", error);
-  //       setError("Failed to load currencies.");
-  //     }
-  //   };
-
-  //   fetchCurrencies();
-  // }, []);
-
   useEffect(() => {
     const loadCategories = async () => {
       try {
-        const data = await fetchCategories();
+        const data = await getCategories();
         setCategories(data);
       } catch (error) {
         console.error("Failed to load categories", error);
@@ -200,7 +175,7 @@ const IncomeForm: React.FC<IncomeFormProps> = ({ initialData }) => {
             setNewCategory,
             setNewCategoryDescription,
             setOpen,
-            fetchCategories
+            getCategories
           )
         }
         handleEditCategory={() =>

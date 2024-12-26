@@ -1,12 +1,6 @@
 import React from "react";
 import { Popover, Typography } from "@mui/material";
-
-interface PopoverProps {
-  open: boolean;
-  anchorEl: HTMLElement | null;
-  message: string;
-  onClose: () => void;
-}
+import { PopoverProps } from "@/interfaces";
 
 const CustomPopover: React.FC<PopoverProps> = ({
   open,

@@ -2,22 +2,13 @@
 
 import { useState, useEffect } from "react";
 import axios from "axios";
-
-interface User {
-  id: string;
-  name: string;
-  email: string;
-}
-
-interface AuthResponse {
-  user: User;
-}
+import { IUser, AuthResponse } from "@/interfaces";
 
 export const useAuth = () => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<IUser | null>(null);
 
   useEffect(() => {
-    const fetchUser = async () => {
+    const getUser = async () => {
       try {
         const res = await axios.get<AuthResponse>("/api/auth/profile");
         setUser(res.data.user);
@@ -26,7 +17,7 @@ export const useAuth = () => {
       }
     };
 
-    fetchUser();
+    getUser();
   }, []);
 
   const login = async (email: string, password: string) => {

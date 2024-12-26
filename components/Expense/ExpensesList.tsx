@@ -5,8 +5,7 @@ import { useSession } from "next-auth/react";
 import { handleDelete } from "@/app/dashboard/expense/delete";
 import { getExpenses } from "@/app/dashboard/expense/get";
 import { refreshExpenses } from "@/app/dashboard/expense/refresh";
-import { Expense } from "@/types";
-import { Session } from "@/interfaces";
+import { Session, IExpense } from "@/interfaces";
 import EditExpenseForm from "@/components/Expense/EditExpenseForm";
 
 import { Delete, Edit } from "@mui/icons-material";
@@ -20,7 +19,7 @@ const ExpensesList: React.FC<{
     data: Session | null;
     status: string;
   };
-  const [expense, setExpense] = useState<Expense[]>([]);
+  const [expense, setExpense] = useState<IExpense[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [editingExpenseId, setEditingExpenseId] = useState<string | null>(null);
 
@@ -35,7 +34,7 @@ const ExpensesList: React.FC<{
           setExpense(expensesData);
 
           const total = expensesData.reduce(
-            (acc: number, item: Expense) => acc + item.amount,
+            (acc: number, item: IExpense) => acc + item.amount,
             0
           );
           onUpdate(total);
@@ -67,7 +66,7 @@ const ExpensesList: React.FC<{
       setExpense(expensesData);
 
       const total = expensesData.reduce(
-        (acc: number, item: Expense) => acc + item.amount,
+        (acc: number, item: IExpense) => acc + item.amount,
         0
       );
 
@@ -110,8 +109,8 @@ const ExpensesList: React.FC<{
           gap: 4,
         }}
       >
-        {expense.map((item: Expense) => (
-          <ListItem key={item._id} style={{ padding: 0 }}>
+        {expense.map((item: IExpense) => (
+          <ListItem key={item._id.toString()} style={{ padding: 0 }}>
             <Paper
               style={{
                 padding: 9,
@@ -126,11 +125,16 @@ const ExpensesList: React.FC<{
                 {item.amount} {userCurrency} - {item.description}
               </Typography>
               <Box sx={{ display: "flex", gap: 3 }}>
-                <Edit onClick={() => handleEdit(item._id)} />
+                <Edit onClick={() => handleEdit(item._id.toString())} />
 
                 <Delete
                   onClick={() =>
-                    handleDelete(item._id, expense, setExpense, reloadData)
+                    handleDelete(
+                      item._id.toString(),
+                      expense,
+                      setExpense,
+                      reloadData
+                    )
                   }
                 />
               </Box>

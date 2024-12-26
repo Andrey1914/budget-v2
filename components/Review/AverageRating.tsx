@@ -7,7 +7,7 @@ const AverageRating: React.FC = () => {
   const [averageRating, setAverageRating] = useState<number | null>(null);
 
   useEffect(() => {
-    const fetchAverageRating = async () => {
+    const getAverageRating = async () => {
       try {
         const response = await axios.get("/api/review/average-rating");
         setAverageRating(response.data.averageRating);
@@ -16,7 +16,7 @@ const AverageRating: React.FC = () => {
       }
     };
 
-    fetchAverageRating();
+    getAverageRating();
   }, []);
 
   return (

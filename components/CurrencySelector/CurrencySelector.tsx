@@ -12,10 +12,7 @@ import {
   Button,
 } from "@mui/material";
 
-interface CurrencySelectorProps {
-  selectedCurrency: string;
-  onCurrencyChange: (currency: string) => void;
-}
+import { CurrencySelectorProps } from "@/interfaces";
 
 const CurrencySelector: React.FC<CurrencySelectorProps> = ({
   selectedCurrency,

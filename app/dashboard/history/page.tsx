@@ -50,14 +50,12 @@ const HistoryPage = () => {
         type: selectedType,
         page: currentPage,
         // limit: limit,
-        // limit: 10000,
       });
-      console.log("Transactions received:", data.transactions);
+      // console.log("Transactions received:", data.transactions);
 
       setTransactions(data.transactions);
       setTotalSum(data.totalSum);
       setTotalTransactions(data.totalTransactions);
-      // setTotalTransactions(data.transactions.length);
     } catch (error) {
       console.error("Ошибка при загрузке транзакций:", error);
     }

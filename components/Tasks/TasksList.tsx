@@ -2,14 +2,13 @@
 
 import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
-import { Task } from "@/types";
 import EditTaskForm from "@/components/Tasks/EditTaskForm";
 import { getTasks } from "@/app/dashboard/tasks/get";
 import { updateTaskStatus } from "@/app/dashboard/tasks/updateCheckbox";
 import { deleteTask } from "@/app/dashboard/tasks/delete";
 import { refreshTasksList } from "@/app/dashboard/tasks/refresh";
 
-import { Session } from "@/interfaces";
+import { Session, ITask } from "@/interfaces";
 
 import { Delete, Edit } from "@mui/icons-material";
 import {
@@ -25,7 +24,7 @@ const TasksList: React.FC = () => {
   const { data: session } = useSession() as {
     data: Session | null;
   };
-  const [tasks, setTasks] = useState<Task[]>([]);
+  const [tasks, setTasks] = useState<ITask[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
   const [unresolvedTasksCount, setUnresolvedTasksCount] = useState<number>(0);
@@ -58,7 +57,9 @@ const TasksList: React.FC = () => {
 
       setTasks((prevTasks) =>
         prevTasks.map((task) =>
-          task._id === id ? { ...task, completed: !task.completed } : task
+          task._id === id
+            ? ({ ...task, completed: !task.completed } as ITask)
+            : task
         )
       );
 
@@ -152,8 +153,8 @@ const TasksList: React.FC = () => {
           }}
         >
           {Array.isArray(tasks) &&
-            tasks.map((item: Task) => (
-              <ListItem key={item._id} style={{ padding: 0 }}>
+            tasks.map((item: ITask) => (
+              <ListItem key={item._id.toString()} style={{ padding: 0 }}>
                 <Paper
                   style={{
                     padding: 9,
@@ -168,7 +169,10 @@ const TasksList: React.FC = () => {
                     <Checkbox
                       checked={Boolean(item.completed)}
                       onChange={() =>
-                        handleCheckboxChange(item._id, item.completed)
+                        handleCheckboxChange(
+                          item._id.toString(),
+                          item.completed
+                        )
                       }
                     />
                     <Typography variant="h6" component="p">
@@ -177,9 +181,8 @@ const TasksList: React.FC = () => {
                   </Box>
 
                   <Box sx={{ display: "flex", gap: 3 }}>
-                    <Edit onClick={() => handleEdit(item._id)} />
-
-                    <Delete onClick={() => handleDelete(item._id)} />
+                    <Edit onClick={() => handleEdit(item._id.toString())} />
+                    <Delete onClick={() => handleDelete(item._id.toString())} />
                   </Box>
                 </Paper>
               </ListItem>

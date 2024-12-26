@@ -1,11 +1,5 @@
 import axios from "axios";
-import { IIncome, IExpense } from "@/interfaces";
-
-interface FilterParams {
-  year: number | "";
-  month: number | "";
-  type: string;
-}
+import { IIncome, IExpense, FilterParams } from "@/interfaces";
 
 export const fetchAnalyticsData = async (filters: FilterParams) => {
   const { year, month, type } = filters;

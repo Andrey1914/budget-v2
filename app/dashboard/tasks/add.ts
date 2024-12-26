@@ -1,10 +1,11 @@
 import axios from "axios";
-import { Task } from "@/types";
+// import { Task } from "@/types";
+import { ITask } from "@/interfaces";
 
 export const addTask = async (
   title: string,
   content: string
-): Promise<Task> => {
+): Promise<ITask> => {
   try {
     const res = await axios.post(
       "/api/tasks/add",

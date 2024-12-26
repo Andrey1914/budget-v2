@@ -8,16 +8,7 @@ import {
   TextField,
 } from "@mui/material";
 
-import { IReview } from "@/interfaces";
-
-interface ReviewListProps {
-  reviews: IReview[];
-  onEditReview?: (
-    id: string,
-    updatedData: { rating: number; text: string }
-  ) => void;
-  onDeleteReview?: (id: string) => void;
-}
+import { IReview, ReviewListProps } from "@/interfaces";
 
 const ReviewsList: React.FC<ReviewListProps> = ({
   reviews,

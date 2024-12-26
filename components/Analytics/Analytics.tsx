@@ -9,7 +9,8 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import { Session, IExpense, IIncome } from "@/interfaces";
+
+import { CategoryChartProps, ChartData } from "@/interfaces";
 
 ChartJS.register(
   CategoryScale,
@@ -19,24 +20,6 @@ ChartJS.register(
   Tooltip,
   Legend
 );
-
-interface CategoryChartProps {
-  session: Session;
-  selectedMonth: number | "";
-  selectedType: string;
-  transactions: IIncome[] | IExpense[];
-}
-
-interface ChartData {
-  labels: string[];
-  datasets: {
-    label: string;
-    data: number[];
-    backgroundColor: string;
-    borderColor: string;
-    borderWidth: number;
-  }[];
-}
 
 const CategoryChart: React.FC<CategoryChartProps> = ({
   selectedMonth,

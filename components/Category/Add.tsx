@@ -1,4 +1,3 @@
-// AddCategoryDialog.tsx
 import React from "react";
 import {
   Dialog,
@@ -9,15 +8,7 @@ import {
   Button,
 } from "@mui/material";
 
-interface AddCategoryDialogProps {
-  open: boolean;
-  onClose: () => void;
-  newCategory: string;
-  newCategoryDescription: string;
-  setNewCategory: (value: string) => void;
-  setNewCategoryDescription: (value: string) => void;
-  handleAddCategory: () => Promise<void>;
-}
+import { AddCategoryDialogProps } from "@/interfaces";
 
 const AddCategoryDialog: React.FC<AddCategoryDialogProps> = ({
   open,

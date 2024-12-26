@@ -29,7 +29,7 @@ const EditIncomeForm = ({
   );
 
   useEffect(() => {
-    const fetchIncome = async () => {
+    const getIncomeById = async () => {
       try {
         const response = await axios.get(`/api/income/${incomeId}`);
         const { amount, description, category, date } = response.data;
@@ -43,7 +43,7 @@ const EditIncomeForm = ({
       }
     };
 
-    fetchIncome();
+    getIncomeById();
   }, [incomeId]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -84,32 +84,6 @@ const EditIncomeForm = ({
     } finally {
       setLoading(false);
     }
-
-    // const result = await editIncome({
-    //   incomeId,
-    //   amount,
-    //   description,
-    //   category,
-    //   date,
-    // });
-
-    // if (result.success) {
-    //   refreshIncomes(result.data);
-    //   onClose(result.data);
-
-    //   setSnackbarMessage("Income edited successfully!");
-    //   setSnackbarSeverity("success");
-    //   setShowSnackbar(true);
-
-    //   console.log("Income edited successfully");
-    // } else {
-    //   setError(result.error);
-
-    //   setSnackbarMessage("Failed to edit income");
-    //   setSnackbarSeverity("error");
-    //   setShowSnackbar(true);
-    // }
-    // setLoading(false);
   };
 
   return (

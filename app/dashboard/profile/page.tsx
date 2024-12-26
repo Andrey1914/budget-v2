@@ -55,7 +55,7 @@ const ProfilePage = () => {
   );
 
   useEffect(() => {
-    const fetchProfile = async () => {
+    const getProfile = async () => {
       try {
         const response = await axios.get("/api/profile/get", {
           params: { email: session?.user.email },
@@ -72,7 +72,7 @@ const ProfilePage = () => {
 
     if (session?.user.email) {
       setEmail(session.user.email);
-      fetchProfile();
+      getProfile();
     }
   }, [session]);
 
@@ -88,8 +88,7 @@ const ProfilePage = () => {
   console.log(session);
 
   useEffect(() => {
-    // Загрузка текущей выбранной валюты
-    const fetchUserCurrency = async () => {
+    const getUserCurrency = async () => {
       try {
         const response = await axios.get("/api/profile/getCurrency", {
           params: { email: session?.user.email },
@@ -101,7 +100,7 @@ const ProfilePage = () => {
     };
 
     if (session?.user.email) {
-      fetchUserCurrency();
+      getUserCurrency();
     }
   }, [session]);
 
@@ -109,7 +108,6 @@ const ProfilePage = () => {
     setSelectedCurrency(currency);
 
     try {
-      // Сохранение выбранной валюты
       await axios.put("/api/profile/updateCurrency", {
         email: session?.user.email,
         currency,

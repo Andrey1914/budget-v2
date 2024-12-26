@@ -1,12 +1,12 @@
 import axios from "axios";
-import { Task } from "@/types";
-import { Session } from "@/interfaces";
+// import { Task } from "@/types";
+import { Session, ITask } from "@/interfaces";
 
 export const updateTaskStatus = async (
   id: string,
   completed: boolean,
   session: Session
-): Promise<Task[]> => {
+): Promise<ITask[]> => {
   try {
     if (!session || !session.user) {
       throw new Error("Session or token is not available");
