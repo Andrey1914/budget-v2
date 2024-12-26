@@ -25,6 +25,7 @@ const AnalyticsPage: React.FC = () => {
     new Date().getMonth() + 1
   );
   const [selectedType, setSelectedType] = useState<string>("all");
+  const [currentPage, setCurrentPage] = useState<number>(1);
 
   const [transactions, setTransactions] = useState<IIncome[] | IExpense[]>([]);
   const [totalSum, setTotalSum] = useState<number>(0);
@@ -38,6 +39,7 @@ const AnalyticsPage: React.FC = () => {
         year: selectedYear,
         month: selectedMonth,
         type: selectedType,
+        page: currentPage,
       });
       console.log("Data in page analytics:", data);
 
@@ -48,7 +50,7 @@ const AnalyticsPage: React.FC = () => {
     } catch (error) {
       console.error("Ошибка при загрузке аналитических данных:", error);
     }
-  }, [selectedYear, selectedMonth, selectedType]);
+  }, [selectedYear, selectedMonth, selectedType, currentPage]);
 
   useEffect(() => {
     if (session) {
