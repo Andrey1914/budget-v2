@@ -14,7 +14,6 @@ import { Session } from "@/interfaces";
 import { Delete, Edit } from "@mui/icons-material";
 import {
   Box,
-  Fab,
   List,
   ListItem,
   Paper,
@@ -119,63 +118,74 @@ const TasksList: React.FC = () => {
         </Typography>
       </Box>
 
-      <Box sx={{ p: 3, backgroundColor: "orange", borderRadius: "0.3rem" }}>
-        {unresolvedTasksCount > 0 && (
-          <Typography
-            variant="h4"
-            component="p"
-            style={{
-              color: "white",
-            }}
-          >
+      <Box
+        sx={{
+          p: 3,
+          backgroundColor: "orange",
+          borderRadius: "0.3rem",
+          color: "#000",
+        }}
+      >
+        {unresolvedTasksCount > 0 ? (
+          <Typography variant="h4" component="p">
             You have {unresolvedTasksCount} unresolved tasks!
+          </Typography>
+        ) : (
+          <Typography variant="h4" component="p">
+            No unresolved tasks, great job!
           </Typography>
         )}
       </Box>
+      {tasks.length === 0 ? (
+        <Box sx={{ p: 3 }}>
+          <Typography variant="subtitle1" color="textSecondary">
+            No tasks available. Add some tasks to get started!
+          </Typography>
+        </Box>
+      ) : (
+        <List
+          style={{
+            width: "100%",
+            display: "flex",
+            flexDirection: "column",
+            gap: 4,
+          }}
+        >
+          {Array.isArray(tasks) &&
+            tasks.map((item: Task) => (
+              <ListItem key={item._id} style={{ padding: 0 }}>
+                <Paper
+                  style={{
+                    padding: 9,
+                    display: "flex",
+                    alignItems: "center",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    width: "100%",
+                  }}
+                >
+                  <Box sx={{ display: "flex", alignItems: "center" }}>
+                    <Checkbox
+                      checked={Boolean(item.completed)}
+                      onChange={() =>
+                        handleCheckboxChange(item._id, item.completed)
+                      }
+                    />
+                    <Typography variant="h6" component="p">
+                      {item.title} - {item.content}
+                    </Typography>
+                  </Box>
 
-      <List
-        style={{
-          width: "100%",
-          display: "flex",
-          flexDirection: "column",
-          gap: 4,
-        }}
-      >
-        {Array.isArray(tasks) &&
-          tasks.map((item: Task) => (
-            <ListItem key={item._id} style={{ padding: 0 }}>
-              <Paper
-                style={{
-                  padding: 9,
-                  display: "flex",
-                  alignItems: "center",
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  width: "100%",
-                }}
-              >
-                <Box sx={{ display: "flex", alignItems: "center" }}>
-                  <Checkbox
-                    checked={Boolean(item.completed)}
-                    onChange={() =>
-                      handleCheckboxChange(item._id, item.completed)
-                    }
-                  />
-                  <Typography variant="h6" component="p">
-                    {item.title} - {item.content}
-                  </Typography>
-                </Box>
+                  <Box sx={{ display: "flex", gap: 3 }}>
+                    <Edit onClick={() => handleEdit(item._id)} />
 
-                <Box sx={{ display: "flex", gap: 3 }}>
-                  <Edit onClick={() => handleEdit(item._id)} />
-
-                  <Delete onClick={() => handleDelete(item._id)} />
-                </Box>
-              </Paper>
-            </ListItem>
-          ))}
-      </List>
-
+                    <Delete onClick={() => handleDelete(item._id)} />
+                  </Box>
+                </Paper>
+              </ListItem>
+            ))}
+        </List>
+      )}
       {editingTaskId && (
         <EditTaskForm
           taskId={editingTaskId}

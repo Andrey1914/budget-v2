@@ -46,19 +46,19 @@ const Navbar: React.FC = () => {
     if (status === "loading") return;
   }, [session, status]);
 
-  if (status === "loading")
-    return (
-      <Oval
-        visible={true}
-        height="80"
-        width="80"
-        color="#1727b7"
-        secondaryColor="#6fb5e7"
-        ariaLabel="oval-loading"
-        wrapperStyle={{}}
-        wrapperClass=""
-      />
-    );
+  // if (status === "loading")
+  //   return (
+  //     <Oval
+  //       visible={true}
+  //       height="80"
+  //       width="80"
+  //       color="#1727b7"
+  //       secondaryColor="#6fb5e7"
+  //       ariaLabel="oval-loading"
+  //       wrapperStyle={{}}
+  //       wrapperClass=""
+  //     />
+  //   );
 
   const links = [
     { href: "/landing", label: "Home", icon: <Home /> },

@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { handleDelete } from "@/app/dashboard/expense/delete";
-import { fetchExpenses } from "@/app/dashboard/expense/get";
+import { getExpenses } from "@/app/dashboard/expense/get";
 import { refreshExpenses } from "@/app/dashboard/expense/refresh";
 import { Expense } from "@/types";
 import { Session } from "@/interfaces";
@@ -12,29 +12,33 @@ import EditExpenseForm from "@/components/Expense/EditExpenseForm";
 import { Delete, Edit } from "@mui/icons-material";
 import { Box, List, ListItem, Paper, Typography } from "@mui/material";
 
-const ExpensesList: React.FC = () => {
+const ExpensesList: React.FC<{
+  totalExpense: number;
+  onUpdate: (updatedExpenses: number) => void;
+}> = ({ totalExpense, onUpdate }) => {
   const { data: session, status } = useSession() as {
     data: Session | null;
     status: string;
   };
   const [expense, setExpense] = useState<Expense[]>([]);
-  const [totalExpense, setTotalExpense] = useState<number>(0);
   const [error, setError] = useState<string | null>(null);
   const [editingExpenseId, setEditingExpenseId] = useState<string | null>(null);
 
+  const userCurrency = session?.user?.currency;
+
   useEffect(() => {
     if (session) {
-      const loadData = async () => {
+      const getExpensesData = async () => {
         try {
-          const expensesData = await fetchExpenses(session);
-          console.log("Expenses data fom expense list:", expensesData);
+          const expensesData = await getExpenses(session);
+
           setExpense(expensesData);
 
           const total = expensesData.reduce(
             (acc: number, item: Expense) => acc + item.amount,
             0
           );
-          setTotalExpense(total);
+          onUpdate(total);
         } catch (err) {
           console.error("Error fetching expenses:", err);
           setError((err as Error).message);
@@ -42,10 +46,10 @@ const ExpensesList: React.FC = () => {
       };
 
       if (session) {
-        loadData();
+        getExpensesData();
       }
     }
-  }, [session, status]);
+  }, [session, status, onUpdate]);
 
   const handleEdit = (id: string) => {
     setEditingExpenseId(id);
@@ -59,6 +63,7 @@ const ExpensesList: React.FC = () => {
 
     try {
       const expensesData = await refreshExpenses(session);
+
       setExpense(expensesData);
 
       const total = expensesData.reduce(
@@ -66,7 +71,7 @@ const ExpensesList: React.FC = () => {
         0
       );
 
-      setTotalExpense(total);
+      onUpdate(total);
     } catch (err) {
       setError((err as Error).message);
     }
@@ -84,15 +89,16 @@ const ExpensesList: React.FC = () => {
           Expenses
         </Typography>
       </Box>
-      <Box sx={{ p: 3, backgroundColor: "orange", borderRadius: "0.3rem" }}>
-        <Typography
-          variant="h4"
-          component="p"
-          style={{
-            color: "white",
-          }}
-        >
-          Total Expenses for this month: {totalExpense} PLN
+      <Box
+        sx={{
+          p: 3,
+          backgroundColor: "orange",
+          borderRadius: "0.3rem",
+          color: "#000",
+        }}
+      >
+        <Typography variant="h4" component="p">
+          Total Expenses for this month: {totalExpense} {userCurrency}
         </Typography>
       </Box>
 
@@ -117,14 +123,14 @@ const ExpensesList: React.FC = () => {
               }}
             >
               <Typography variant="h6" component="p">
-                {item.amount} - {item.description}
+                {item.amount} {userCurrency} - {item.description}
               </Typography>
               <Box sx={{ display: "flex", gap: 3 }}>
                 <Edit onClick={() => handleEdit(item._id)} />
 
                 <Delete
                   onClick={() =>
-                    handleDelete(item._id, expense, setExpense, setTotalExpense)
+                    handleDelete(item._id, expense, setExpense, reloadData)
                   }
                 />
               </Box>
@@ -132,6 +138,7 @@ const ExpensesList: React.FC = () => {
           </ListItem>
         ))}
       </List>
+
       {editingExpenseId && (
         <EditExpenseForm
           expenseId={editingExpenseId}

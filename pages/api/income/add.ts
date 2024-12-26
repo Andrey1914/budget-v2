@@ -18,7 +18,7 @@ const addIncome = async (req: NextApiRequest, res: NextApiResponse) => {
         return res.status(401).json({ error: "Unauthorized" });
       }
 
-      const { amount, description, category, date } = req.body;
+      const { amount, description, category, date, currency } = req.body;
       if (!amount || !category || !date) {
         return res.status(400).json({ error: "Missing required fields" });
       }
@@ -45,6 +45,7 @@ const addIncome = async (req: NextApiRequest, res: NextApiResponse) => {
         category: categoryId,
         date: incomeDate,
         createdAt: new Date(),
+        currency,
       });
 
       res.status(201).json(income);

@@ -5,6 +5,7 @@ export type Expense = {
   description: string;
   category: string;
   date: string;
+  currency: string;
 };
 
 // Income
@@ -14,6 +15,7 @@ export type Income = {
   description: string;
   category: string;
   date: string;
+  currency: string;
 };
 
 // Task

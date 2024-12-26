@@ -51,6 +51,12 @@ export default NextAuth({
           user.isVerified = true;
         }
 
+        // if (user.currency) {
+        //   console.log("Currency found:", user.currency);
+        // } else {
+        //   console.log("Currency not found for user");
+        // }
+
         const isPasswordValid = await bcrypt.compare(
           credentials.password,
           user.password
@@ -67,6 +73,7 @@ export default NextAuth({
           name: user.name,
           email: user.email,
           image: user.image,
+          currency: user.currency,
           token: user.token,
           isVerified: user.isVerified,
         };
@@ -86,6 +93,7 @@ export default NextAuth({
         token.id = user.id;
         token.name = user.name;
         token.image = user.image;
+        token.currency = user.currency;
         token.token = user.token;
         token.isVerified = user.isVerified;
       } else {
@@ -103,20 +111,14 @@ export default NextAuth({
       }
       return token;
     },
-    //   if (user) {
-    //     token.id = user.id;
-    //     token.name = user.name;
-    //     token.image = user.image;
-    //     token.token = user.token;
-    //     token.isVerified = user.isVerified;
-    //   }
-    //   return token;
-    // },
+
     async session({ session, token }) {
       if (session?.user) {
         session.user.id = token.id as string;
         session.user.name = token.name as string;
         session.user.image = token.image as string;
+        session.user.currency = token.currency as string;
+
         session.user.token = token.token as string;
         session.user.isVerified = token.isVerified as boolean;
       }

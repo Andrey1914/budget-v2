@@ -4,7 +4,7 @@ import clientPromise from "@/lib/db";
 
 const secret = process.env.JWT_SECRET;
 
-export default async function handler(
+export default async function getUser(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
@@ -39,6 +39,7 @@ export default async function handler(
       name: user.name,
       image: user.image,
       createdAt: user.createdAt,
+      baseCurrency: user.baseCurrency || "USD",
     });
   } catch (error) {
     console.error("Error fetching user:", error);

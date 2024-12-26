@@ -11,17 +11,16 @@ import CarryOverBalance from "@/components/CarryOverBalance/CarryOverBalance";
 
 import { Box, Grid2, Typography } from "@mui/material";
 
-import { Oval } from "react-loader-spinner";
+// import { Oval } from "react-loader-spinner";
 
 const Dashboard: React.FC = () => {
   const { data: session, status } = useSession();
   const router = useRouter();
 
-  const [carryOverBalanceData, setCarryOverBalanceData] = useState<{
-    totalIncome: number;
-    totalExpense: number;
-    carryOverBalance: number;
-  } | null>(null);
+  const [carryOverBalance, setCarryOverBalance] = useState<number>(0);
+  const [totalIncome, setTotalIncome] = useState<number>(0);
+  const [totalExpense, setTotalExpense] = useState<number>(0);
+
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -39,11 +38,10 @@ const Dashboard: React.FC = () => {
     try {
       const response = await fetch(`/api/transactions/getAllTransactions`);
       const data = await response.json();
-      setCarryOverBalanceData({
-        totalIncome: data.totalIncome,
-        totalExpense: data.totalExpense,
-        carryOverBalance: data.carryOverBalance,
-      });
+
+      setCarryOverBalance(data.carryOverBalance);
+      setTotalIncome(data.totalIncome);
+      setTotalExpense(data.totalExpense);
     } catch (error) {
       console.error("Ошибка загрузки данных:", error);
     } finally {
@@ -51,11 +49,19 @@ const Dashboard: React.FC = () => {
     }
   };
 
-  if (status === "loading") {
-    return (
-      <Oval height="80" width="80" color="#1727b7" secondaryColor="#6fb5e7" />
-    );
-  }
+  const handleExpensesUpdate = (updatedExpenses: number) => {
+    setTotalExpense(updatedExpenses);
+  };
+
+  const handleIncomesUpdate = (updatedIncomes: number) => {
+    setTotalIncome(updatedIncomes);
+  };
+
+  // if (status === "loading") {
+  //   return (
+  //     <Oval height="80" width="80" color="#1727b7" secondaryColor="#6fb5e7" />
+  //   );
+  // }
 
   if (!session || !session.user.isVerified) {
     return null;
@@ -64,32 +70,43 @@ const Dashboard: React.FC = () => {
   return (
     <>
       <Box sx={{ p: 4 }}>
-        <Typography variant="h4" component="h1">
+        <Typography variant="h3" component="h1">
           Welcome to Finance App, {session.user.name}
         </Typography>
 
         <Grid2 container spacing={4}>
           <Grid2 container size={12} component="div">
             <Grid2 size={6} component="div">
-              <Grid2 container direction="column" spacing={2}>
+              <Grid2 container direction="column" spacing={4}>
                 <Grid2 size={6} component="div">
-                  <IncomesList />
+                  <IncomesList
+                    totalIncome={totalIncome}
+                    onUpdate={handleIncomesUpdate}
+                  />
                 </Grid2>
                 <Grid2 size={6} component="div">
-                  <ExpensesList />
+                  <ExpensesList
+                    totalExpense={totalExpense}
+                    onUpdate={handleExpensesUpdate}
+                  />
                 </Grid2>
               </Grid2>
             </Grid2>
 
             <Grid2 size={6} component="div">
-              {carryOverBalanceData && (
-                <CarryOverBalance {...carryOverBalanceData} />
-              )}
+              <Grid2 container direction="column" spacing={4}>
+                <Grid2 size={6} component="div">
+                  <CarryOverBalance
+                    carryOverBalance={carryOverBalance}
+                    totalIncome={totalIncome}
+                    totalExpense={totalExpense}
+                  />
+                </Grid2>
+                <Grid2 size={6} component="div">
+                  <TasksList />
+                </Grid2>
+              </Grid2>
             </Grid2>
-          </Grid2>
-
-          <Grid2 size={12} component="div">
-            <TasksList />
           </Grid2>
         </Grid2>
       </Box>

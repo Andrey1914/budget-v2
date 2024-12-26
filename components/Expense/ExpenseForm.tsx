@@ -30,6 +30,10 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ initialData }) => {
   const [date, setDate] = useState(initialData?.date || "");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [currency, setCurrency] = useState<string>("USD");
+  const [currencies, setCurrencies] = useState<
+    { code: string; name: string }[]
+  >([]);
 
   const [categories, setCategories] = useState<Category[]>([]);
 
@@ -96,6 +100,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ initialData }) => {
         amount: parsedAmount,
         description,
         category,
+        currency,
         date,
       });
 
@@ -150,6 +155,9 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ initialData }) => {
         description={description}
         setDescription={setDescription}
         date={date}
+        currency={currency}
+        setCurrency={setCurrency}
+        currencies={currencies}
         setDate={setDate}
         loading={loading}
         onSubmit={handleSubmit}

@@ -16,6 +16,8 @@ import { Box, Container } from "@mui/material";
 const AnalyticsPage: React.FC = () => {
   const { data: session } = useSession();
 
+  const userCurrency = session?.user?.currency;
+
   const [selectedYear, setSelectedYear] = useState<number | "">(
     new Date().getFullYear()
   );
@@ -89,7 +91,9 @@ const AnalyticsPage: React.FC = () => {
           </div>
 
           <div>
-            <p>Total sum: {totalSum}</p>
+            <p>
+              Total sum: {totalSum} {userCurrency}
+            </p>
           </div>
         </Container>
       </Box>

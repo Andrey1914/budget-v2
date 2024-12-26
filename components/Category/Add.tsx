@@ -29,7 +29,7 @@ const AddCategoryDialog: React.FC<AddCategoryDialogProps> = ({
   handleAddCategory,
 }) => {
   return (
-    <Dialog open={open} onClose={onClose}>
+    <Dialog open={open} onClose={onClose} disableEnforceFocus>
       <DialogTitle>Add New Category</DialogTitle>
       <DialogContent>
         <TextField

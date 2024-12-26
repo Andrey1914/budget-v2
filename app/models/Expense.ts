@@ -18,6 +18,10 @@ const expenseSchema = new Schema<IExpense>(
       type: Date,
       required: true,
     },
+    currency: {
+      type: String,
+      required: true,
+    },
   },
   { timestamps: true }
 );

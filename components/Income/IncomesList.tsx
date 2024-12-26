@@ -12,16 +12,20 @@ import EditIncomeForm from "@/components/Income/EditIncomeForm";
 import { Delete, Edit } from "@mui/icons-material";
 import { Box, List, ListItem, Paper, Typography } from "@mui/material";
 
-const IncomesList: React.FC = () => {
+const IncomesList: React.FC<{
+  totalIncome: number;
+  onUpdate: (updatedIncomes: number) => void;
+}> = ({ totalIncome, onUpdate }) => {
   const { data: session, status } = useSession() as {
     data: Session | null;
     status: string;
   };
 
-  const [income, setIncome] = useState<any[]>([]);
-  const [totalIncome, setTotalIncome] = useState<number>(0);
+  const [income, setIncome] = useState<Income[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [editingIncomeId, setEditingIncomeId] = useState<string | null>(null);
+
+  const userCurrency = session?.user?.currency;
 
   useEffect(() => {
     if (session) {
@@ -35,7 +39,7 @@ const IncomesList: React.FC = () => {
             (acc: number, item: Income) => acc + item.amount,
             0
           );
-          setTotalIncome(total);
+          onUpdate(total);
         } catch (err) {
           console.error("Error fetching incomes:", err);
           setError((err as Error).message);
@@ -46,7 +50,7 @@ const IncomesList: React.FC = () => {
         getIncomesData();
       }
     }
-  }, [session, status]);
+  }, [session, status, onUpdate]);
 
   const handleEdit = (id: string) => {
     setEditingIncomeId(id);
@@ -68,7 +72,7 @@ const IncomesList: React.FC = () => {
         0
       );
 
-      setTotalIncome(total);
+      onUpdate(total);
     } catch (err) {
       setError((err as Error).message);
     }
@@ -86,18 +90,18 @@ const IncomesList: React.FC = () => {
           Incomes
         </Typography>
       </Box>
-      <Box sx={{ p: 3, backgroundColor: "orange", borderRadius: "0.3rem" }}>
-        <Typography
-          variant="h4"
-          component="p"
-          style={{
-            color: "white",
-          }}
-        >
-          Total Incomes for this month: {totalIncome} PLN
+      <Box
+        sx={{
+          p: 3,
+          backgroundColor: "orange",
+          borderRadius: "0.3rem",
+          color: "#000",
+        }}
+      >
+        <Typography variant="h4" component="p">
+          Total Incomes for this month: {totalIncome} {userCurrency}
         </Typography>
       </Box>
-
       <List
         style={{
           width: "100%",
@@ -119,14 +123,14 @@ const IncomesList: React.FC = () => {
               }}
             >
               <Typography variant="h6" component="p">
-                {item.amount} - {item.description}
+                {item.amount} {userCurrency} - {item.description}
               </Typography>
               <Box sx={{ display: "flex", gap: 3 }}>
                 <Edit onClick={() => handleEdit(item._id)} />
 
                 <Delete
                   onClick={() =>
-                    handleDelete(item._id, income, setIncome, setTotalIncome)
+                    handleDelete(item._id, income, setIncome, reloadData)
                   }
                 />
               </Box>
@@ -134,7 +138,6 @@ const IncomesList: React.FC = () => {
           </ListItem>
         ))}
       </List>
-
       {editingIncomeId && (
         <EditIncomeForm
           incomeId={editingIncomeId}

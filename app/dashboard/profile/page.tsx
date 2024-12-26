@@ -16,6 +16,7 @@ import {
   styled,
 } from "@mui/material";
 import axios from "axios";
+import CurrencySelector from "@/components/CurrencySelector/CurrencySelector";
 
 import { CloudUpload } from "@mui/icons-material";
 import { Oval } from "react-loader-spinner";
@@ -41,6 +42,7 @@ const ProfilePage = () => {
   const [email, setEmail] = useState<string>("");
   const [avatar, setAvatar] = useState<string>("");
   const [createdAt, setCreatedAt] = useState<string>("");
+  const [selectedCurrency, setSelectedCurrency] = useState<string>("");
 
   const [error, setError] = useState("");
   const [loadingSave, setLoadingSave] = useState(false);
@@ -84,6 +86,44 @@ const ProfilePage = () => {
   }, [session]);
 
   console.log(session);
+
+  useEffect(() => {
+    // Загрузка текущей выбранной валюты
+    const fetchUserCurrency = async () => {
+      try {
+        const response = await axios.get("/api/profile/getCurrency", {
+          params: { email: session?.user.email },
+        });
+        setSelectedCurrency(response.data.currency || "USD");
+      } catch (error) {
+        console.error("Error fetching currency:", error);
+      }
+    };
+
+    if (session?.user.email) {
+      fetchUserCurrency();
+    }
+  }, [session]);
+
+  const handleCurrencyChange = async (currency: string) => {
+    setSelectedCurrency(currency);
+
+    try {
+      // Сохранение выбранной валюты
+      await axios.put("/api/profile/updateCurrency", {
+        email: session?.user.email,
+        currency,
+      });
+      setSnackbarMessage("Currency updated successfully!");
+      setSnackbarSeverity("success");
+      setShowSnackbar(true);
+    } catch (error) {
+      console.error("Failed to update currency:", error);
+      setSnackbarMessage("Failed to update currency.");
+      setSnackbarSeverity("error");
+      setShowSnackbar(true);
+    }
+  };
 
   const handleSaveChanges = async () => {
     setLoadingSave(true);
@@ -300,6 +340,11 @@ const ProfilePage = () => {
               Profile created on:
               <strong>{createdAt || "Loading..."}</strong>
             </Typography>
+
+            <CurrencySelector
+              selectedCurrency={selectedCurrency}
+              onCurrencyChange={handleCurrencyChange}
+            />
             <Box
               sx={{
                 display: "flex",

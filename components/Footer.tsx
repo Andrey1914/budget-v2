@@ -11,7 +11,9 @@ const Footer: React.FC = () => {
   const { data: session } = useSession();
 
   return (
-    <footer style={{ padding: "2rem 0", backgroundColor: "#000" }}>
+    <footer
+      style={{ padding: "2rem 0", backgroundColor: "#000", minHeight: "310px" }}
+    >
       <Container maxWidth="lg">
         <Link
           href={session ? "/dashboard" : "/landing"}

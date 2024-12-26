@@ -4,6 +4,7 @@ declare module "next-auth" {
   interface User extends DefaultUser {
     id: string;
     token: string;
+    currency?: string;
     isVerified: boolean;
   }
   interface Session {
@@ -13,6 +14,7 @@ declare module "next-auth" {
       name?: string | null;
       email?: string | null;
       image?: string;
+      currency?: string;
       token?: string | null;
       isVerified: boolean;
     } & DefaultSession["user"];

@@ -1,10 +1,17 @@
+import { useSession } from "next-auth/react";
 import { Box, Typography } from "@mui/material";
-import { BalanceComparisonProps } from "@/interfaces";
+import { Session, BalanceComparisonProps } from "@/interfaces";
 
 const BalanceComparison: React.FC<BalanceComparisonProps> = ({
   totalIncome,
   totalExpense,
 }) => {
+  const { data: session } = useSession() as {
+    data: Session | null;
+  };
+
+  const userCurrency = session?.user?.currency;
+
   const balance = totalIncome - totalExpense;
 
   return (
@@ -20,11 +27,15 @@ const BalanceComparison: React.FC<BalanceComparisonProps> = ({
         marginTop: "1rem",
       }}
     >
-      <Typography variant="h4">Total Income: {totalIncome}</Typography>
-      <Typography variant="h4">Total Expense: {totalExpense}</Typography>
+      <Typography variant="h4">
+        Total Income: {totalIncome} {userCurrency}
+      </Typography>
+      <Typography variant="h4">
+        Total Expense: {totalExpense} {userCurrency}
+      </Typography>
       <Typography variant="h4" component="p">
         {balance >= 0 ? "Balance: " : "Deficit: "}
-        {balance}
+        {balance} {userCurrency}
       </Typography>
     </Box>
   );

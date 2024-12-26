@@ -16,16 +16,21 @@ const Header: React.FC = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
-    <header style={{ padding: "1rem 0" }}>
+    <header
+      style={{
+        padding: "1rem 0",
+        minHeight: "90px",
+      }}
+    >
       <ContainerNavLinks maxWidth="lg">
         {!isMobile && (
           <Link
             href={session ? "/dashboard" : "/landing"}
             style={{
-              display: "inline-flex",
-              flexDirection: "column",
-              alignItems: "center",
-              gap: "0.1rem",
+              // display: "inline-flex",
+              // flexDirection: "column",
+              // alignItems: "center",
+              // gap: "0.1rem",
               padding: "0.5rem",
             }}
           >

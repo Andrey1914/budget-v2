@@ -2,7 +2,7 @@ import axios from "axios";
 import { Expense } from "@/types";
 import { Session } from "@/interfaces";
 
-export const fetchExpenses = async (session: Session): Promise<Expense[]> => {
+export const getExpenses = async (session: Session): Promise<Expense[]> => {
   try {
     if (!session || !session.user) {
       throw new Error("Session or token is not available");

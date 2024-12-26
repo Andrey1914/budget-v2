@@ -18,7 +18,7 @@ const updateProfile = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const userId = new ObjectId(token);
 
-  const { name, avatar } = req.body;
+  const { name, avatar, baseCurrency } = req.body;
 
   console.log("Received body:", req.body);
 
@@ -32,14 +32,20 @@ const updateProfile = async (req: NextApiRequest, res: NextApiResponse) => {
     const client = await clientPromise;
     const db = client.db("budget-v2");
 
+    const updateFields: any = {
+      name,
+      image: avatar,
+    };
+
+    if (baseCurrency) {
+      updateFields.baseCurrency = baseCurrency;
+    }
+
     const result = await db.collection("users").updateOne(
       { email: token.email },
 
       {
-        $set: {
-          name,
-          image: avatar,
-        },
+        $set: updateFields,
       }
     );
 

@@ -18,6 +18,10 @@ const incomeSchema = new Schema<IIncome>(
       type: Date,
       required: true,
     },
+    currency: {
+      type: String,
+      required: true,
+    },
   },
   { timestamps: true }
 );

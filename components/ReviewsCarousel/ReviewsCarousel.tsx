@@ -50,7 +50,7 @@ const ReviewsCarousel: React.FC = () => {
       loop={true}
       style={{
         height: isMobile ? "auto" : "130px",
-        overflow: "visible",
+        overflow: "hidden",
       }}
     >
       {latestReviews.map((review) => (

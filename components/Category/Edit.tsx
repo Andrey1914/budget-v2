@@ -31,7 +31,7 @@ const EditCategoryDialog: React.FC<EditCategoryDialogProps> = ({
   handleEditCategory,
 }) => {
   return (
-    <Dialog open={open} onClose={onClose}>
+    <Dialog open={open} onClose={onClose} disableEnforceFocus>
       <DialogTitle>Edit Category</DialogTitle>
       <DialogContent>
         <TextField

@@ -11,6 +11,7 @@ import createEmotionCache from "@/lib/createEmotionCache";
 import useIdleLogout from "@/hooks/useIdleLogout";
 
 import Footer from "@/components/Footer";
+import Header from "@/components/Header/Header";
 
 const clientSideEmotionCache = createEmotionCache();
 
@@ -47,7 +48,7 @@ export default function ClientProviders({
     <CacheProvider value={clientSideEmotionCache}>
       <ThemeProvider theme={theme}>
         <Box
-          component="main"
+          component="body"
           sx={{
             display: "flex",
             flexDirection: "column",
@@ -56,11 +57,15 @@ export default function ClientProviders({
         >
           <CssBaseline />
           <SessionProvider session={pageProps.session}>
+            <Header />
+
             <Box
+              component="main"
               sx={{
                 flex: 1,
                 display: "flex",
                 flexDirection: "column",
+                minHeight: "600px",
               }}
             >
               {children}

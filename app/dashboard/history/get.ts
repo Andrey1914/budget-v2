@@ -6,23 +6,25 @@ interface FilterParams {
   month: number | "";
   type: string;
   page: number;
-  limit: number;
+  // limit: number;
 }
 
 export const fetchTransactions = async (filters: FilterParams) => {
-  const { year, month, type, page, limit } = filters;
+  // const { year, month, type, page, limit } = filters;
+  const { year, month, type, page } = filters;
 
   try {
     const res = await axios.get<{
       transactions: IIncome[] | IExpense[];
       totalSum: number;
+      totalTransactions: number;
     }>("/api/transactions/filterTransactions", {
       params: {
         year: year !== "" ? year : undefined,
         month: month !== "" ? month : undefined,
         type: type !== "all" ? type : undefined,
         page,
-        limit,
+        // limit,
       },
     });
 
@@ -31,6 +33,7 @@ export const fetchTransactions = async (filters: FilterParams) => {
     return {
       transactions: res.data.transactions,
       totalSum: res.data.totalSum,
+      totalTransactions: res.data.totalTransactions,
     };
   } catch (error) {
     console.error("Ошибка при загрузке транзакций:", error);

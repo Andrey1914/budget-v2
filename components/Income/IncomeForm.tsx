@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
+import axios from "axios";
+
 import { IncomeFormProps, Category } from "@/interfaces";
 import SnackbarNotification from "@/components/Notification/Snackbar";
 import {
@@ -29,6 +31,10 @@ const IncomeForm: React.FC<IncomeFormProps> = ({ initialData }) => {
   const [date, setDate] = useState(initialData?.date || "");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [currency, setCurrency] = useState<string>("USD");
+  const [currencies, setCurrencies] = useState<
+    { code: string; name: string }[]
+  >([]);
 
   const [categories, setCategories] = useState<Category[]>([]);
 
@@ -47,6 +53,31 @@ const IncomeForm: React.FC<IncomeFormProps> = ({ initialData }) => {
   const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">(
     "success"
   );
+
+  // useEffect(() => {
+  //   const fetchCurrencies = async () => {
+  //     try {
+  //       const response = await axios.get(
+  //         "https://openexchangerates.org/api/currencies.json"
+  //         // {
+  //         //   headers: {
+  //         //     Authorization: `Bearer YOUR_API_KEY`,
+  //         //   },
+  //         // }
+  //       );
+  //       const currenciesList = Object.keys(response.data).map((key) => ({
+  //         code: key,
+  //         name: response.data[key],
+  //       }));
+  //       setCurrencies(currenciesList); // Устанавливаем валюты
+  //     } catch (error) {
+  //       console.error("Error fetching currencies:", error);
+  //       setError("Failed to load currencies.");
+  //     }
+  //   };
+
+  //   fetchCurrencies();
+  // }, []);
 
   useEffect(() => {
     const loadCategories = async () => {
@@ -95,6 +126,7 @@ const IncomeForm: React.FC<IncomeFormProps> = ({ initialData }) => {
         amount: parsedAmount,
         description,
         category,
+        currency,
         date,
       });
 
@@ -150,6 +182,9 @@ const IncomeForm: React.FC<IncomeFormProps> = ({ initialData }) => {
         setDescription={setDescription}
         date={date}
         setDate={setDate}
+        currency={currency}
+        setCurrency={setCurrency}
+        currencies={currencies}
         loading={loading}
         onSubmit={handleSubmit}
         categories={categories}

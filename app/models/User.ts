@@ -29,6 +29,10 @@ const userSchema = new Schema<IUser>(
     verificationCode: {
       type: String,
     },
+    currency: {
+      type: String,
+      default: "USD",
+    },
   },
   { timestamps: true }
 );

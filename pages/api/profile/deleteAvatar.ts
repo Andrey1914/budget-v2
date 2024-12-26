@@ -13,7 +13,6 @@ export default async function handler(
   }
 
   try {
-    // Проверяем токен
     const token = await getToken({ req, secret });
     if (!token) {
       return res.status(401).json({ error: "Unauthorized" });
@@ -24,11 +23,9 @@ export default async function handler(
       return res.status(400).json({ error: "Invalid token: email missing" });
     }
 
-    // Подключение к базе данных
     const client = await clientPromise;
     const db = client.db("budget-v2");
 
-    // Обновление поля `image` пользователя
     const result = await db
       .collection("users")
       .updateOne({ email }, { $set: { image: null } });

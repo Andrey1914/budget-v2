@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
-import { IIncome, IExpense } from "@/interfaces";
+import { useSession } from "next-auth/react";
+import { Session, IIncome, IExpense } from "@/interfaces";
 import {
   Container,
   Box,
@@ -18,6 +19,12 @@ import FilterPanel from "@/components/FilterPanel/FilterPanel";
 import { fetchTransactions } from "@/app/dashboard/history/get";
 
 const HistoryPage = () => {
+  const { data: session } = useSession() as {
+    data: Session | null;
+  };
+
+  const userCurrency = session?.user?.currency;
+
   const [selectedYear, setSelectedYear] = useState<number | "">(
     new Date().getFullYear()
   );
@@ -42,16 +49,19 @@ const HistoryPage = () => {
         month: selectedMonth,
         type: selectedType,
         page: currentPage,
-        limit: limit,
+        // limit: limit,
+        // limit: 10000,
       });
+      console.log("Transactions received:", data.transactions);
 
       setTransactions(data.transactions);
       setTotalSum(data.totalSum);
-      setTotalTransactions(data.transactions.length);
+      setTotalTransactions(data.totalTransactions);
+      // setTotalTransactions(data.transactions.length);
     } catch (error) {
       console.error("Ошибка при загрузке транзакций:", error);
     }
-  }, [selectedYear, selectedMonth, selectedType, currentPage, limit]);
+  }, [selectedYear, selectedMonth, selectedType, currentPage]);
 
   useEffect(() => {
     if (isFirstRender.current) {
@@ -96,7 +106,7 @@ const HistoryPage = () => {
               borderRadius: "0.3rem",
             }}
           >
-            Total sum: {totalSum}
+            Total sum: {totalSum} {userCurrency}
           </Typography>
         </Box>
 
@@ -113,7 +123,8 @@ const HistoryPage = () => {
                 }}
               >
                 <p>
-                  {transaction.description} - {transaction.amount} (
+                  {transaction.description} - {transaction.amount}{" "}
+                  {userCurrency} (
                   {new Date(transaction.date).toLocaleDateString()})
                 </p>
               </Paper>
