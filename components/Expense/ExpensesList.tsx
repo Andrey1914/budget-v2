@@ -2,14 +2,17 @@
 
 import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+
 import { handleDelete } from "@/app/dashboard/expense/delete";
 import { getExpenses } from "@/app/dashboard/expense/get";
 import { refreshExpenses } from "@/app/dashboard/expense/refresh";
 import { Session, IExpense } from "@/interfaces";
 import EditExpenseForm from "@/components/Expense/EditExpenseForm";
 
-import { Delete, Edit } from "@mui/icons-material";
-import { Box, List, ListItem, Paper, Typography } from "@mui/material";
+import { Delete, Edit, Add } from "@mui/icons-material";
+
+import { Box, List, ListItem, Paper, Typography, Fab } from "@mui/material";
 
 const ExpensesList: React.FC<{
   totalExpense: number;
@@ -19,6 +22,8 @@ const ExpensesList: React.FC<{
     data: Session | null;
     status: string;
   };
+  const router = useRouter();
+
   const [expense, setExpense] = useState<IExpense[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [editingExpenseId, setEditingExpenseId] = useState<string | null>(null);
@@ -76,6 +81,10 @@ const ExpensesList: React.FC<{
     }
   };
 
+  const hendleAddClick = () => {
+    router.push("/dashboard/expense");
+  };
+
   if (!session) {
     return null;
   }
@@ -90,6 +99,9 @@ const ExpensesList: React.FC<{
       </Box>
       <Box
         sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
           p: 3,
           backgroundColor: "orange",
           borderRadius: "0.3rem",
@@ -99,6 +111,11 @@ const ExpensesList: React.FC<{
         <Typography variant="h4" component="p">
           Total Expenses for this month: {totalExpense} {userCurrency}
         </Typography>
+        <Box>
+          <Fab color="primary" aria-label="add" onClick={hendleAddClick}>
+            <Add />
+          </Fab>
+        </Box>
       </Box>
 
       <List

@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 
 import { Session, IExpense, IIncome } from "@/interfaces";
 
-import { fetchAnalyticsData } from "@/app/dashboard/analytics/get";
+import { getAnalyticsData } from "@/app/dashboard/analytics/get";
 
 import BalanceComparison from "@/components/BalanceComparison/BalanceComparison";
 import CategoryChart from "@/components/Analytics/Analytics";
@@ -35,7 +35,7 @@ const AnalyticsPage: React.FC = () => {
 
   const handleFilterSubmit = useCallback(async () => {
     try {
-      const data = await fetchAnalyticsData({
+      const data = await getAnalyticsData({
         year: selectedYear,
         month: selectedMonth,
         type: selectedType,

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { editTask } from "@/app/dashboard/tasks/edit";
+import { useEditTask } from "@/hooks/useTaskHooks";
+import { Oval } from "react-loader-spinner";
 
 import { Box, TextField, Button } from "@mui/material";
 
@@ -10,14 +11,16 @@ const EditTaskForm = ({
   onClose,
 }: {
   taskId: string;
-  refreshTasks: (task: any) => void;
-  onClose: (task: any) => void;
+  refreshTasks: () => void;
+  onClose: () => void;
 }) => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [date, setDate] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  const editTask = useEditTask();
 
   useEffect(() => {
     const getTaskById = async () => {
@@ -39,17 +42,18 @@ const EditTaskForm = ({
     e.preventDefault();
     setLoading(true);
 
-    try {
-      const updatedTask = await editTask(taskId, title, content, date);
-
-      alert("Task updated successfully");
-      refreshTasks(updatedTask);
-      onClose(updatedTask);
-    } catch (err: any) {
-      setError(err.message || "Failed to update task");
-    } finally {
-      setLoading(false);
-    }
+    editTask.mutate(
+      { taskId, title, content, date },
+      {
+        onSuccess: () => {
+          refreshTasks();
+          onClose();
+        },
+        onError: (err: any) => {
+          setError(err.message || "Failed to update task");
+        },
+      }
+    );
   };
 
   return (
@@ -96,7 +100,16 @@ const EditTaskForm = ({
         />
       </div>
       <Button variant="outlined" type="submit" disabled={loading}>
-        {loading ? "Saving..." : "Save"}
+        {loading ? (
+          <Oval
+            height="30"
+            width="30"
+            color="#1727b7"
+            secondaryColor="#6fb5e7"
+          />
+        ) : (
+          "Save"
+        )}
       </Button>
       <Button variant="outlined" type="button" onClick={onClose}>
         Cancel

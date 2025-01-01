@@ -63,9 +63,9 @@ const Navbar: React.FC = () => {
   const links = [
     { href: "/landing", label: "Home", icon: <Home /> },
     { href: "/dashboard", label: "Dashboard" },
-    { href: "/dashboard/income", label: "Incomes" },
-    { href: "/dashboard/expense", label: "Expenses" },
-    { href: "/dashboard/tasks", label: "Tasks" },
+    // { href: "/dashboard/income", label: "Incomes" },
+    // { href: "/dashboard/expense", label: "Expenses" },
+    // { href: "/dashboard/tasks", label: "Tasks" },
   ];
 
   const mobileLinks = [

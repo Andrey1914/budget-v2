@@ -2,14 +2,16 @@
 
 import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+
 import { handleDelete } from "@/app/dashboard/income/delete";
 import { getIncomes } from "@/app/dashboard/income/get";
 import { refreshIncomes } from "@/app/dashboard/income/refresh";
 import { Session, IIncome } from "@/interfaces";
 import EditIncomeForm from "@/components/Income/EditIncomeForm";
 
-import { Delete, Edit } from "@mui/icons-material";
-import { Box, List, ListItem, Paper, Typography } from "@mui/material";
+import { Delete, Edit, Add } from "@mui/icons-material";
+import { Box, List, ListItem, Paper, Typography, Fab } from "@mui/material";
 
 const IncomesList: React.FC<{
   totalIncome: number;
@@ -19,6 +21,7 @@ const IncomesList: React.FC<{
     data: Session | null;
     status: string;
   };
+  const router = useRouter();
 
   const [income, setIncome] = useState<IIncome[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -77,6 +80,10 @@ const IncomesList: React.FC<{
     }
   };
 
+  const hendleAddClick = () => {
+    router.push("/dashboard/income");
+  };
+
   if (!session) {
     return null;
   }
@@ -91,6 +98,9 @@ const IncomesList: React.FC<{
       </Box>
       <Box
         sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
           p: 3,
           backgroundColor: "orange",
           borderRadius: "0.3rem",
@@ -100,6 +110,11 @@ const IncomesList: React.FC<{
         <Typography variant="h4" component="p">
           Total Incomes for this month: {totalIncome} {userCurrency}
         </Typography>
+        <Box>
+          <Fab color="primary" aria-label="add" onClick={hendleAddClick}>
+            <Add />
+          </Fab>
+        </Box>
       </Box>
       <List
         style={{

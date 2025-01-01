@@ -74,9 +74,14 @@ const Dashboard: React.FC = () => {
           Welcome to Finance App, {session.user.name}
         </Typography>
 
-        <Grid2 container spacing={4}>
-          <Grid2 container size={12} component="div">
-            <Grid2 size={6} component="div">
+        <Grid2 container spacing={4} direction={{ xs: "column", md: "row" }}>
+          <Grid2
+            container
+            size={12}
+            direction={{ xs: "column", md: "row" }}
+            component="div"
+          >
+            <Grid2 size={{ xs: 12, md: 6 }} component="div">
               <Grid2 container direction="column" spacing={4}>
                 <Grid2 size={6} component="div">
                   <IncomesList
@@ -93,7 +98,7 @@ const Dashboard: React.FC = () => {
               </Grid2>
             </Grid2>
 
-            <Grid2 size={6} component="div">
+            <Grid2 size={{ xs: 12, md: 6 }} component="div">
               <Grid2 container direction="column" spacing={4}>
                 <Grid2 size={6} component="div">
                   <CarryOverBalance

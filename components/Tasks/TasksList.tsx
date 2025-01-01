@@ -1,16 +1,19 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+
 import EditTaskForm from "@/components/Tasks/EditTaskForm";
-import { getTasks } from "@/app/dashboard/tasks/get";
-import { updateTaskStatus } from "@/app/dashboard/tasks/updateCheckbox";
-import { deleteTask } from "@/app/dashboard/tasks/delete";
-import { refreshTasksList } from "@/app/dashboard/tasks/refresh";
+import {
+  useGetTasks,
+  useUpdateTaskStatus,
+  useDeleteTask,
+} from "@/hooks/useTaskHooks";
 
 import { Session, ITask } from "@/interfaces";
 
-import { Delete, Edit } from "@mui/icons-material";
+import { Delete, Edit, Add } from "@mui/icons-material";
 import {
   Box,
   List,
@@ -18,92 +21,46 @@ import {
   Paper,
   Checkbox,
   Typography,
+  Fab,
 } from "@mui/material";
 
 const TasksList: React.FC = () => {
   const { data: session } = useSession() as {
     data: Session | null;
   };
-  const [tasks, setTasks] = useState<ITask[]>([]);
-  const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
+
   const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
-  const [unresolvedTasksCount, setUnresolvedTasksCount] = useState<number>(0);
-
-  useEffect(() => {
-    if (session) {
-      const getTasksData = async () => {
-        try {
-          const tasksData = await getTasks(session);
-
-          setTasks(tasksData);
-
-          setUnresolvedTasksCount(
-            tasksData.filter((task) => !task.completed).length
-          );
-        } catch (err) {
-          setError((err as Error).message);
-        }
-      };
-
-      getTasksData();
-    }
-  }, [session]);
+  const { data: tasks = [], error, refetch } = useGetTasks(session as Session);
+  const updateTaskStatus = useUpdateTaskStatus(session as Session);
+  const deleteTask = useDeleteTask(session as Session);
+  const unresolvedTasksCount = tasks.filter((task) => !task.completed).length;
 
   const handleCheckboxChange = async (id: string, completed: boolean) => {
-    if (!session) return;
-
-    try {
-      await updateTaskStatus(id, completed, session);
-
-      setTasks((prevTasks) =>
-        prevTasks.map((task) =>
-          task._id === id
-            ? ({ ...task, completed: !task.completed } as ITask)
-            : task
-        )
-      );
-
-      setUnresolvedTasksCount((prevCount) =>
-        completed ? prevCount + 1 : prevCount - 1
-      );
-    } catch (err) {
-      setError((err as Error).message);
-    }
+    updateTaskStatus.mutate(
+      { id, completed },
+      {
+        onSuccess: () => {
+          refetch();
+        },
+      }
+    );
   };
 
-  const handleDelete = async (id: string) => {
-    if (!session) return;
-
-    try {
-      await deleteTask(id, session);
-      const updatedTasks = tasks.filter((task) => task._id !== id);
-
-      setTasks(updatedTasks);
-
-      setUnresolvedTasksCount(
-        updatedTasks.filter((task) => !task.completed).length
-      );
-    } catch (err) {
-      setError((err as Error).message);
-    }
+  const handleDelete = (id: string) => {
+    deleteTask.mutate(id, {
+      onSuccess: () => {
+        refetch();
+      },
+    });
   };
 
   const handleEdit = (id: string) => {
     setEditingTaskId(id);
   };
 
-  const refreshTasks = async () => {
-    if (!session) return;
-
-    try {
-      const tasksData = await refreshTasksList(session);
-      setTasks(tasksData);
-      setUnresolvedTasksCount(
-        tasksData.filter((task) => !task.completed).length
-      );
-    } catch (err) {
-      setError((err as Error).message);
-    }
+  const hendleAddClick = () => {
+    router.push("/dashboard/tasks");
   };
 
   if (!session) {
@@ -112,7 +69,7 @@ const TasksList: React.FC = () => {
 
   return (
     <>
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {error && <p style={{ color: "red" }}>{error.message}</p>}
       <Box sx={{ p: 4 }}>
         <Typography variant="h3" component="h2">
           Tasks
@@ -121,6 +78,9 @@ const TasksList: React.FC = () => {
 
       <Box
         sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
           p: 3,
           backgroundColor: "orange",
           borderRadius: "0.3rem",
@@ -136,6 +96,11 @@ const TasksList: React.FC = () => {
             No unresolved tasks, great job!
           </Typography>
         )}
+        <Box>
+          <Fab color="primary" aria-label="add" onClick={hendleAddClick}>
+            <Add />
+          </Fab>
+        </Box>
       </Box>
       {tasks.length === 0 ? (
         <Box sx={{ p: 3 }}>
@@ -192,7 +157,7 @@ const TasksList: React.FC = () => {
       {editingTaskId && (
         <EditTaskForm
           taskId={editingTaskId}
-          refreshTasks={refreshTasks}
+          refreshTasks={refetch}
           onClose={() => setEditingTaskId(null)}
         />
       )}

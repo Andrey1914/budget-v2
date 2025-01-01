@@ -1,18 +1,22 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { TaskFormProps } from "@/interfaces";
-import { addTask } from "@/app/dashboard/tasks/add";
+import { Oval } from "react-loader-spinner";
+import { useAddTask } from "@/hooks/useTaskHooks";
 import SnackbarNotification from "@/components/Notification/Snackbar";
 
 import { Box, TextField, Button } from "@mui/material";
 
 const TaskForm: React.FC<TaskFormProps> = () => {
   const { data: session } = useSession();
+  const router = useRouter();
+
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
-  const [error, setError] = useState<string>("");
+  const [loading, setLoading] = useState(false);
 
   const [showSnackbar, setShowSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
@@ -20,32 +24,43 @@ const TaskForm: React.FC<TaskFormProps> = () => {
     "success"
   );
 
+  const addTaskMutation = useAddTask();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
 
     if (!session) {
-      setError("You must be logged in to add a task.");
+      setSnackbarMessage("You must be logged in to add a task.");
+      setSnackbarSeverity("error");
+      setShowSnackbar(true);
       return;
     }
 
-    try {
-      await addTask(title, content);
+    addTaskMutation.mutate(
+      { title, content },
+      {
+        onSuccess: () => {
+          setTitle("");
+          setContent("");
 
-      setTitle("");
-      setContent("");
-      setError("");
-
-      setSnackbarMessage("Task added successfully");
-      setSnackbarSeverity("success");
-      setShowSnackbar(true);
-    } catch (error) {
-      const errorMessage = (error as Error).message || "Failed to add task";
-      setError(errorMessage);
-
-      setSnackbarMessage(errorMessage);
-      setSnackbarSeverity("error");
-      setShowSnackbar(true);
-    }
+          setSnackbarMessage("Task added successfully");
+          setSnackbarSeverity("success");
+          setShowSnackbar(true);
+          setLoading(false);
+          setTimeout(() => {
+            router.push("/dashboard");
+          }, 2000);
+        },
+        onError: (error) => {
+          const errorMessage = (error as Error).message || "Failed to add task";
+          setSnackbarMessage(errorMessage);
+          setSnackbarSeverity("error");
+          setShowSnackbar(true);
+          setLoading(false);
+        },
+      }
+    );
   };
 
   return (
@@ -81,11 +96,20 @@ const TaskForm: React.FC<TaskFormProps> = () => {
             placeholder="Content"
           />
         </div>
-        {error && <p style={{ color: "red" }}>{error}</p>}
-        <Button variant="outlined" type="submit">
-          Save
+        <Button variant="outlined" type="submit" disabled={loading}>
+          {loading ? (
+            <Oval
+              height="30"
+              width="30"
+              color="#1727b7"
+              secondaryColor="#6fb5e7"
+            />
+          ) : (
+            "Save"
+          )}
         </Button>
       </Box>
+
       {showSnackbar && (
         <SnackbarNotification
           message={snackbarMessage}

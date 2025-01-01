@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { signOut, SessionProvider } from "next-auth/react";
 import { Session } from "next-auth";
 import { CacheProvider } from "@emotion/react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider, Box } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import theme from "@/app/styles/theme";
@@ -14,6 +15,7 @@ import Footer from "@/components/Footer";
 import Header from "@/components/Header/Header";
 
 const clientSideEmotionCache = createEmotionCache();
+const queryClient = new QueryClient();
 
 export default function ClientProviders({
   children,
@@ -57,20 +59,22 @@ export default function ClientProviders({
         >
           <CssBaseline />
           <SessionProvider session={pageProps.session}>
-            <Header />
+            <QueryClientProvider client={queryClient}>
+              <Header />
 
-            <Box
-              component="main"
-              sx={{
-                flex: 1,
-                display: "flex",
-                flexDirection: "column",
-                minHeight: "600px",
-              }}
-            >
-              {children}
-            </Box>
-            <Footer />
+              <Box
+                component="main"
+                sx={{
+                  flex: 1,
+                  display: "flex",
+                  flexDirection: "column",
+                  minHeight: "600px",
+                }}
+              >
+                {children}
+              </Box>
+              <Footer />
+            </QueryClientProvider>
           </SessionProvider>
         </Box>
       </ThemeProvider>
