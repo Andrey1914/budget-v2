@@ -12,6 +12,7 @@ export interface ITask extends Document {
 
 export interface TaskFormProps {
   onSubmit: (data: { title: string; content: string }) => void;
+  loading?: boolean;
 }
 
 export interface EditTaskFormProps {
