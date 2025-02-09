@@ -1,5 +1,7 @@
 "use client";
 
+import React from "react";
+import { Parallax } from "react-parallax";
 import {
   Box,
   Typography,
@@ -16,45 +18,93 @@ const Feature = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        p: 3,
-        background: `linear-gradient(to left, rgba(0, 0, 0, 1) 10%, rgba(0, 0, 0, 0) 100%), url(${financeAnalysis.src})`,
-        backgroundSize: "cover",
-        backgroundRepeat: "no-repeat",
-        backgroundPosition: "center",
-        minWidth: "150px",
-        minHeight: "100%",
-      }}
+    <Parallax
+      bgImage={financeAnalysis.src}
+      bgImageAlt="Financial Analysis Background"
+      strength={300}
+      bgImageStyle={{ objectFit: "cover" }}
     >
-      <Grid2 container spacing={3} justifyContent="end">
-        {features.map((feature, index) => (
-          <Grid2
-            key={index}
-            sx={{
-              width: { xs: "100%", sm: "33%" },
-              pl: isMobile && index % 2 !== 0 ? "32px" : 0,
-            }}
-            component="div"
-          >
-            <Paper
-              elevation={3}
+      <Box
+        sx={{
+          display: "flex",
+          p: 3,
+          background: `linear-gradient(to left, rgba(0, 0, 0, 1) 10%, rgba(0, 0, 0, 0) 100%)`,
+          backgroundSize: "cover",
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "center",
+          minWidth: "150px",
+          minHeight: "100%",
+        }}
+      >
+        <Grid2 container spacing={3} justifyContent="end">
+          {features.map((feature, index) => (
+            <Grid2
+              key={index}
               sx={{
-                display: "flex",
-                backgroundColor: "#000",
-                color: "#fff",
+                width: { xs: "100%", sm: "33%" },
+                pl: isMobile && index % 2 !== 0 ? "32px" : 0,
               }}
+              component="div"
             >
-              <Box sx={{ p: 3 }}>
-                <Typography variant="h6">{feature.title}</Typography>
-                <Typography>{feature.description}</Typography>
-              </Box>
-            </Paper>
-          </Grid2>
-        ))}
-      </Grid2>
-    </Box>
+              <Paper
+                elevation={3}
+                sx={{
+                  display: "flex",
+                  backgroundColor: "#000",
+                  color: "#fff",
+                  p: 3,
+                }}
+              >
+                <Box sx={{ p: 3 }}>
+                  <Typography variant="h6">{feature.title}</Typography>
+                  <Typography>{feature.description}</Typography>
+                </Box>
+              </Paper>
+            </Grid2>
+          ))}
+        </Grid2>
+      </Box>
+    </Parallax>
+    // <Box
+    //   sx={{
+    //     display: "flex",
+    //     p: 3,
+    //     background: `linear-gradient(to left, rgba(0, 0, 0, 1) 10%, rgba(0, 0, 0, 0) 100%), url(${financeAnalysis.src})`,
+    //     backgroundSize: "cover",
+    //     backgroundRepeat: "no-repeat",
+    //     // backgroundPosition: "center",
+    //     ...parallaxStyle,
+    //     minWidth: "150px",
+    //     minHeight: "100%",
+    //   }}
+    // >
+    //   <Grid2 container spacing={3} justifyContent="end">
+    //     {features.map((feature, index) => (
+    //       <Grid2
+    //         key={index}
+    //         sx={{
+    //           width: { xs: "100%", sm: "33%" },
+    //           pl: isMobile && index % 2 !== 0 ? "32px" : 0,
+    //         }}
+    //         component="div"
+    //       >
+    //         <Paper
+    //           elevation={3}
+    //           sx={{
+    //             display: "flex",
+    //             backgroundColor: "#000",
+    //             color: "#fff",
+    //           }}
+    //         >
+    //           <Box sx={{ p: 3 }}>
+    //             <Typography variant="h6">{feature.title}</Typography>
+    //             <Typography>{feature.description}</Typography>
+    //           </Box>
+    //         </Paper>
+    //       </Grid2>
+    //     ))}
+    //   </Grid2>
+    // </Box>
   );
 };
 

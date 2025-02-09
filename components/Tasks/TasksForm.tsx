@@ -1,22 +1,18 @@
 "use client";
 
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { TaskFormProps } from "@/interfaces";
 import { Oval } from "react-loader-spinner";
-import { useAddTask } from "@/hooks/useTaskHooks";
 import SnackbarNotification from "@/components/Notification/Snackbar";
 
 import { Box, TextField, Button } from "@mui/material";
 
-const TaskForm: React.FC<TaskFormProps> = () => {
+const TaskForm: React.FC<TaskFormProps> = ({ onSubmit, loading }) => {
   const { data: session } = useSession();
-  const router = useRouter();
 
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
-  const [loading, setLoading] = useState(false);
 
   const [showSnackbar, setShowSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
@@ -24,11 +20,8 @@ const TaskForm: React.FC<TaskFormProps> = () => {
     "success"
   );
 
-  const addTaskMutation = useAddTask();
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
 
     if (!session) {
       setSnackbarMessage("You must be logged in to add a task.");
@@ -37,30 +30,7 @@ const TaskForm: React.FC<TaskFormProps> = () => {
       return;
     }
 
-    addTaskMutation.mutate(
-      { title, content },
-      {
-        onSuccess: () => {
-          setTitle("");
-          setContent("");
-
-          setSnackbarMessage("Task added successfully");
-          setSnackbarSeverity("success");
-          setShowSnackbar(true);
-          setLoading(false);
-          setTimeout(() => {
-            router.push("/dashboard");
-          }, 2000);
-        },
-        onError: (error) => {
-          const errorMessage = (error as Error).message || "Failed to add task";
-          setSnackbarMessage(errorMessage);
-          setSnackbarSeverity("error");
-          setShowSnackbar(true);
-          setLoading(false);
-        },
-      }
-    );
+    onSubmit({ title, content });
   };
 
   return (

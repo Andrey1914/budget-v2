@@ -3,13 +3,13 @@
 import React from "react";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
-
+import { SwitcherProps } from "@/interfaces";
 import Navbar from "@/components/Navbar/Navbar";
 import { useMediaQuery, useTheme } from "@mui/material";
 
 import { ContainerNavLinks } from "@/components/Header/Header.styled";
 
-const Header: React.FC = () => {
+const Header: React.FC<SwitcherProps> = ({ toggleTheme, isDarkMode }) => {
   const { data: session } = useSession();
 
   const theme = useTheme();
@@ -38,7 +38,7 @@ const Header: React.FC = () => {
           </Link>
         )}
 
-        <Navbar />
+        <Navbar toggleTheme={toggleTheme} isDarkMode={isDarkMode} />
       </ContainerNavLinks>
     </header>
   );

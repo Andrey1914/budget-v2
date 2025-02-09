@@ -59,7 +59,7 @@ const TasksList: React.FC = () => {
     setEditingTaskId(id);
   };
 
-  const hendleAddClick = () => {
+  const handleAddClick = () => {
     router.push("/dashboard/tasks");
   };
 
@@ -97,7 +97,7 @@ const TasksList: React.FC = () => {
           </Typography>
         )}
         <Box>
-          <Fab color="primary" aria-label="add" onClick={hendleAddClick}>
+          <Fab color="primary" aria-label="add" onClick={handleAddClick}>
             <Add />
           </Fab>
         </Box>

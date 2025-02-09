@@ -17,6 +17,7 @@ import {
   ListItemIcon,
   ListItemText,
   useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import {
   Menu,
@@ -25,15 +26,18 @@ import {
   AppRegistration,
   Home,
 } from "@mui/icons-material";
-import theme from "@/app/styles/theme";
+// import theme from "@/app/styles/theme";
 import UserMenu from "@/components/UserMenu/UserMenu";
+import ThemeSwitcher from "@/components/ThemeSwitcher/ThemeSwitcher";
+import { SwitcherProps } from "@/interfaces";
 
-const Navbar: React.FC = () => {
+const Navbar: React.FC<SwitcherProps> = ({ toggleTheme, isDarkMode }) => {
   const { data: session, status } = useSession();
   const router = useRouter();
   const pathname = usePathname();
 
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   useEffect(() => {
@@ -224,6 +228,12 @@ const Navbar: React.FC = () => {
                     <List>{renderLinks()}</List>
                     <List>{renderMobileLinks()}</List>
                     <List>
+                      <ListItem>
+                        <ThemeSwitcher
+                          isDarkMode={isDarkMode}
+                          toggleTheme={toggleTheme}
+                        />
+                      </ListItem>
                       <ListItem
                         onClick={() => signOut({ callbackUrl: "/landing" })}
                       >
@@ -235,7 +245,13 @@ const Navbar: React.FC = () => {
                     </List>
                   </>
                 ) : (
-                  <List>{renderAuthLinks()}</List>
+                  <>
+                    <List>{renderAuthLinks()}</List>
+                    <ThemeSwitcher
+                      isDarkMode={isDarkMode}
+                      toggleTheme={toggleTheme}
+                    />
+                  </>
                 )}
               </Box>
             </Drawer>
@@ -272,6 +288,10 @@ const Navbar: React.FC = () => {
                   <Typography variant="h6" component="p">
                     {session.user.name}
                   </Typography>
+                  <ThemeSwitcher
+                    isDarkMode={isDarkMode}
+                    toggleTheme={toggleTheme}
+                  />
                   <UserMenu
                     userName={session?.user?.name ?? null}
                     userImage={session?.user?.image ?? null}
@@ -319,6 +339,10 @@ const Navbar: React.FC = () => {
                 >
                   Sign Up
                 </Link>
+                <ThemeSwitcher
+                  isDarkMode={isDarkMode}
+                  toggleTheme={toggleTheme}
+                />
               </Box>
             )}
           </Box>

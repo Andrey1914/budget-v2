@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import { Container, Typography, Box, Grid2 } from "@mui/material";
 import { AdvantagesText } from "@/components/Advantages/Advantages.styled";
 import { textData } from "@/components/Advantages/AdvantagesData";
+import { useTheme } from "@mui/material";
 
 const Advantages: React.FC = () => {
+  const theme = useTheme();
   const [expandedStates, setExpandedStates] = useState<boolean[]>(
     Array(textData.length).fill(false)
   );
@@ -17,7 +19,13 @@ const Advantages: React.FC = () => {
   };
 
   return (
-    <Box sx={{ backgroundColor: "#fefae0", padding: "60px 0" }}>
+    //backgroundColor: theme.palette.backgrounds.primary,
+    <Box
+      sx={{
+        padding: "60px 0",
+        backgroundColor: theme.palette.background.advantages,
+      }}
+    >
       <Container>
         <Typography
           variant="h4"
@@ -60,7 +68,6 @@ const Advantages: React.FC = () => {
                   {item.title}
                 </Typography>
                 <AdvantagesText
-                  variant="h6"
                   color="text.secondary"
                   isExpanded={expandedStates[index]}
                   onClick={() => toggleText(index)}

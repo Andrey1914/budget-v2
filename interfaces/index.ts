@@ -13,3 +13,4 @@ export * from "./filter";
 export * from "./chart";
 export * from "./currency";
 export * from "./popover";
+export * from "./theme-switcher";

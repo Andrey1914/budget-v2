@@ -13,6 +13,7 @@ import ReviewsCarousel from "@/components/ReviewsCarousel/ReviewsCarousel";
 import FAQ from "@/components/faq/FAQ";
 import AverageRating from "@/components/Review/AverageRating";
 import Feature from "@/components/Features/Features";
+import { GetStartedButton } from "@/components/Hero/Hero.styled";
 
 const Landing: React.FC = () => {
   const { data: session, status } = useSession();
@@ -24,6 +25,10 @@ const Landing: React.FC = () => {
     } else {
       router.push("/auth/register");
     }
+  };
+
+  const handleNavigation = () => {
+    router.push("/auth/register");
   };
 
   return (
@@ -97,11 +102,13 @@ const Landing: React.FC = () => {
 
       {/* Призыв к действию */}
       <Box component="section" sx={{ p: 4 }}>
-        <Link href="/auth/register" passHref>
-          <Button variant="contained" size="large" color="primary">
-            Ready to start?
-          </Button>
-        </Link>
+        <GetStartedButton
+          colors={["#40ffaa", "#4079ff", "#40ffaa", "#4079ff", "#40ffaa"]}
+          onClick={handleNavigation}
+        >
+          <span className="text-content">Get Started</span>
+          <span className="gradient-overlay"></span>
+        </GetStartedButton>
       </Box>
     </MainContainer>
   );

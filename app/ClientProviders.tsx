@@ -1,13 +1,13 @@
 "use client";
 
-import { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { signOut, SessionProvider } from "next-auth/react";
 import { Session } from "next-auth";
 import { CacheProvider } from "@emotion/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider, Box } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
-import theme from "@/app/styles/theme";
+import { lightTheme, darkTheme } from "@/app/styles/theme";
 import createEmotionCache from "@/lib/createEmotionCache";
 import useIdleLogout from "@/hooks/useIdleLogout";
 
@@ -46,24 +46,41 @@ export default function ClientProviders({
   }, []);
   useIdleLogout();
 
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
+    if (typeof window === "undefined") return false;
+    return localStorage.getItem("theme") === "dark";
+  });
+
+  const [hydrated, setHydrated] = useState(false);
+
+  useEffect(() => {
+    setHydrated(true);
+  }, []);
+
+  if (!hydrated) {
+    return null;
+  }
+
+  const toggleTheme = () => {
+    const newTheme = !isDarkMode;
+    setIsDarkMode(newTheme);
+    localStorage.setItem("theme", newTheme ? "dark" : "light");
+  };
   return (
     <CacheProvider value={clientSideEmotionCache}>
-      <ThemeProvider theme={theme}>
-        <Box
-          component="body"
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            minHeight: "100vh",
-          }}
-        >
-          <CssBaseline />
-          <SessionProvider session={pageProps.session}>
-            <QueryClientProvider client={queryClient}>
-              <Header />
-
+      <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
+        <CssBaseline />
+        <SessionProvider session={pageProps.session}>
+          <QueryClientProvider client={queryClient}>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                minHeight: "100vh",
+              }}
+            >
+              <Header toggleTheme={toggleTheme} isDarkMode={isDarkMode} />
               <Box
-                component="main"
                 sx={{
                   flex: 1,
                   display: "flex",
@@ -74,9 +91,9 @@ export default function ClientProviders({
                 {children}
               </Box>
               <Footer />
-            </QueryClientProvider>
-          </SessionProvider>
-        </Box>
+            </Box>
+          </QueryClientProvider>
+        </SessionProvider>
       </ThemeProvider>
     </CacheProvider>
   );

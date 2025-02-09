@@ -30,6 +30,7 @@ const AddTask: React.FC = () => {
           <Typography variant="h2" component="h1">
             Add Task
           </Typography>
+
           <TaskForm onSubmit={handleSubmit} />
         </div>
       </Container>

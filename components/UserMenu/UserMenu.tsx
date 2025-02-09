@@ -7,6 +7,7 @@ import {
   Avatar,
   IconButton,
   useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import {
   Logout,
@@ -16,8 +17,6 @@ import {
   History,
 } from "@mui/icons-material";
 
-import theme from "@/app/styles/theme";
-
 import { UserMenuProps } from "@/interfaces";
 
 const UserMenu: React.FC<UserMenuProps> = ({ userName, userImage }) => {
@@ -26,6 +25,8 @@ const UserMenu: React.FC<UserMenuProps> = ({ userName, userImage }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const userInitial = userName?.charAt(0).toUpperCase() || "?";
+
+  const theme = useTheme();
 
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
