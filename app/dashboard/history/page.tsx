@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
 import { Session, IIncome, IExpense } from "@/interfaces";
 import {
   Container,
@@ -13,15 +14,24 @@ import {
   Button,
   Select,
   MenuItem,
+  useTheme,
+  useMediaQuery,
+  Theme,
 } from "@mui/material";
 
 import FilterPanel from "@/components/FilterPanel/FilterPanel";
 import { fetchTransactions } from "@/app/dashboard/history/get";
+import emptyHistory from "@/public/empty-history.webp";
 
 const HistoryPage = () => {
   const { data: session } = useSession() as {
     data: Session | null;
   };
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery((theme: Theme) =>
+    theme.breakpoints.down("sm")
+  );
 
   const userCurrency = session?.user?.currency;
 
@@ -79,19 +89,23 @@ const HistoryPage = () => {
   return (
     <main>
       <Container maxWidth="sm">
-        <div>
-          <FilterPanel
-            selectedYear={selectedYear}
-            selectedMonth={selectedMonth}
-            selectedType={selectedType}
-            onYearChange={setSelectedYear}
-            onMonthChange={setSelectedMonth}
-            onTypeChange={setSelectedType}
-            onApplyFilters={handleFilterSubmit}
-          />
-        </div>
-        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-          <Typography variant="h2" component="h1">
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            flexDirection: isMobile ? "column" : "row",
+            p: theme.spacing(2),
+          }}
+        >
+          <Typography
+            variant="h2"
+            component="h1"
+            sx={{
+              fontSize: isMobile ? theme.spacing(5) : theme.spacing(6),
+              textAlign: isMobile ? "center" : "left",
+              paddingBottom: isMobile ? theme.spacing(3) : 0,
+            }}
+          >
             History
           </Typography>
           <Typography
@@ -108,60 +122,114 @@ const HistoryPage = () => {
           </Typography>
         </Box>
 
-        <List style={{ width: "100%" }}>
-          {paginatedTransactions.map((transaction) => (
-            <ListItem key={transaction._id.toString()}>
-              <Paper
-                style={{
-                  padding: "1rem",
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  width: "100%",
-                }}
+        <FilterPanel
+          selectedYear={selectedYear}
+          selectedMonth={selectedMonth}
+          selectedType={selectedType}
+          onYearChange={setSelectedYear}
+          onMonthChange={setSelectedMonth}
+          onTypeChange={setSelectedType}
+          onApplyFilters={handleFilterSubmit}
+        />
+
+        <Box sx={{ p: theme.spacing(2) }}>
+          <List style={{ width: "100%" }}>
+            {paginatedTransactions.length === 0 ? (
+              <Box
+                display="flex"
+                flexDirection="column"
+                alignItems="center"
+                justifyContent="center"
+                width="100%"
+                padding="2rem"
               >
-                <p>
-                  {transaction.description} - {transaction.amount}{" "}
-                  {userCurrency} (
-                  {new Date(transaction.date).toLocaleDateString()})
-                </p>
-              </Paper>
-            </ListItem>
-          ))}
-        </List>
+                <Typography variant="h6" color="textSecondary" mt={2}>
+                  Your history is empty
+                </Typography>
 
-        <Box sx={{ display: "flex", justifyContent: "space-between", mt: 2 }}>
-          <Button
-            variant="contained"
-            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-            disabled={currentPage === 1}
-          >
-            Назад
-          </Button>
-          <Typography>
-            Страница {currentPage} из {totalPages}
-          </Typography>
-          <Button
-            variant="contained"
-            onClick={() =>
-              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-            }
-            disabled={currentPage === totalPages}
-          >
-            Вперед
-          </Button>
-        </Box>
+                <Image
+                  src={emptyHistory}
+                  alt="Нет данных"
+                  style={{ width: "100%" }}
+                />
+              </Box>
+            ) : (
+              paginatedTransactions.map((transaction) => (
+                <ListItem key={transaction._id.toString()}>
+                  <Paper
+                    style={{
+                      padding: "1rem",
+                      display: "flex",
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      width: "100%",
+                    }}
+                  >
+                    <p>
+                      {transaction.description} - {transaction.amount}{" "}
+                      {userCurrency} (
+                      {new Date(transaction.date).toLocaleDateString()})
+                    </p>
+                  </Paper>
+                </ListItem>
+              ))
+            )}
+          </List>
 
-        <Box sx={{ mt: 2 }}>
-          <label>Записей на страницу: </label>
-          <Select
-            value={limit}
-            onChange={(e) => setLimit(Number(e.target.value))}
-          >
-            <MenuItem value={5}>5</MenuItem>
-            <MenuItem value={10}>10</MenuItem>
-            <MenuItem value={20}>20</MenuItem>
-          </Select>
+          {/* <List style={{ width: "100%" }}>
+            {paginatedTransactions.map((transaction) => (
+              <ListItem key={transaction._id.toString()}>
+                <Paper
+                  style={{
+                    padding: "1rem",
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    width: "100%",
+                  }}
+                >
+                  <p>
+                    {transaction.description} - {transaction.amount}{" "}
+                    {userCurrency} (
+                    {new Date(transaction.date).toLocaleDateString()})
+                  </p>
+                </Paper>
+              </ListItem>
+            ))}
+          </List> */}
+          <Box sx={{ display: "flex", justifyContent: "space-between", mt: 2 }}>
+            <Button
+              variant="contained"
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+              disabled={currentPage === 1}
+            >
+              Назад
+            </Button>
+            <Typography>
+              Страница {currentPage} из {totalPages}
+            </Typography>
+            <Button
+              variant="contained"
+              onClick={() =>
+                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+              }
+              disabled={currentPage === totalPages}
+            >
+              Вперед
+            </Button>
+          </Box>
+          <Box sx={{ mt: 2 }}>
+            <label>Записей на страницу:</label>
+
+            <Select
+              value={limit}
+              onChange={(e) => setLimit(Number(e.target.value))}
+            >
+              <MenuItem value={5}>5</MenuItem>
+              <MenuItem value={10}>10</MenuItem>
+              <MenuItem value={20}>20</MenuItem>
+            </Select>
+          </Box>
         </Box>
       </Container>
     </main>

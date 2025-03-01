@@ -129,7 +129,8 @@ export const GetStartedButton = styled(Button)<GetStartedButtonProps>(
       borderRadius: "inherit",
       width: "calc(100% - 4px)",
       height: "calc(100% - 4px)",
-      backgroundColor: "#060606",
+      backgroundColor: theme.palette.background.default,
+
       zIndex: -1,
       left: "50%",
       top: "50%",
