@@ -111,11 +111,12 @@ const HistoryPage = () => {
           <Typography
             variant="h4"
             component="p"
-            style={{
-              padding: "0.8rem",
-              color: "white",
-              backgroundColor: "orange",
-              borderRadius: "0.3rem",
+            sx={{
+              p: 3,
+              color: theme.palette.text.primary,
+              backgroundColor: theme.palette.background.totalSum,
+              borderRadius: 1,
+              border: "1px solid #FEA362",
             }}
           >
             Total sum: {totalSum} {userCurrency}
@@ -132,16 +133,18 @@ const HistoryPage = () => {
           onApplyFilters={handleFilterSubmit}
         />
 
-        <Box sx={{ p: theme.spacing(2) }}>
-          <List style={{ width: "100%" }}>
+        <Box sx={{ p: 2 }}>
+          <List sx={{ width: "100%" }}>
             {paginatedTransactions.length === 0 ? (
               <Box
-                display="flex"
-                flexDirection="column"
-                alignItems="center"
-                justifyContent="center"
-                width="100%"
-                padding="2rem"
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: "100%",
+                  p: 5,
+                }}
               >
                 <Typography variant="h6" color="textSecondary" mt={2}>
                   Your history is empty
@@ -157,7 +160,7 @@ const HistoryPage = () => {
               paginatedTransactions.map((transaction) => (
                 <ListItem key={transaction._id.toString()}>
                   <Paper
-                    style={{
+                    sx={{
                       padding: "1rem",
                       display: "flex",
                       flexDirection: "row",
@@ -176,59 +179,47 @@ const HistoryPage = () => {
             )}
           </List>
 
-          {/* <List style={{ width: "100%" }}>
-            {paginatedTransactions.map((transaction) => (
-              <ListItem key={transaction._id.toString()}>
-                <Paper
-                  style={{
-                    padding: "1rem",
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    width: "100%",
-                  }}
-                >
-                  <p>
-                    {transaction.description} - {transaction.amount}{" "}
-                    {userCurrency} (
-                    {new Date(transaction.date).toLocaleDateString()})
-                  </p>
-                </Paper>
-              </ListItem>
-            ))}
-          </List> */}
-          <Box sx={{ display: "flex", justifyContent: "space-between", mt: 2 }}>
-            <Button
-              variant="contained"
-              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-              disabled={currentPage === 1}
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 4 }}>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                mt: 2,
+              }}
             >
-              Назад
-            </Button>
-            <Typography>
-              Страница {currentPage} из {totalPages}
-            </Typography>
-            <Button
-              variant="contained"
-              onClick={() =>
-                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-              }
-              disabled={currentPage === totalPages}
-            >
-              Вперед
-            </Button>
-          </Box>
-          <Box sx={{ mt: 2 }}>
-            <label>Записей на страницу:</label>
+              <Button
+                variant="contained"
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
+              >
+                Назад
+              </Button>
+              <Typography>
+                Страница {currentPage} из {totalPages}
+              </Typography>
+              <Button
+                variant="contained"
+                onClick={() =>
+                  setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                }
+                disabled={currentPage === totalPages}
+              >
+                Вперед
+              </Button>
+            </Box>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 3 }}>
+              <Typography>Записей на страницу:</Typography>
 
-            <Select
-              value={limit}
-              onChange={(e) => setLimit(Number(e.target.value))}
-            >
-              <MenuItem value={5}>5</MenuItem>
-              <MenuItem value={10}>10</MenuItem>
-              <MenuItem value={20}>20</MenuItem>
-            </Select>
+              <Select
+                value={limit}
+                onChange={(e) => setLimit(Number(e.target.value))}
+              >
+                <MenuItem value={5}>5</MenuItem>
+                <MenuItem value={10}>10</MenuItem>
+                <MenuItem value={20}>20</MenuItem>
+              </Select>
+            </Box>
           </Box>
         </Box>
       </Container>
