@@ -12,7 +12,15 @@ import EditExpenseForm from "@/components/Expense/EditExpenseForm";
 
 import { Delete, Edit, Add } from "@mui/icons-material";
 
-import { Box, List, ListItem, Paper, Typography, Fab } from "@mui/material";
+import {
+  Box,
+  List,
+  ListItem,
+  Paper,
+  Typography,
+  Fab,
+  useTheme,
+} from "@mui/material";
 
 const ExpensesList: React.FC<{
   totalExpense: number;
@@ -23,6 +31,7 @@ const ExpensesList: React.FC<{
     status: string;
   };
   const router = useRouter();
+  const theme = useTheme();
 
   const [expense, setExpense] = useState<IExpense[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -103,12 +112,16 @@ const ExpensesList: React.FC<{
           justifyContent: "space-between",
           alignItems: "center",
           p: 3,
-          backgroundColor: "orange",
-          borderRadius: "0.3rem",
-          color: "#000",
+          backgroundColor: theme.palette.background.totalSum,
+          borderRadius: 1,
+          border: "1px solid #FEA362",
         }}
       >
-        <Typography variant="h4" component="p">
+        <Typography
+          variant="h5"
+          component="p"
+          sx={{ color: theme.palette.text.primary }}
+        >
           Total Expenses for this month: {totalExpense} {userCurrency}
         </Typography>
         <Box>
