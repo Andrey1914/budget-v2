@@ -11,7 +11,15 @@ import { Session, IIncome } from "@/interfaces";
 import EditIncomeForm from "@/components/Income/EditIncomeForm";
 
 import { Delete, Edit, Add } from "@mui/icons-material";
-import { Box, List, ListItem, Paper, Typography, Fab } from "@mui/material";
+import {
+  Box,
+  List,
+  ListItem,
+  Paper,
+  Typography,
+  Fab,
+  useTheme,
+} from "@mui/material";
 
 const IncomesList: React.FC<{
   totalIncome: number;
@@ -22,6 +30,7 @@ const IncomesList: React.FC<{
     status: string;
   };
   const router = useRouter();
+  const theme = useTheme();
 
   const [income, setIncome] = useState<IIncome[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -102,12 +111,16 @@ const IncomesList: React.FC<{
           justifyContent: "space-between",
           alignItems: "center",
           p: 3,
-          backgroundColor: "orange",
-          borderRadius: "0.3rem",
-          color: "#000",
+          backgroundColor: theme.palette.background.totalSum,
+          borderRadius: 1,
+          border: "1px solid #FEA362",
         }}
       >
-        <Typography variant="h4" component="p">
+        <Typography
+          variant="h5"
+          component="p"
+          sx={{ color: theme.palette.text.primary }}
+        >
           Total Incomes for this month: {totalIncome} {userCurrency}
         </Typography>
         <Box>
@@ -117,7 +130,7 @@ const IncomesList: React.FC<{
         </Box>
       </Box>
       <List
-        style={{
+        sx={{
           width: "100%",
           display: "flex",
           flexDirection: "column",
@@ -125,10 +138,10 @@ const IncomesList: React.FC<{
         }}
       >
         {income.map((item: IIncome) => (
-          <ListItem key={item._id.toString()} style={{ padding: 0 }}>
+          <ListItem key={item._id.toString()} sx={{ p: 0 }}>
             <Paper
-              style={{
-                padding: 9,
+              sx={{
+                p: 9,
                 display: "flex",
                 flexDirection: "row",
                 alignItems: "center",
@@ -157,6 +170,7 @@ const IncomesList: React.FC<{
           </ListItem>
         ))}
       </List>
+
       {editingIncomeId && (
         <EditIncomeForm
           incomeId={editingIncomeId}
