@@ -21,6 +21,12 @@ const EditExpenseForm = ({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  const [showSnackbar, setShowSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">(
+    "success"
+  );
+
   useEffect(() => {
     const getExpenseById = async () => {
       try {
@@ -43,22 +49,39 @@ const EditExpenseForm = ({
     setLoading(true);
     setError(null);
 
-    const result = await editExpense({
-      expenseId,
-      amount,
-      description,
-      category,
-      date,
-    });
+    try {
+      const result = await editExpense({
+        expenseId,
+        amount,
+        description,
+        category,
+        date,
+      });
 
-    if (result.success) {
-      alert("Expense updated successfully");
-      refreshExpenses(result.data);
-      onClose(result.data);
-    } else {
-      setError(result.error);
+      if (result.success) {
+        refreshExpenses(result.data);
+        onClose(result.data);
+
+        setSnackbarMessage("Expense edited successfully!");
+        setSnackbarSeverity("success");
+        setShowSnackbar(true);
+
+        console.log("Expense edited successfully");
+      } else {
+        setError(result.error);
+        setSnackbarMessage("Failed to edit Expense");
+        setSnackbarSeverity("error");
+        setShowSnackbar(true);
+      }
+    } catch (error: any) {
+      setError(error.message || "An unexpected error occurred.");
+      setSnackbarMessage("Failed to edit expense");
+      setSnackbarSeverity("error");
+      setShowSnackbar(true);
+      console.error("Error editing expense:", error);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (

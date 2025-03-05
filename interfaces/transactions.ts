@@ -1,5 +1,17 @@
+import { Schema, Document } from "mongoose";
 import { ObjectId } from "mongodb";
 import { Category } from "./category";
+
+export interface IBaseTransaction extends Document {
+  _id: Schema.Types.ObjectId;
+  userId: Schema.Types.ObjectId;
+  amount: number;
+  category: Schema.Types.ObjectId | string;
+  description: string;
+  date: Date;
+  categoryDetails?: Category;
+  currency?: string;
+}
 
 export interface Transaction {
   _id: ObjectId;

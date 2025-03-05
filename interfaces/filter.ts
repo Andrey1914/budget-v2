@@ -3,7 +3,6 @@ export interface FilterParams {
   month: number | "";
   type: string;
   page: number;
-  // limit: number;
 }
 
 export interface FilterPanelProps {

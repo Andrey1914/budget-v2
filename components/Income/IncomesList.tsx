@@ -130,12 +130,13 @@ const IncomesList: React.FC<{
           </Fab>
         </Box>
       </Box>
+
       <List
         sx={{
           width: "100%",
           display: "flex",
           flexDirection: "column",
-          gap: 4,
+          gap: 1,
         }}
       >
         {income.length === 0 ? (

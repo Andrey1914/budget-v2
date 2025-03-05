@@ -1,38 +1,10 @@
-import { Schema, Document } from "mongoose";
-import { Category } from "./category";
+import { IBaseTransaction } from "./transactions";
+import { BaseFormProps, BaseEditFormProps } from "./form";
 
-export interface IIncome extends Document {
-  _id: Schema.Types.ObjectId;
-  userId: Schema.Types.ObjectId;
-  amount: number;
-  category: Schema.Types.ObjectId | string;
-  description: string;
-  date: Date;
-  categoryDetails?: Category;
-  currency?: string;
-}
+export interface IIncome extends IBaseTransaction {}
 
-export interface IncomeFormProps {
-  initialData?: {
-    amount: number;
-    category: string;
-    description: string;
-    date: string;
-    currency: string;
-  };
-  onSubmit: (data: {
-    amount: number;
-    category: string;
-    description: string;
-    date: string;
-    currency: string;
-  }) => void;
-}
+export interface IncomeFormProps extends BaseFormProps {}
 
-export interface EditIncomeFormProps {
+export interface EditIncomeFormProps extends BaseEditFormProps {
   incomeId: string;
-  initialAmount: number;
-  initialDescription: string;
-  initialCategory: string;
-  onIncomeUpdated: () => void;
 }

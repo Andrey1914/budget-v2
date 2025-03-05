@@ -133,11 +133,11 @@ const ExpensesList: React.FC<{
       </Box>
 
       <List
-        style={{
+        sx={{
           width: "100%",
           display: "flex",
           flexDirection: "column",
-          gap: 4,
+          gap: 1,
         }}
       >
         {expense.length === 0 ? (
