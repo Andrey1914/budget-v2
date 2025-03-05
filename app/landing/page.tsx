@@ -4,7 +4,7 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { Box, Typography, Button } from "@mui/material";
+import { Box, Typography, Button, useTheme } from "@mui/material";
 import { Send } from "@mui/icons-material";
 import { MainContainer } from "@/app/styles/Container";
 import Hero from "@/components/Hero/Hero";
@@ -18,6 +18,8 @@ import { GetStartedButton } from "@/components/Hero/Hero.styled";
 const Landing: React.FC = () => {
   const { data: session, status } = useSession();
   const router = useRouter();
+
+  const theme = useTheme();
 
   const handleReviewClick = () => {
     if (status === "authenticated") {
@@ -50,7 +52,7 @@ const Landing: React.FC = () => {
       <Box
         component="section"
         title="reviews"
-        sx={{ py: 6, backgroundColor: "#f7f7f7" }}
+        sx={{ py: 6, backgroundColor: theme.palette.background.reviews }}
       >
         <Box sx={{ p: 4 }}>
           <Typography variant="h2" gutterBottom>

@@ -63,10 +63,11 @@ const ReviewsCarousel: React.FC = () => {
               alignItems: "center",
               textAlign: "center",
               color: "#571862",
-              backgroundColor: "rgb(198, 198, 198)",
+              backgroundColor: theme.palette.background.swiperSlide,
 
               boxShadow: "2px 2px 5px rgba(0, 0, 0, 0.1)",
               borderRadius: 4,
+              border: "1px solid #6CC3E0",
               height: isMobile ? "90%" : "100%",
               margin: isMobile ? "0 auto" : "unset",
             }}

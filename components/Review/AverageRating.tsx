@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Box, Rating, Typography } from "@mui/material";
+import { Box, Rating, Typography, useTheme } from "@mui/material";
 import { Oval } from "react-loader-spinner";
 
 const AverageRating: React.FC = () => {
   const [averageRating, setAverageRating] = useState<number | null>(null);
+
+  const theme = useTheme();
 
   useEffect(() => {
     const getAverageRating = async () => {
@@ -31,10 +33,10 @@ const AverageRating: React.FC = () => {
           />
           <Typography
             variant="h4"
-            style={{
-              marginLeft: "8px",
-              fontSize: "32px",
-              color: "rgba(0, 0, 0, 0.26)",
+            sx={{
+              marginLeft: theme.spacing(2),
+              fontSize: theme.spacing(5),
+              color: theme.palette.text.secondary,
             }}
           >
             {averageRating.toFixed(1)}

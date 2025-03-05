@@ -4,10 +4,12 @@ import { createTheme } from "@mui/material";
 
 declare module "@mui/material/styles" {
   interface TypeBackground {
-    advantages?: string;
     primary?: string;
     secondary?: string;
     tertiary?: string;
+    advantages?: string;
+    reviews?: string;
+    swiperSlide?: string;
     totalSum?: string;
   }
 }
@@ -45,11 +47,13 @@ export const lightTheme = createTheme({
 
     background: {
       default: "#ffffff",
-      paper: "#f4f4f4",
-      advantages: "#fefae0",
       primary: "#fefae0",
       secondary: "#e0f7fa",
       tertiary: "#ede7f6",
+      paper: "#f4f4f4",
+      advantages: "#fefae0",
+      reviews: "#E7F9FF",
+      swiperSlide: "#2898BD",
       totalSum: "#F38A3F",
     },
 
@@ -88,7 +92,9 @@ export const darkTheme = createTheme({
       default: "#121212",
       paper: "#1d1d1d",
       advantages: "#164555",
+      reviews: "#206A83",
       totalSum: "#E56910",
+      swiperSlide: "#9DD9EE",
     },
     text: {
       primary: "#ffffff",
