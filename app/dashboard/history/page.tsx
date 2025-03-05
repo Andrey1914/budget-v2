@@ -152,7 +152,7 @@ const HistoryPage = () => {
 
                 <Image
                   src={emptyHistory}
-                  alt="Нет данных"
+                  alt="No history image"
                   style={{ width: "100%" }}
                 />
               </Box>

@@ -22,6 +22,7 @@ import {
   Checkbox,
   Typography,
   Fab,
+  useTheme,
 } from "@mui/material";
 
 const TasksList: React.FC = () => {
@@ -29,6 +30,7 @@ const TasksList: React.FC = () => {
     data: Session | null;
   };
   const router = useRouter();
+  const theme = useTheme();
 
   const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
   const { data: tasks = [], error, refetch } = useGetTasks(session as Session);
@@ -82,13 +84,17 @@ const TasksList: React.FC = () => {
           justifyContent: "space-between",
           alignItems: "center",
           p: 3,
-          backgroundColor: "orange",
-          borderRadius: "0.3rem",
-          color: "#000",
+          backgroundColor: theme.palette.background.totalSum,
+          borderRadius: 1,
+          border: "1px solid #FEA362",
         }}
       >
         {unresolvedTasksCount > 0 ? (
-          <Typography variant="h4" component="p">
+          <Typography
+            variant="h4"
+            component="p"
+            sx={{ color: theme.palette.text.primary }}
+          >
             You have {unresolvedTasksCount} unresolved tasks!
           </Typography>
         ) : (
@@ -119,10 +125,10 @@ const TasksList: React.FC = () => {
         >
           {Array.isArray(tasks) &&
             tasks.map((item: ITask) => (
-              <ListItem key={item._id.toString()} style={{ padding: 0 }}>
+              <ListItem key={item._id.toString()} sx={{ p: 0 }}>
                 <Paper
-                  style={{
-                    padding: 9,
+                  sx={{
+                    p: 2,
                     display: "flex",
                     alignItems: "center",
                     flexDirection: "row",

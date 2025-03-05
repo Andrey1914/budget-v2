@@ -9,7 +9,7 @@ import { getIncomes } from "@/app/dashboard/income/get";
 import { refreshIncomes } from "@/app/dashboard/income/refresh";
 import { Session, IIncome } from "@/interfaces";
 import EditIncomeForm from "@/components/Income/EditIncomeForm";
-
+import emptyList from "@/public/empty-list.webp";
 import { Delete, Edit, Add } from "@mui/icons-material";
 import {
   Box,
@@ -20,6 +20,7 @@ import {
   Fab,
   useTheme,
 } from "@mui/material";
+import Image from "next/image";
 
 const IncomesList: React.FC<{
   totalIncome: number;
@@ -137,38 +138,59 @@ const IncomesList: React.FC<{
           gap: 4,
         }}
       >
-        {income.map((item: IIncome) => (
-          <ListItem key={item._id.toString()} sx={{ p: 0 }}>
-            <Paper
-              sx={{
-                p: 9,
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-between",
-                width: "100%",
-              }}
-            >
-              <Typography variant="h6" component="p">
-                {item.amount} {userCurrency} - {item.description}
-              </Typography>
-              <Box sx={{ display: "flex", gap: 3 }}>
-                <Edit onClick={() => handleEdit(item._id.toString())} />
+        {income.length === 0 ? (
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              width: "100%",
+            }}
+          >
+            <Image
+              src={emptyList}
+              alt="Empty list image"
+              style={{ width: "100%" }}
+            />
+            <Typography variant="h6" component="p">
+              No incomes yet
+            </Typography>
+          </Box>
+        ) : (
+          income.map((item: IIncome) => (
+            <ListItem key={item._id.toString()} sx={{ p: 0 }}>
+              <Paper
+                sx={{
+                  p: 3,
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  width: "100%",
+                }}
+              >
+                <Typography variant="h6" component="p">
+                  {item.amount} {userCurrency} - {item.description}
+                </Typography>
+                <Box sx={{ display: "flex", gap: 3 }}>
+                  <Edit onClick={() => handleEdit(item._id.toString())} />
 
-                <Delete
-                  onClick={() =>
-                    handleDelete(
-                      item._id.toString(),
-                      income,
-                      setIncome,
-                      reloadData
-                    )
-                  }
-                />
-              </Box>
-            </Paper>
-          </ListItem>
-        ))}
+                  <Delete
+                    onClick={() =>
+                      handleDelete(
+                        item._id.toString(),
+                        income,
+                        setIncome,
+                        reloadData
+                      )
+                    }
+                  />
+                </Box>
+              </Paper>
+            </ListItem>
+          ))
+        )}
       </List>
 
       {editingIncomeId && (

@@ -9,7 +9,7 @@ import { getExpenses } from "@/app/dashboard/expense/get";
 import { refreshExpenses } from "@/app/dashboard/expense/refresh";
 import { Session, IExpense } from "@/interfaces";
 import EditExpenseForm from "@/components/Expense/EditExpenseForm";
-
+import emptyList from "@/public/empty-list.webp";
 import { Delete, Edit, Add } from "@mui/icons-material";
 
 import {
@@ -21,6 +21,7 @@ import {
   Fab,
   useTheme,
 } from "@mui/material";
+import Image from "next/image";
 
 const ExpensesList: React.FC<{
   totalExpense: number;
@@ -139,38 +140,59 @@ const ExpensesList: React.FC<{
           gap: 4,
         }}
       >
-        {expense.map((item: IExpense) => (
-          <ListItem key={item._id.toString()} style={{ padding: 0 }}>
-            <Paper
-              style={{
-                padding: 9,
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-between",
-                width: "100%",
-              }}
-            >
-              <Typography variant="h6" component="p">
-                {item.amount} {userCurrency} - {item.description}
-              </Typography>
-              <Box sx={{ display: "flex", gap: 3 }}>
-                <Edit onClick={() => handleEdit(item._id.toString())} />
+        {expense.length === 0 ? (
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              width: "100%",
+            }}
+          >
+            <Image
+              src={emptyList}
+              alt="Empty list image"
+              style={{ width: "100%" }}
+            />
+            <Typography variant="h6" component="p">
+              No expenses to show
+            </Typography>
+          </Box>
+        ) : (
+          expense.map((item: IExpense) => (
+            <ListItem key={item._id.toString()} sx={{ p: 0 }}>
+              <Paper
+                sx={{
+                  p: 3,
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  width: "100%",
+                }}
+              >
+                <Typography variant="h6" component="p">
+                  {item.amount} {userCurrency} - {item.description}
+                </Typography>
+                <Box sx={{ display: "flex", gap: 3 }}>
+                  <Edit onClick={() => handleEdit(item._id.toString())} />
 
-                <Delete
-                  onClick={() =>
-                    handleDelete(
-                      item._id.toString(),
-                      expense,
-                      setExpense,
-                      reloadData
-                    )
-                  }
-                />
-              </Box>
-            </Paper>
-          </ListItem>
-        ))}
+                  <Delete
+                    onClick={() =>
+                      handleDelete(
+                        item._id.toString(),
+                        expense,
+                        setExpense,
+                        reloadData
+                      )
+                    }
+                  />
+                </Box>
+              </Paper>
+            </ListItem>
+          ))
+        )}
       </List>
 
       {editingExpenseId && (
