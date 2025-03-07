@@ -8,6 +8,7 @@ import Navbar from "@/components/Navbar/Navbar";
 import { useMediaQuery, useTheme } from "@mui/material";
 
 import { ContainerNavLinks } from "@/components/Header/Header.styled";
+import Logo from "@/components/Logo/Logo";
 
 const Header: React.FC<SwitcherProps> = ({ toggleTheme, isDarkMode }) => {
   const { data: session } = useSession();
@@ -27,17 +28,12 @@ const Header: React.FC<SwitcherProps> = ({ toggleTheme, isDarkMode }) => {
           <Link
             href={session ? "/dashboard" : "/landing"}
             style={{
-              // display: "inline-flex",
-              // flexDirection: "column",
-              // alignItems: "center",
-              // gap: "0.1rem",
               padding: "0.5rem",
             }}
           >
-            Finance App
+            <Logo text="My-Finance-App-" />
           </Link>
         )}
-
         <Navbar toggleTheme={toggleTheme} isDarkMode={isDarkMode} />
       </ContainerNavLinks>
     </header>

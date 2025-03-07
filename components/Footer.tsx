@@ -6,6 +6,7 @@ import { useSession } from "next-auth/react";
 
 import { Container } from "@mui/material";
 import LegalInformation from "@/components/LegalInformation/LegalInformation";
+import Logo from "@/components/Logo/Logo";
 
 const Footer: React.FC = () => {
   const { data: session } = useSession();
@@ -19,7 +20,7 @@ const Footer: React.FC = () => {
           href={session ? "/dashboard" : "/landing"}
           style={{ color: "#fff" }}
         >
-          Finance App
+          <Logo text="My-Finance-App-" />
         </Link>
         <LegalInformation />
       </Container>

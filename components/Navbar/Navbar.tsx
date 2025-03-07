@@ -30,6 +30,7 @@ import {
 import UserMenu from "@/components/UserMenu/UserMenu";
 import ThemeSwitcher from "@/components/ThemeSwitcher/ThemeSwitcher";
 import { SwitcherProps } from "@/interfaces";
+import Logo from "@/components/Logo/Logo";
 
 const Navbar: React.FC<SwitcherProps> = ({ toggleTheme, isDarkMode }) => {
   const { data: session, status } = useSession();
@@ -216,6 +217,8 @@ const Navbar: React.FC<SwitcherProps> = ({ toggleTheme, isDarkMode }) => {
                 {session && session.user.isVerified ? (
                   <>
                     <Box sx={{ display: "flex", gap: 4, alignItems: "center" }}>
+                      <Logo text="My-Finance-App-" />
+
                       <Typography variant="h6" component="p">
                         {session.user.name}
                       </Typography>
@@ -246,6 +249,7 @@ const Navbar: React.FC<SwitcherProps> = ({ toggleTheme, isDarkMode }) => {
                   </>
                 ) : (
                   <>
+                    <Logo text="My-Finance-App-" />
                     <List>{renderAuthLinks()}</List>
                     <ThemeSwitcher
                       isDarkMode={isDarkMode}
