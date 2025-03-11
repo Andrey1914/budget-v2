@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
-import { Oval } from "react-loader-spinner";
 
 import {
   Box,
@@ -14,10 +13,11 @@ import {
   Drawer,
   List,
   ListItem,
-  ListItemIcon,
+  Icon,
   ListItemText,
   useMediaQuery,
   useTheme,
+  Button,
 } from "@mui/material";
 import {
   Menu,
@@ -26,7 +26,6 @@ import {
   AppRegistration,
   Home,
 } from "@mui/icons-material";
-// import theme from "@/app/styles/theme";
 import UserMenu from "@/components/UserMenu/UserMenu";
 import ThemeSwitcher from "@/components/ThemeSwitcher/ThemeSwitcher";
 import { SwitcherProps } from "@/interfaces";
@@ -51,26 +50,16 @@ const Navbar: React.FC<SwitcherProps> = ({ toggleTheme, isDarkMode }) => {
     if (status === "loading") return;
   }, [session, status]);
 
-  // if (status === "loading")
-  //   return (
-  //     <Oval
-  //       visible={true}
-  //       height="80"
-  //       width="80"
-  //       color="#1727b7"
-  //       secondaryColor="#6fb5e7"
-  //       ariaLabel="oval-loading"
-  //       wrapperStyle={{}}
-  //       wrapperClass=""
-  //     />
-  //   );
-
   const links = [
-    { href: "/landing", label: "Home", icon: <Home /> },
+    { href: "/landing", label: "Home" },
     { href: "/dashboard", label: "Dashboard" },
-    // { href: "/dashboard/income", label: "Incomes" },
-    // { href: "/dashboard/expense", label: "Expenses" },
-    // { href: "/dashboard/tasks", label: "Tasks" },
+  ];
+
+  const homeLink = [{ href: "/landing", label: "Home", icon: <Home /> }];
+
+  const authLinks = [
+    { href: "/auth/login", label: "SignIn", icon: <Login /> },
+    { href: "/auth/register", label: "SignUp", icon: <AppRegistration /> },
   ];
 
   const mobileLinks = [
@@ -83,107 +72,95 @@ const Navbar: React.FC<SwitcherProps> = ({ toggleTheme, isDarkMode }) => {
 
   const renderLinks = () =>
     links.map((link) => (
-      <Link
-        key={link.href}
-        href={link.href}
-        style={{
-          textDecoration: "none",
-          color: isActive(link.href) ? "#0066ff" : "inherit",
-        }}
-      >
-        <ListItem
-          sx={{
-            borderBottom: isActive(link.href) ? "2px solid #0066ff" : "none",
+      <ListItem key={link.href}>
+        <Link
+          key={link.href}
+          href={link.href}
+          style={{
+            textDecoration: "none",
+            color: isActive(link.href) ? "#0066ff" : "inherit",
           }}
         >
-          {link.icon && <ListItemIcon>{link.icon}</ListItemIcon>}
-          <ListItemText primary={link.label} />
-        </ListItem>
-      </Link>
+          <ListItemText
+            sx={{
+              borderBottom: isActive(link.href) ? "2px solid #0066ff" : "none",
+            }}
+            primary={link.label}
+          />
+        </Link>
+      </ListItem>
     ));
 
   const renderMobileLinks = () =>
     mobileLinks.map((link) => (
-      <Link
-        key={link.href}
-        href={link.href}
-        style={{
-          textDecoration: "none",
-          color: isActive(link.href) ? "#0066ff" : "inherit",
-        }}
-      >
-        <ListItem
-          sx={{
-            borderBottom: isActive(link.href) ? "2px solid #0066ff" : "none",
+      <ListItem key={link.href}>
+        <Link
+          key={link.href}
+          href={link.href}
+          style={{
+            textDecoration: "none",
+            color: isActive(link.href) ? "#0066ff" : "inherit",
           }}
         >
-          <ListItemText primary={link.label} />
-        </ListItem>
-      </Link>
+          <ListItemText
+            sx={{
+              borderBottom: isActive(link.href) ? "2px solid #0066ff" : "none",
+            }}
+            primary={link.label}
+          />
+        </Link>
+      </ListItem>
     ));
 
-  const renderAuthLinks = () => (
-    <>
-      <Link
-        href="/landing"
-        style={{
-          textDecoration: "none",
-          color: isActive("/landing") ? "#0066ff" : "inherit",
-        }}
-      >
-        <ListItem
-          sx={{
-            borderBottom: isActive("/landing") ? "2px solid #0066ff" : "none",
+  const renderHomeLink = () =>
+    homeLink.map((link) => (
+      <ListItem key={link.href}>
+        <Link
+          key={link.href}
+          href={link.href}
+          style={{
+            textDecoration: "none",
+            color: isActive(link.href) ? "#0066ff" : "inherit",
           }}
         >
-          <ListItemIcon>
-            <Home />
-          </ListItemIcon>
-          <ListItemText primary="Home" />
-        </ListItem>
-      </Link>
-      <Link
-        href="/auth/login"
-        style={{
-          textDecoration: "none",
-          color: isActive("/auth/login") ? "#0066ff" : "inherit",
-        }}
-      >
-        <ListItem
-          sx={{
-            borderBottom: isActive("/auth/login")
-              ? "2px solid #0066ff"
-              : "none",
+          <Box
+            sx={{
+              display: "flex",
+              gap: 3,
+              borderBottom: isActive(link.href) ? "2px solid #0066ff" : "none",
+            }}
+          >
+            <Icon>{link.icon}</Icon>
+            <ListItemText primary={link.label} />
+          </Box>
+        </Link>
+      </ListItem>
+    ));
+
+  const renderAuthLinks = () =>
+    authLinks.map((link) => (
+      <ListItem key={link.href}>
+        <Link
+          key={link.href}
+          href={link.href}
+          style={{
+            textDecoration: "none",
+            color: isActive(link.href) ? "#0066ff" : "inherit",
           }}
         >
-          <ListItemIcon>
-            <Login />
-          </ListItemIcon>
-          <ListItemText primary="Login" />
-        </ListItem>
-      </Link>
-      <Link
-        href="/auth/register"
-        style={{
-          textDecoration: "none",
-          color: isActive("/auth/register") ? "#0066ff" : "inherit",
-        }}
-      >
-        <ListItem
-          sx={{
-            borderBottom: isActive("/auth/register")
-              ? "2px solid #0066ff"
-              : "none",
-          }}
-        >
-          <ListItemIcon>
-            <AppRegistration />
-          </ListItemIcon>
-          <ListItemText primary="Registration" />
-        </ListItem>
-      </Link>
-    </>
-  );
+          <Box
+            sx={{
+              display: "flex",
+              gap: 3,
+              borderBottom: isActive(link.href) ? "2px solid #0066ff" : "none",
+            }}
+          >
+            <Icon>{link.icon}</Icon>
+            <ListItemText primary={link.label} />
+          </Box>
+        </Link>
+      </ListItem>
+    ));
 
   const handleDrawerToggle = () => {
     setDrawerOpen(!drawerOpen);
@@ -209,14 +186,21 @@ const Navbar: React.FC<SwitcherProps> = ({ toggleTheme, isDarkMode }) => {
               <Box
                 sx={{
                   width: 250,
-                  padding: "1rem",
+                  p: theme.spacing(3),
                 }}
                 role="presentation"
                 onClick={handleDrawerToggle}
               >
                 {session && session.user.isVerified ? (
                   <>
-                    <Box sx={{ display: "flex", gap: 4, alignItems: "center" }}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        flexDirection: isMobile ? "column" : "row",
+                        gap: 4,
+                        alignItems: "center",
+                      }}
+                    >
                       <Logo text="My-Finance-App-" />
 
                       <Typography variant="h6" component="p">
@@ -228,29 +212,43 @@ const Navbar: React.FC<SwitcherProps> = ({ toggleTheme, isDarkMode }) => {
                         userImage={session?.user?.image ?? null}
                       />
                     </Box>
-                    <List>{renderLinks()}</List>
-                    <List>{renderMobileLinks()}</List>
                     <List>
-                      <ListItem>
+                      {renderLinks()} {renderMobileLinks()}
+                    </List>
+
+                    <Box
+                      sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "start",
+                        gap: 4,
+                        p: 1,
+                      }}
+                    >
+                      <Button
+                        onClick={() => signOut({ callbackUrl: "/landing" })}
+                      >
+                        <Box sx={{ display: "flex", gap: 3 }}>
+                          <Logout />
+                          <Typography variant="button">Logout</Typography>
+                        </Box>
+                      </Button>
+
+                      <Box>
                         <ThemeSwitcher
                           isDarkMode={isDarkMode}
                           toggleTheme={toggleTheme}
                         />
-                      </ListItem>
-                      <ListItem
-                        onClick={() => signOut({ callbackUrl: "/landing" })}
-                      >
-                        <ListItemIcon>
-                          <Logout />
-                        </ListItemIcon>
-                        <ListItemText primary="Logout" />
-                      </ListItem>
-                    </List>
+                      </Box>
+                    </Box>
                   </>
                 ) : (
                   <>
                     <Logo text="My-Finance-App-" />
-                    <List>{renderAuthLinks()}</List>
+                    <List>
+                      {renderHomeLink()}
+                      {renderAuthLinks()}
+                    </List>
                     <ThemeSwitcher
                       isDarkMode={isDarkMode}
                       toggleTheme={toggleTheme}
@@ -304,45 +302,17 @@ const Navbar: React.FC<SwitcherProps> = ({ toggleTheme, isDarkMode }) => {
               </>
             ) : (
               <Box sx={{ display: "flex", gap: 4 }}>
-                <Link
-                  href="/landing"
-                  style={{
-                    textDecoration: "none",
-                    color: isActive("/landing") ? "#0066ff" : "inherit",
-                    borderBottom: isActive("/landing")
-                      ? "2px solid #0066ff"
-                      : "none",
-                    paddingBottom: "4px",
+                <List
+                  sx={{
+                    display: "flex",
+                    flexDirection: isMobile ? "column" : "row",
+                    gap: 3,
                   }}
                 >
-                  Home
-                </Link>
-                <Link
-                  href="/auth/login"
-                  style={{
-                    textDecoration: "none",
-                    color: isActive("/auth/login") ? "#0066ff" : "inherit",
-                    borderBottom: isActive("/auth/login")
-                      ? "2px solid #0066ff"
-                      : "none",
-                    paddingBottom: "4px",
-                  }}
-                >
-                  Sign In
-                </Link>
-                <Link
-                  href="/auth/register"
-                  style={{
-                    textDecoration: "none",
-                    color: isActive("/auth/register") ? "#0066ff" : "inherit",
-                    borderBottom: isActive("/auth/register")
-                      ? "2px solid #0066ff"
-                      : "none",
-                    paddingBottom: "4px",
-                  }}
-                >
-                  Sign Up
-                </Link>
+                  {renderHomeLink()}
+                  {renderAuthLinks()}
+                </List>
+
                 <ThemeSwitcher
                   isDarkMode={isDarkMode}
                   toggleTheme={toggleTheme}

@@ -23,51 +23,45 @@ const LegalInformation: React.FC = () => {
   };
 
   return (
-    <Box
-      sx={{
-        padding: 4,
-      }}
-    >
-      <Box>
-        <List sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-          <ListItem>
-            <Link
-              onClick={() => handleLinkAgreement()}
-              underline="hover"
-              target="_blank"
-            >
-              Условия использования
-            </Link>
-          </ListItem>
-          <ListItem>
-            <Link
-              onClick={() => handleLinkPrivacy()}
-              underline="hover"
-              target="_blank"
-            >
-              Политика конфиденциальности
-            </Link>
-          </ListItem>
-          <ListItem>
-            <Link
-              onClick={() => handleLinkCookie()}
-              underline="hover"
-              target="_blank"
-            >
-              Политика в отношении файлов cookie
-            </Link>
-          </ListItem>
-          <ListItem>
-            <Link
-              onClick={() => handleLinkLicense()}
-              underline="hover"
-              target="_blank"
-            >
-              Лицензионное соглашение
-            </Link>
-          </ListItem>
-        </List>
-      </Box>
+    <Box>
+      <List sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+        <ListItem>
+          <Link
+            onClick={() => handleLinkAgreement()}
+            underline="hover"
+            target="_blank"
+          >
+            Условия использования
+          </Link>
+        </ListItem>
+        <ListItem>
+          <Link
+            onClick={() => handleLinkPrivacy()}
+            underline="hover"
+            target="_blank"
+          >
+            Политика конфиденциальности
+          </Link>
+        </ListItem>
+        <ListItem>
+          <Link
+            onClick={() => handleLinkCookie()}
+            underline="hover"
+            target="_blank"
+          >
+            Политика в отношении файлов cookie
+          </Link>
+        </ListItem>
+        <ListItem>
+          <Link
+            onClick={() => handleLinkLicense()}
+            underline="hover"
+            target="_blank"
+          >
+            Лицензионное соглашение
+          </Link>
+        </ListItem>
+      </List>
     </Box>
   );
 };
