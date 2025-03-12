@@ -6,6 +6,7 @@ import {
   Avatar,
   Button,
   TextField,
+  useTheme,
 } from "@mui/material";
 
 import { IReview, ReviewListProps } from "@/interfaces";
@@ -18,6 +19,8 @@ const ReviewsList: React.FC<ReviewListProps> = ({
   const [editingReviewId, setEditingReviewId] = useState<string | null>(null);
   const [editedText, setEditedText] = useState<string>("");
   const [editedRating, setEditedRating] = useState<number | null>(null);
+
+  const theme = useTheme();
 
   const handleEditClick = (review: IReview) => {
     setEditingReviewId(review._id.toString());
@@ -50,7 +53,10 @@ const ReviewsList: React.FC<ReviewListProps> = ({
           sx={{
             py: 1,
             p: 2,
-            backgroundColor: index % 2 === 0 ? "grey.100" : "#dcdbdb",
+            backgroundColor:
+              index % 2 === 0
+                ? theme.palette.background.reviewsListItems
+                : theme.palette.background.reviewsList,
             borderRadius: 1,
           }}
         >
@@ -74,7 +80,10 @@ const ReviewsList: React.FC<ReviewListProps> = ({
             <Box
               sx={{
                 p: 2,
-                backgroundColor: index % 2 === 0 ? "#dcdbdb" : "grey.100",
+                backgroundColor:
+                  index % 2 === 0
+                    ? theme.palette.background.reviewsList
+                    : theme.palette.background.reviewsListItems,
                 borderRadius: 1,
               }}
             >

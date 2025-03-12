@@ -22,45 +22,35 @@ const LegalInformation: React.FC = () => {
     router.push("/landing/license");
   };
 
+  const links = [
+    {
+      text: "Условия использования",
+      handler: () => handleLinkAgreement(),
+    },
+    {
+      text: "Политика конфиденциальности",
+      handler: () => handleLinkPrivacy(),
+    },
+    {
+      text: "Политика в отношении файлов cookie",
+      handler: () => handleLinkCookie(),
+    },
+    {
+      text: "Лицензионное соглашение",
+      handler: () => handleLinkLicense(),
+    },
+  ];
+
   return (
     <Box>
       <List sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-        <ListItem>
-          <Link
-            onClick={() => handleLinkAgreement()}
-            underline="hover"
-            target="_blank"
-          >
-            Условия использования
-          </Link>
-        </ListItem>
-        <ListItem>
-          <Link
-            onClick={() => handleLinkPrivacy()}
-            underline="hover"
-            target="_blank"
-          >
-            Политика конфиденциальности
-          </Link>
-        </ListItem>
-        <ListItem>
-          <Link
-            onClick={() => handleLinkCookie()}
-            underline="hover"
-            target="_blank"
-          >
-            Политика в отношении файлов cookie
-          </Link>
-        </ListItem>
-        <ListItem>
-          <Link
-            onClick={() => handleLinkLicense()}
-            underline="hover"
-            target="_blank"
-          >
-            Лицензионное соглашение
-          </Link>
-        </ListItem>
+        {links.map((link, index) => (
+          <ListItem key={index}>
+            <Link onClick={link.handler} underline="hover" target="_blank">
+              {link.text}
+            </Link>
+          </ListItem>
+        ))}
       </List>
     </Box>
   );

@@ -28,7 +28,9 @@ const AllReviewsPage: React.FC = () => {
   return (
     <Container maxWidth="md">
       <Box sx={{ py: 4 }}>
-        <Box sx={{ p: 2, backgroundColor: "#dcdbdb" }}>
+        <Box
+          sx={{ p: 2, backgroundColor: theme.palette.background.reviewsList }}
+        >
           <Typography variant="h5" gutterBottom>
             All reviews.
           </Typography>

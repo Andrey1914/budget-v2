@@ -9,6 +9,8 @@ declare module "@mui/material/styles" {
     tertiary?: string;
     advantages?: string;
     reviews?: string;
+    reviewsList?: string;
+    reviewsListItems?: string;
     swiperSlide?: string;
     totalSum?: string;
   }
@@ -53,12 +55,15 @@ export const lightTheme = createTheme({
       paper: "#f4f4f4",
       advantages: "#fefae0",
       reviews: "#E7F9FF",
+      reviewsList: "#dcdbdb",
+      reviewsListItems: "#f5f5f5",
       swiperSlide: "#2898BD",
       totalSum: "#F38A3F",
     },
 
     text: {
       primary: "#000000",
+      secondary: "rgba(0, 0, 0, 0.26)",
     },
   },
 });
@@ -93,11 +98,14 @@ export const darkTheme = createTheme({
       paper: "#1d1d1d",
       advantages: "#164555",
       reviews: "#206A83",
+      reviewsList: "#161A1D",
+      reviewsListItems: "#22272B",
       totalSum: "#E56910",
       swiperSlide: "#9DD9EE",
     },
     text: {
       primary: "#ffffff",
+      secondary: "rgba(255, 255, 255, 0.3)",
     },
   },
 });

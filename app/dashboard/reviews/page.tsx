@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import axios from "axios";
 
-import { Box, Container, Typography, Rating } from "@mui/material";
+import { Box, Container, Typography, Rating, useTheme } from "@mui/material";
 import ReviewForm from "@/components/Review/ReviewForm";
 import ReviewsList from "@/components/Review/ReviewsList";
 import { IReview } from "@/interfaces";
@@ -18,6 +18,8 @@ const Review: React.FC = () => {
   const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">(
     "success"
   );
+
+  const theme = useTheme();
 
   const handleAddReview = async (newReview: {
     rating: number | null;
@@ -108,14 +110,20 @@ const Review: React.FC = () => {
         <ReviewForm onAddReview={handleAddReview} />
       </Box>
       <Box sx={{ py: 4 }}>
-        <Box sx={{ p: 2, mb: 2, backgroundColor: "#dcdbdb" }}>
+        <Box
+          sx={{
+            p: 2,
+            mb: 2,
+            backgroundColor: theme.palette.background.reviewsList,
+          }}
+        >
           <Box sx={{ display: "flex", alignItems: "center", gap: 2, pb: 2 }}>
             <Typography variant="h5">My reviews.</Typography>
             <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
               <Rating value={averageRating} readOnly precision={0.1} />
               <Typography
                 variant="body2"
-                sx={{ fontSize: "14px", color: "rgba(0, 0, 0, 0.26)" }}
+                sx={{ fontSize: "14px", color: theme.palette.text.secondary }}
               >
                 {averageRating.toFixed(1)}
               </Typography>
@@ -127,7 +135,17 @@ const Review: React.FC = () => {
             onDeleteReview={handleDeleteReview}
           />
         </Box>
-        <Link href="/reviews">All reviews</Link>
+        <Link href="/reviews" style={{ textDecoration: "none" }}>
+          <Typography
+            variant="body2"
+            sx={{
+              fontSize: "14px",
+              color: theme.palette.text.secondary,
+            }}
+          >
+            All reviews
+          </Typography>
+        </Link>
       </Box>
 
       {showSnackbar && (

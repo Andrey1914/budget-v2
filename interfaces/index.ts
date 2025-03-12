@@ -15,3 +15,4 @@ export * from "./chart";
 export * from "./currency";
 export * from "./popover";
 export * from "./theme-switcher";
+export * from "./button";

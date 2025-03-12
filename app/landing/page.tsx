@@ -13,7 +13,7 @@ import ReviewsCarousel from "@/components/ReviewsCarousel/ReviewsCarousel";
 import FAQ from "@/components/faq/FAQ";
 import AverageRating from "@/components/Review/AverageRating";
 import Feature from "@/components/Features/Features";
-import { GetStartedButton } from "@/components/Hero/Hero.styled";
+import { GetStartedButton } from "@/app/styles/Buttons";
 
 const Landing: React.FC = () => {
   const { data: session, status } = useSession();
@@ -89,7 +89,23 @@ const Landing: React.FC = () => {
               Send feedback
             </Button>
 
-            <Link href="reviews">All reviews.</Link>
+            <Link
+              href="reviews"
+              style={{ display: "flex", textDecoration: "none" }}
+            >
+              <Typography
+                variant="body2"
+                sx={{
+                  fontSize: "14px",
+                  p: 1,
+                  color: theme.palette.text.secondary,
+                  border: `2px solid ${theme.palette.text.secondary}`,
+                  borderRadius: theme.spacing(1),
+                }}
+              >
+                All reviews
+              </Typography>
+            </Link>
           </Box>
         </Box>
       </Box>
