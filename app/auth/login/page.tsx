@@ -15,6 +15,8 @@ import {
   Container,
   IconButton,
   InputAdornment,
+  Typography,
+  useTheme,
 } from "@mui/material";
 
 import { Visibility, VisibilityOff } from "@mui/icons-material";
@@ -33,6 +35,8 @@ const Login: React.FC = () => {
   const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">(
     "success"
   );
+
+  const theme = useTheme();
 
   const handleTogglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
@@ -79,14 +83,18 @@ const Login: React.FC = () => {
   };
 
   return (
-    <Box component="section" title="login" style={{ padding: "2rem 0" }}>
+    <Box component="section" title="login" sx={{ py: 4 }}>
       <Container maxWidth="sm">
-        <h1>You need to register or logged in.</h1>
+        <Typography variant="h1" component="h1" sx={{ fontSize: 24, py: 2 }}>
+          You need to register or logged in.
+        </Typography>
 
-        <h2>Login</h2>
+        <Typography variant="h2" component="h2" sx={{ fontSize: 20, py: 3 }}>
+          Login
+        </Typography>
         {error && <p style={{ color: "red" }}>{error}</p>}
         <form onSubmit={handleSubmit}>
-          <Box mb={2}>
+          <Box mb={3}>
             <TextField
               id="email"
               label="Email"
@@ -97,7 +105,7 @@ const Login: React.FC = () => {
               required
             />
           </Box>
-          <Box mb={2}>
+          <Box mb={3}>
             <TextField
               id="password"
               label="Password"
@@ -144,7 +152,18 @@ const Login: React.FC = () => {
           </Button>
         </form>
         <Box sx={{ p: 4, textAlign: "center" }}>
-          <Link href="/auth/reset-password">Забыли пароль?</Link>
+          <Link href="/auth/reset-password" style={{ textDecoration: "none" }}>
+            <Typography
+              variant="body2"
+              sx={{
+                fontSize: 18,
+                p: 1,
+                color: theme.palette.text.secondary,
+              }}
+            >
+              Забыли пароль?
+            </Typography>
+          </Link>
         </Box>
 
         {showSnackbar && (

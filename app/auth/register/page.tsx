@@ -100,13 +100,17 @@ const Register: React.FC = () => {
   };
 
   return (
-    <Box component="section" title="registration" style={{ padding: "2rem 0" }}>
+    <Box component="section" title="registration" sx={{ py: 4 }}>
       <Container maxWidth="sm">
-        <h1>Registration</h1>
-        <p>The verification code will be sent to your email!</p>
+        <Typography variant="h1" component="h1" sx={{ fontSize: 24, py: 2 }}>
+          Registration
+        </Typography>
+        <Typography variant="body1" component="p" sx={{ fontSize: 16, py: 3 }}>
+          The verification code will be sent to your email!
+        </Typography>
         {error && <p style={{ color: "red" }}>{error}</p>}
         <form onSubmit={handleSubmit}>
-          <Box mb={2}>
+          <Box mb={3}>
             <TextField
               id="name"
               label="Name"
@@ -125,7 +129,7 @@ const Register: React.FC = () => {
               required
             />
           </Box>
-          <Box mb={2}>
+          <Box mb={3}>
             <TextField
               id="email"
               label="Email"
@@ -140,7 +144,7 @@ const Register: React.FC = () => {
               required
             />
           </Box>
-          <Box mb={2}>
+          <Box mb={3}>
             <TextField
               id="password"
               label="Password"
@@ -199,7 +203,7 @@ const Register: React.FC = () => {
             horizontal: "left",
           }}
         >
-          <Typography sx={{ padding: "10px", color: "red" }}>
+          <Typography sx={{ p: "10px", color: "red" }}>
             {popoverMessage}
           </Typography>
         </Popover>

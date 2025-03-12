@@ -125,11 +125,13 @@ const ResetPasswordPage: React.FC = () => {
   };
 
   return (
-    <Box component="section" style={{ padding: "2rem 0" }}>
+    <Box component="section" sx={{ py: 4 }}>
       <Container maxWidth="sm">
-        <h1>Сменить пароль</h1>
+        <Typography variant="h1" component="h1" sx={{ fontSize: 24, py: 3 }}>
+          Сменить пароль.
+        </Typography>
         <form onSubmit={handleSubmit}>
-          <Box mb={2}>
+          <Box mb={3}>
             <TextField
               id="email"
               label="Email"
@@ -143,7 +145,7 @@ const ResetPasswordPage: React.FC = () => {
               required
             />
           </Box>
-          <Box mb={2}>
+          <Box mb={3}>
             <TextField
               id="password"
               label="New password"
@@ -177,7 +179,7 @@ const ResetPasswordPage: React.FC = () => {
               }}
             />
           </Box>
-          <Box mb={2}>
+          <Box mb={3}>
             <TextField
               id="confirm-password"
               label="Confirm new password"
