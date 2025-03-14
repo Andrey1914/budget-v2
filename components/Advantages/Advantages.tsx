@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { Container, Typography, Box, Grid2 } from "@mui/material";
+import { Typography, Box, Grid2, useTheme } from "@mui/material";
 import { AdvantagesText } from "@/components/Advantages/Advantages.styled";
 import { textData } from "@/components/Advantages/AdvantagesData";
-import { useTheme } from "@mui/material";
 
 const Advantages: React.FC = () => {
   const theme = useTheme();
+
   const [expandedStates, setExpandedStates] = useState<boolean[]>(
     Array(textData.length).fill(false)
   );
@@ -19,66 +19,78 @@ const Advantages: React.FC = () => {
   };
 
   return (
-    //backgroundColor: theme.palette.backgrounds.primary,
     <Box
       sx={{
-        padding: "60px 0",
+        py: theme.spacing(4),
         backgroundColor: theme.palette.background.advantages,
       }}
     >
-      <Container>
-        <Typography
-          variant="h4"
-          component="h2"
-          align="center"
-          sx={{ marginBottom: 4, fontWeight: 600 }}
-        >
-          Контроль своих финансов с новым уровнем удобства
-        </Typography>
+      <Typography
+        variant="h4"
+        component="h2"
+        sx={{
+          textAlign: "center",
+          py: theme.spacing(5),
+          fontWeight: theme.typography.fontWeightBold,
+        }}
+      >
+        Control your finances with a new level of convenience.
+      </Typography>
 
-        <Typography
-          variant="h5"
-          component="p"
-          align="center"
-          sx={{ marginBottom: 4, fontWeight: 400 }}
-        >
-          Наше приложение для контроля финансов и транзакций — это удобный
-          инструмент для тех, кто стремится держать свои расходы и доходы под
-          контролем. Мы продумали каждую деталь, чтобы процесс планирования,
-          анализа и управления деньгами был максимально простым и эффективным.
-        </Typography>
+      <Typography
+        variant="h5"
+        component="p"
+        sx={{
+          textAlign: "center",
+          p: theme.spacing(3),
+          fontWeight: theme.typography.fontWeightRegular,
+        }}
+      >
+        Our financial and transaction management app is a convenient tool for
+        those who strive to keep their expenses and income under control.
+        We&apos;ve carefully considered every detail to make the process of
+        planning, analyzing, and managing money as simple and efficient as
+        possible.
+      </Typography>
 
-        <Grid2 container spacing={4} direction="column" sx={{ padding: 4 }}>
-          {textData.map((item, index) => (
-            <Grid2
-              key={index}
-              sx={{
-                width: "100%",
-                paddingLeft: { xs: 0, sm: index % 2 === 0 ? 2 : 6 },
-                paddingRight: { xs: 0, sm: index % 2 === 0 ? 6 : 2 },
-              }}
-              component="div"
-            >
-              <Box>
-                <Typography
-                  variant="h5"
-                  component="p"
-                  sx={{ marginBottom: 2, fontWeight: 600 }}
-                >
-                  {item.title}
-                </Typography>
-                <AdvantagesText
-                  color="text.secondary"
-                  isExpanded={expandedStates[index]}
-                  onClick={() => toggleText(index)}
-                >
-                  {item.text}
-                </AdvantagesText>
-              </Box>
-            </Grid2>
-          ))}
-        </Grid2>
-      </Container>
+      <Grid2
+        container
+        spacing={4}
+        direction="column"
+        sx={{ p: theme.spacing(4) }}
+      >
+        {textData.map((item, index) => (
+          <Grid2
+            key={index}
+            sx={{
+              width: "100%",
+              paddingLeft: { xs: 0, sm: index % 2 === 0 ? 2 : 6 },
+              paddingRight: { xs: 0, sm: index % 2 === 0 ? 6 : 2 },
+            }}
+            component="div"
+          >
+            <Box>
+              <Typography
+                variant="h5"
+                component="p"
+                sx={{
+                  py: theme.spacing(2),
+                  fontWeight: theme.typography.fontWeightBold,
+                }}
+              >
+                {item.title}
+              </Typography>
+              <AdvantagesText
+                color="text.secondary"
+                isExpanded={expandedStates[index]}
+                onClick={() => toggleText(index)}
+              >
+                {item.text}
+              </AdvantagesText>
+            </Box>
+          </Grid2>
+        ))}
+      </Grid2>
     </Box>
   );
 };
