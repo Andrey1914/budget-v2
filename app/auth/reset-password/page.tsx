@@ -22,12 +22,14 @@ import {
   Typography,
   IconButton,
   InputAdornment,
+  useTheme,
 } from "@mui/material";
 
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 const ResetPasswordPage: React.FC = () => {
   const router = useRouter();
+  const theme = useTheme();
 
   const [email, setEmail] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -127,7 +129,15 @@ const ResetPasswordPage: React.FC = () => {
   return (
     <Box component="section" sx={{ py: 4 }}>
       <Container maxWidth="sm">
-        <Typography variant="h1" component="h1" sx={{ fontSize: 24, py: 3 }}>
+        <Typography
+          variant="h1"
+          component="h1"
+          sx={{
+            textAlign: "center",
+            fontSize: theme.typography.fontSizes[4],
+            py: 3,
+          }}
+        >
           Сменить пароль.
         </Typography>
         <form onSubmit={handleSubmit}>

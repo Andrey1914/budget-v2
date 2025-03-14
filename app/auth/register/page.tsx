@@ -20,12 +20,14 @@ import {
   Typography,
   IconButton,
   InputAdornment,
+  useTheme,
 } from "@mui/material";
 
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 const Register: React.FC = () => {
   const router = useRouter();
+  const theme = useTheme();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -102,12 +104,25 @@ const Register: React.FC = () => {
   return (
     <Box component="section" title="registration" sx={{ py: 4 }}>
       <Container maxWidth="sm">
-        <Typography variant="h1" component="h1" sx={{ fontSize: 24, py: 2 }}>
-          Registration
-        </Typography>
-        <Typography variant="body1" component="p" sx={{ fontSize: 16, py: 3 }}>
+        <Typography
+          variant="body1"
+          component="p"
+          sx={{ fontSize: theme.typography.fontSizes[1], py: 2 }}
+        >
           The verification code will be sent to your email!
         </Typography>
+        <Typography
+          variant="h1"
+          component="h1"
+          sx={{
+            textAlign: "center",
+            fontSize: theme.typography.fontSizes[4],
+            py: 3,
+          }}
+        >
+          Registration
+        </Typography>
+
         {error && <p style={{ color: "red" }}>{error}</p>}
         <form onSubmit={handleSubmit}>
           <Box mb={3}>

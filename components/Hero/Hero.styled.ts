@@ -3,7 +3,7 @@ import hero from "../../public/finance-background.png";
 
 export const HeroContainer = styled(Container)(({ theme }) => ({
   position: "relative",
-  padding: 0,
+  p: 0,
   top: theme.spacing(7),
 
   [theme.breakpoints.up("sm")]: {
@@ -23,23 +23,23 @@ export const HeroSection = styled("div")(({ theme }) => ({
   textAlign: "center",
 
   [theme.breakpoints.up("sm")]: {
-    padding: theme.spacing(4),
+    p: theme.spacing(4),
   },
 }));
 
 export const HeroBackdrop = styled(Box)(({ theme }) => ({
-  padding: theme.spacing(3),
+  p: theme.spacing(3),
   backdropFilter: "blur(15px)",
   backgroundColor: "rgba(0, 0, 0, 0.4)",
 
   [theme.breakpoints.up("sm")]: {
-    padding: theme.spacing(4),
+    p: theme.spacing(4),
   },
 }));
 
 export const HeroTitle = styled(Typography)(({ theme }) => ({
   fontWeight: theme.typography.fontWeightBold,
-  fontSize: theme.spacing(5),
+  fontSize: theme.typography.fontSizes[5],
   paddingBottom: theme.spacing(3),
   color: "#b5b5b5a4",
 
@@ -53,7 +53,7 @@ export const HeroTitle = styled(Typography)(({ theme }) => ({
 
   [theme.breakpoints.up("sm")]: {
     paddingBottom: theme.spacing(4),
-    fontSize: theme.spacing(6),
+    fontSize: theme.typography.fontSizes[7],
   },
 
   "@keyframes shine": {
@@ -68,11 +68,11 @@ export const HeroTitle = styled(Typography)(({ theme }) => ({
 
 export const HeroSubTitle = styled(Typography)(({ theme }) => ({
   paddingBottom: theme.spacing(3),
-  fontSize: theme.spacing(4),
+  fontSize: theme.typography.fontSizes[4],
   color: "#eaeaea",
 
   [theme.breakpoints.up("sm")]: {
     paddingBottom: theme.spacing(4),
-    fontSize: theme.spacing(5),
+    fontSize: theme.typography.fontSizes[5],
   },
 }));

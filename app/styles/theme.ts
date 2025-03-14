@@ -14,14 +14,26 @@ declare module "@mui/material/styles" {
     swiperSlide?: string;
     totalSum?: string;
   }
+
+  interface TypographyVariants {
+    fontSizes: number[];
+  }
+
+  interface TypographyVariantsOptions {
+    fontSizes?: number[];
+  }
 }
 
 export const lightTheme = createTheme({
   typography: {
     fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
     fontSize: 12,
+    fontSizes: [14, 16, 18, 20, 24, 32, 48, 64, 96],
+
     fontWeightBold: 700,
+    fontWeightMedium: 500,
     fontWeightRegular: 400,
+    fontWeightLight: 100,
   },
   spacing: [0, 4, 8, 16, 24, 32, 64, 128, 190, 256, 300],
   breakpoints: {
@@ -72,8 +84,12 @@ export const darkTheme = createTheme({
   typography: {
     fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
     fontSize: 12,
+    fontSizes: [14, 16, 18, 20, 24, 32, 48, 64, 96],
+
     fontWeightBold: 700,
+    fontWeightMedium: 500,
     fontWeightRegular: 400,
+    fontWeightLight: 100,
   },
   spacing: [0, 4, 8, 16, 24, 32, 64, 128, 190, 256, 300],
   breakpoints: {

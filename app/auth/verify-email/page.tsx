@@ -7,11 +7,20 @@ import axios from "axios";
 import { Oval } from "react-loader-spinner";
 import SnackbarNotification from "@/components/Notification/Snackbar";
 
-import { Box, TextField, Button, Container } from "@mui/material";
+import {
+  Box,
+  TextField,
+  Button,
+  Container,
+  Typography,
+  useTheme,
+} from "@mui/material";
 
 const VerifyEmail: React.FC = () => {
   const { data: session } = useSession();
   const router = useRouter();
+  const theme = useTheme();
+
   const [verificationCode, setVerificationCode] = useState("");
   const [loading, setLoading] = useState(false);
   const [showSnackbar, setShowSnackbar] = useState(false);
@@ -66,9 +75,19 @@ const VerifyEmail: React.FC = () => {
   return (
     <Box component="section">
       <Container maxWidth="sm">
-        <h1>Verify Email</h1>
+        <Typography
+          variant="h1"
+          component="h1"
+          sx={{
+            textAlign: "center",
+            fontSize: theme.typography.fontSizes[4],
+            py: 3,
+          }}
+        >
+          Verify Email
+        </Typography>
         <form onSubmit={handleSubmit}>
-          <Box mb={2}>
+          <Box mb={3}>
             <TextField
               label="Verification Code"
               variant="outlined"
