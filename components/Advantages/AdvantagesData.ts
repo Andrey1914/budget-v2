@@ -1,26 +1,26 @@
 export const textData = [
   {
-    title: "Гибкость и удобство с фильтрами по месяцам",
-    text: "Приложение позволяет вам быстро сортировать и анализировать данные по месяцам. Это значит, что вы можете отслеживать, как изменяются ваши расходы и доходы из месяца в месяц, замечать закономерности и на основе этого делать более обоснованные финансовые решения. Не нужно больше тратить время на поиск нужных транзакций — все под рукой и структурировано.",
+    title: "Flexibility and Convenience with Monthly Filters",
+    text: "The app allows you to quickly sort and analyze data by month. This means you can track how your expenses and income change from month to month, identify patterns, and make more informed financial decisions based on that. No more wasting time searching for the right transactions—everything is structured and at your fingertips.",
   },
   {
-    title: "Настраиваемый график для анализа",
-    text: "С помощью настраиваемого графика вы можете визуализировать свои финансовые потоки. Отслеживание данных становится не просто удобным, но и наглядным. Вы сами решаете, какие параметры вас интересуют, и в какой форме хотите их видеть. Это помогает понять динамику ваших финансов и вовремя корректировать бюджет.",
+    title: "Customizable Chart for Analysis",
+    text: "With a customizable chart, you can visualize your financial flows. Tracking data becomes not only convenient but also more intuitive. You decide which parameters interest you and in what format you want to see them. This helps you understand the dynamics of your finances and adjust your budget in time.",
   },
   {
-    title: "Интуитивно понятные списки задач и записей",
-    text: "В нашем приложении вы можете создать списки задач, которые легко редактировать, удалять или менять статус. Такой подход позволяет вам эффективно организовывать рабочий процесс и не забывать о важных финансовых операциях, например, запланированных платежах или поступлениях. Это дает вам полное ощущение контроля и помогает систематизировать финансовую деятельность.",
+    title: "Intuitive Task and Record Lists",
+    text: "In our app, you can create task lists that are easy to edit, delete, or change their status. This approach allows you to efficiently organize your workflow and keep track of important financial operations, such as scheduled payments or incoming funds. It gives you a complete sense of control and helps systematize your financial activities.",
   },
   {
-    title: "Полная свобода с доходами и расходами",
-    text: "Вы можете точно так же работать с записями о доходах и расходах. Каждый элемент можно редактировать, удалять или изменять его статус, что дает вам полную свободу в управлении личными финансами. Это означает, что вы всегда будете в курсе, какие операции были совершены, что было изменено и как ваши финансовые цели продвигаются.",
+    title: "Complete Freedom with Income and Expenses",
+    text: "You can manage income and expense records just as easily. Every entry can be edited, deleted, or its status changed, giving you full control over your personal finances. This means you will always be aware of the transactions made, any modifications, and how your financial goals are progressing.",
   },
   {
-    title: "Простой и понятный интерфейс",
-    text: "Мы постарались сделать интерфейс настолько интуитивным, чтобы вам не приходилось тратить время на обучение работе с приложением. Все функции доступны прямо с главного экрана, что позволяет вам быстро и легко находить нужные данные, не теряя времени на поиски.",
+    title: "Simple and User-Friendly Interface",
+    text: "We have designed the interface to be as intuitive as possible, so you don't have to spend time learning how to use the app. All features are available right from the main screen, allowing you to quickly and easily find the necessary data without wasting time searching.",
   },
   {
-    title: "Повышение финансовой осведомленности",
-    text: "Это не просто приложение для отслеживания расходов и доходов, это инструмент, который помогает вам осознавать, куда уходят ваши деньги и какие финансовые привычки требуют изменений. Вы сможете наблюдать тенденции, на основе которых можно строить более эффективные стратегии для достижения ваших целей.",
+    title: "Enhancing Financial Awareness",
+    text: "This is not just an app for tracking expenses and income; it's a tool that helps you understand where your money is going and which financial habits need improvement. You can observe trends and use them to develop more effective strategies for achieving your financial goals.",
   },
 ];

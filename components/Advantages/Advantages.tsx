@@ -30,8 +30,8 @@ const Advantages: React.FC = () => {
         component="h2"
         sx={{
           textAlign: "center",
-          py: theme.spacing(5),
-          fontWeight: theme.typography.fontWeightBold,
+          p: theme.spacing(5),
+          fontWeight: theme.typography.fontWeightLight,
         }}
       >
         Control your finances with a new level of convenience.
@@ -75,7 +75,7 @@ const Advantages: React.FC = () => {
                 component="p"
                 sx={{
                   py: theme.spacing(2),
-                  fontWeight: theme.typography.fontWeightBold,
+                  fontWeight: theme.typography.fontWeightMedium,
                 }}
               >
                 {item.title}
