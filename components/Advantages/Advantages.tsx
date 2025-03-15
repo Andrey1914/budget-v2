@@ -30,8 +30,9 @@ const Advantages: React.FC = () => {
         component="h2"
         sx={{
           textAlign: "center",
-          p: theme.spacing(5),
-          fontWeight: theme.typography.fontWeightLight,
+          p: theme.spacing(4),
+          fontWeight: theme.typography.fontWeightRegular,
+          fontSize: theme.typography.fontSizes[5],
         }}
       >
         Control your finances with a new level of convenience.
@@ -43,7 +44,8 @@ const Advantages: React.FC = () => {
         sx={{
           textAlign: "center",
           p: theme.spacing(3),
-          fontWeight: theme.typography.fontWeightRegular,
+          fontWeight: theme.typography.fontWeightLight,
+          fontSize: theme.typography.fontSizes[4],
         }}
       >
         Our financial and transaction management app is a convenient tool for
@@ -57,7 +59,9 @@ const Advantages: React.FC = () => {
         container
         spacing={4}
         direction="column"
-        sx={{ p: theme.spacing(4) }}
+        sx={{
+          p: theme.spacing(3),
+        }}
       >
         {textData.map((item, index) => (
           <Grid2
@@ -75,7 +79,7 @@ const Advantages: React.FC = () => {
                 component="p"
                 sx={{
                   py: theme.spacing(2),
-                  fontWeight: theme.typography.fontWeightMedium,
+                  fontWeight: theme.typography.fontWeightRegular,
                 }}
               >
                 {item.title}
@@ -84,6 +88,7 @@ const Advantages: React.FC = () => {
                 color="text.secondary"
                 isExpanded={expandedStates[index]}
                 onClick={() => toggleText(index)}
+                sx={{ fontWeight: theme.typography.fontWeightLight }}
               >
                 {item.text}
               </AdvantagesText>
