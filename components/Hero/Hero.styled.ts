@@ -1,21 +1,10 @@
-import { styled, Box, Container, Typography, Button } from "@mui/material";
+import { styled, Box, Container, Typography } from "@mui/material";
 import hero from "../../public/finance-background.png";
-
-export const HeroContainer = styled(Container)(({ theme }) => ({
-  position: "relative",
-  p: 0,
-  top: theme.spacing(7),
-
-  [theme.breakpoints.up("sm")]: {
-    top: theme.spacing(8),
-  },
-}));
 
 export const HeroSection = styled("div")(({ theme }) => ({
   backgroundImage: `url(${hero.src})`,
   backgroundSize: "cover",
   backgroundPosition: "center",
-  height: "75vh",
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
@@ -23,17 +12,45 @@ export const HeroSection = styled("div")(({ theme }) => ({
   textAlign: "center",
 
   [theme.breakpoints.up("sm")]: {
-    p: theme.spacing(4),
+    height: "auto",
+    minHeight: "500px",
+  },
+}));
+
+export const HeroContainer = styled(Container)(({ theme }) => ({
+  position: "relative",
+  width: "100%",
+  minHeight: "500px",
+  bottom: 0,
+  paddingLeft: theme.spacing(3),
+  paddingRight: theme.spacing(3),
+
+  [theme.breakpoints.up("sm")]: {
+    paddingLeft: theme.spacing(4),
+    paddingRight: theme.spacing(4),
   },
 }));
 
 export const HeroBackdrop = styled(Box)(({ theme }) => ({
-  p: theme.spacing(3),
+  position: "absolute",
+  bottom: theme.spacing(-4),
+  left: "50%",
+  transform: "translateX(-50%)",
+  width: "90%",
+  maxWidth: "600px",
+  minHeight: "100px",
+  padding: theme.spacing(3),
   backdropFilter: "blur(15px)",
   backgroundColor: "rgba(0, 0, 0, 0.4)",
+  borderRadius: "4px",
 
   [theme.breakpoints.up("sm")]: {
-    p: theme.spacing(4),
+    padding: theme.spacing(4),
+    maxWidth: "700px",
+  },
+
+  [theme.breakpoints.up("md")]: {
+    padding: theme.spacing(5),
   },
 }));
 
@@ -53,7 +70,10 @@ export const HeroTitle = styled(Typography)(({ theme }) => ({
 
   [theme.breakpoints.up("sm")]: {
     paddingBottom: theme.spacing(4),
-    fontSize: theme.typography.fontSizes[7],
+  },
+
+  [theme.breakpoints.up("md")]: {
+    fontSize: theme.typography.fontSizes[6],
   },
 
   "@keyframes shine": {
@@ -73,6 +93,10 @@ export const HeroSubTitle = styled(Typography)(({ theme }) => ({
 
   [theme.breakpoints.up("sm")]: {
     paddingBottom: theme.spacing(4),
+    fontSize: theme.typography.fontSizes[4],
+  },
+
+  [theme.breakpoints.up("md")]: {
     fontSize: theme.typography.fontSizes[5],
   },
 }));

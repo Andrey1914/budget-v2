@@ -91,7 +91,7 @@ export const darkTheme = createTheme({
     fontWeightRegular: 400,
     fontWeightLight: 100,
   },
-  spacing: [0, 4, 8, 16, 24, 32, 64, 128, 190, 256, 300],
+  spacing: [0, 4, 8, 16, 24, 32, 64, 100, 128, 160, 170, 190, 256, 300],
   breakpoints: {
     values: {
       xs: 0,
