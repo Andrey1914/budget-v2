@@ -6,12 +6,10 @@ export const ContainerNavLinks = styled(Container)(({ theme }) => ({
   justifyContent: "space-between",
 
   [theme.breakpoints.down("md")]: {
-    flexDirection: "column-reverse",
-    gap: theme.spacing(3),
+    gap: theme.spacing(1),
   },
 
   [theme.breakpoints.up("md")]: {
-    // flexDirection: "row-reverse",
     gap: theme.spacing(4),
   },
 }));

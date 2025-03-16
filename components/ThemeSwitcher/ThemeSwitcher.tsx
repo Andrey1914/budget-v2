@@ -19,6 +19,7 @@ const ThemeSwitcher: React.FC<SwitcherProps> = ({
   }
   return (
     <FormControlLabel
+      sx={{ gap: 2 }}
       control={
         <Switch
           checked={isDarkMode}

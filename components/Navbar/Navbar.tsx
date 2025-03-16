@@ -39,6 +39,7 @@ const Navbar: React.FC<SwitcherProps> = ({ toggleTheme, isDarkMode }) => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  // const isTablet = useMediaQuery(theme.breakpoints.down("md"));
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -126,7 +127,7 @@ const Navbar: React.FC<SwitcherProps> = ({ toggleTheme, isDarkMode }) => {
           <Box
             sx={{
               display: "flex",
-              gap: 3,
+              gap: 2,
               borderBottom: isActive(link.href) ? "2px solid #0066ff" : "none",
             }}
           >
@@ -151,7 +152,7 @@ const Navbar: React.FC<SwitcherProps> = ({ toggleTheme, isDarkMode }) => {
           <Box
             sx={{
               display: "flex",
-              gap: 3,
+              gap: 2,
               borderBottom: isActive(link.href) ? "2px solid #0066ff" : "none",
             }}
           >
@@ -260,7 +261,7 @@ const Navbar: React.FC<SwitcherProps> = ({ toggleTheme, isDarkMode }) => {
           </>
         ) : (
           <Box
-            style={{
+            sx={{
               display: "flex",
               justifyContent: "space-between",
               alignItems: "center",
@@ -301,12 +302,12 @@ const Navbar: React.FC<SwitcherProps> = ({ toggleTheme, isDarkMode }) => {
                 </Box>
               </>
             ) : (
-              <Box sx={{ display: "flex", gap: 4 }}>
+              <Box sx={{ display: "flex", gap: 3 }}>
                 <List
                   sx={{
                     display: "flex",
                     flexDirection: isMobile ? "column" : "row",
-                    gap: 3,
+                    gap: 2,
                   }}
                 >
                   {renderHomeLink()}
