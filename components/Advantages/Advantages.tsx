@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Typography, Box, Grid2, useTheme } from "@mui/material";
 import { AdvantagesText } from "@/components/Advantages/Advantages.styled";
 import { textData } from "@/components/Advantages/AdvantagesData";
+import { text } from "stream/consumers";
 
 const Advantages: React.FC = () => {
   const theme = useTheme();
@@ -21,8 +22,12 @@ const Advantages: React.FC = () => {
   return (
     <Box
       sx={{
-        py: theme.spacing(4),
+        py: theme.spacing(6),
+        px: theme.spacing(3),
         backgroundColor: theme.palette.background.advantages,
+        [theme.breakpoints.up("sm")]: {
+          px: theme.spacing(5),
+        },
       }}
     >
       <Typography
@@ -42,8 +47,8 @@ const Advantages: React.FC = () => {
         variant="h5"
         component="p"
         sx={{
+          paddingBottom: theme.spacing(4),
           textAlign: "center",
-          p: theme.spacing(3),
           fontWeight: theme.typography.fontWeightLight,
           fontSize: theme.typography.fontSizes[4],
         }}
@@ -60,16 +65,25 @@ const Advantages: React.FC = () => {
         spacing={4}
         direction="column"
         sx={{
-          p: theme.spacing(3),
+          display: "grid",
+          gridTemplateColumns: { xs: "1fr", md: "repeat(2, 1fr)" },
         }}
       >
         {textData.map((item, index) => (
           <Grid2
             key={index}
             sx={{
-              width: "100%",
-              paddingLeft: { xs: 0, sm: index % 2 === 0 ? 2 : 6 },
-              paddingRight: { xs: 0, sm: index % 2 === 0 ? 6 : 2 },
+              paddingLeft: {
+                xs: 0,
+                sm: index % 2 === 0 ? 2 : 6,
+                md: Math.floor(index / 2) % 2 === 0 ? 2 : 6,
+              },
+
+              paddingRight: {
+                xs: 0,
+                sm: index % 2 === 0 ? 6 : 2,
+                md: Math.floor(index / 2) % 2 === 0 ? 6 : 2,
+              },
             }}
             component="div"
           >
@@ -88,7 +102,10 @@ const Advantages: React.FC = () => {
                 color="text.secondary"
                 isExpanded={expandedStates[index]}
                 onClick={() => toggleText(index)}
-                sx={{ fontWeight: theme.typography.fontWeightLight }}
+                sx={{
+                  fontWeight: theme.typography.fontWeightLight,
+                  textAlign: "center",
+                }}
               >
                 {item.text}
               </AdvantagesText>
