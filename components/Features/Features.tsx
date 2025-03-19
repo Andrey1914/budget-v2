@@ -15,7 +15,7 @@ import { features } from "@/components/Features/FeaturesData";
 
 const Feature = () => {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   return (
     <Parallax
@@ -36,28 +36,45 @@ const Feature = () => {
           minHeight: "100%",
         }}
       >
-        <Grid2 container spacing={3} justifyContent="end">
+        <Grid2
+          container
+          spacing={3}
+          justifyContent="end"
+          sx={{
+            maxWidth: { xs: "450px", md: "100%" },
+            ml: "auto",
+          }}
+        >
           {features.map((feature, index) => (
             <Grid2
               key={index}
               sx={{
-                width: { xs: "100%", sm: "33%" },
+                width: { xs: "100%", md: "350px" },
                 pl: isMobile && index % 2 !== 0 ? "32px" : 0,
+                display: "flex",
               }}
               component="div"
             >
               <Paper
-                elevation={3}
+                elevation={4}
                 sx={{
                   display: "flex",
                   backgroundColor: "#000",
                   color: "#fff",
                   p: 3,
+                  flex: 1,
                 }}
               >
-                <Box sx={{ p: 3 }}>
+                <Box sx={{ p: 2, flex: 1 }}>
                   <Typography variant="h6">{feature.title}</Typography>
-                  <Typography>{feature.description}</Typography>
+                  <Typography
+                    sx={{
+                      fontWeight: theme.typography.fontWeightLight,
+                      fontSize: theme.typography.fontSizes[2],
+                    }}
+                  >
+                    {feature.description}
+                  </Typography>
                 </Box>
               </Paper>
             </Grid2>
