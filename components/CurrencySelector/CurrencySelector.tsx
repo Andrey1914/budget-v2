@@ -49,6 +49,7 @@ const CurrencySelector: React.FC<CurrencySelectorProps> = ({
     <FormControl fullWidth margin="normal">
       <InputLabel id="currency-selector-label">Currency</InputLabel>
       <Select
+        label="Currency"
         labelId="currency-selector-label"
         value={selectedCurrency}
         onChange={(e) => onCurrencyChange(e.target.value)}

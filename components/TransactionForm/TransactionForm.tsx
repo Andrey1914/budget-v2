@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
+
 import axios from "axios";
 import {
   Box,
@@ -12,7 +14,7 @@ import {
 import { Oval } from "react-loader-spinner";
 import SelectCategory from "@/components/Category/Select";
 import CustomPopover from "@/components/Popover/Popover";
-import { TransactionFormProps } from "@/interfaces";
+import { Session, TransactionFormProps } from "@/interfaces";
 
 const TransactionForm: React.FC<TransactionFormProps> = ({
   amount,
@@ -48,11 +50,15 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
   message,
   onClose,
 }) => {
+  const { data: session } = useSession() as { data: Session | null };
+
   const [currencies, setCurrencies] = useState<
     { code: string; name: string }[]
   >([]);
 
   const [error, setError] = useState<string | null>(null);
+
+  const userCurrency = session?.user?.currency;
 
   useEffect(() => {
     const fetchCurrencies = async () => {
@@ -142,7 +148,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
           <Select
             labelId="currency-label"
             id="currency"
-            value={currency || "PLN"}
+            value={userCurrency || currency || "PLN"}
             label="Currency"
             onChange={(e) => setCurrency(e.target.value)}
           >
