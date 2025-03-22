@@ -41,7 +41,7 @@ const Feature = () => {
           spacing={3}
           justifyContent="end"
           sx={{
-            maxWidth: { xs: "450px", md: "100%" },
+            maxWidth: { xs: "450px", md: "85%" },
             ml: "auto",
           }}
         >
