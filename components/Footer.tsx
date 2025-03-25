@@ -12,9 +12,7 @@ const Footer: React.FC = () => {
   const { data: session } = useSession();
 
   return (
-    <footer
-      style={{ padding: "2rem 0", backgroundColor: "#000", minHeight: "310px" }}
-    >
+    <footer style={{ padding: "2rem 0", minHeight: "310px" }}>
       <Container maxWidth="lg">
         <Box sx={{ p: 4 }}>
           <Link

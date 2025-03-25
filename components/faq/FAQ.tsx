@@ -6,7 +6,6 @@ import {
   AccordionSummary,
   AccordionDetails,
   Typography,
-  Box,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
@@ -14,7 +13,7 @@ import { faqData } from "@/components/faq/faqData";
 
 const FAQ: React.FC = () => {
   return (
-    <Box component="section">
+    <>
       {faqData.map((section, sectionIndex) => (
         <Accordion key={sectionIndex}>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -35,7 +34,7 @@ const FAQ: React.FC = () => {
           </AccordionDetails>
         </Accordion>
       ))}
-    </Box>
+    </>
   );
 };
 

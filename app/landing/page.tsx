@@ -4,7 +4,7 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { Box, Typography, Button, useTheme } from "@mui/material";
+import { Box, Typography, Button, useTheme, Container } from "@mui/material";
 import { Send } from "@mui/icons-material";
 import { MainContainer } from "@/app/styles/Container";
 import Hero from "@/components/Hero/Hero";
@@ -52,82 +52,99 @@ const Landing: React.FC = () => {
       <Box
         component="section"
         title="reviews"
-        sx={{ py: 6, backgroundColor: theme.palette.background.reviews }}
+        sx={{ py: 6, px: 2, backgroundColor: theme.palette.background.reviews }}
       >
-        <Box sx={{ p: 4 }}>
-          <Typography variant="h2" gutterBottom>
-            We hope you enjoy our app!
-          </Typography>
-          <Typography variant="h4" gutterBottom>
-            Leave your feedback and help us become better!{" "}
-          </Typography>
-          <AverageRating />
-        </Box>
-
-        <Box>
-          <ReviewsCarousel />
-        </Box>
-
-        <Box sx={{ p: 4 }}>
-          <Box
-            component="div"
-            sx={{
-              pt: 3,
-              display: "flex",
-
-              flexDirection: "column",
-              gap: "1rem",
-              maxWidth: "200px",
-            }}
-          >
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleReviewClick}
+        <Container maxWidth="md">
+          <Box sx={{ py: 4 }}>
+            <Typography
+              variant="h2"
+              component="h2"
+              gutterBottom
+              sx={{
+                fontSize: theme.typography.fontSizes[6],
+                fontWeight: theme.typography.fontWeightLight,
+              }}
             >
-              <Send sx={{ mr: 2 }} />
-              Send feedback
-            </Button>
-
-            <Link
-              href="reviews"
-              style={{ display: "flex", textDecoration: "none" }}
+              We hope you enjoy our app!
+            </Typography>
+            <Typography
+              variant="h4"
+              component="p"
+              gutterBottom
+              sx={{ fontSize: theme.typography.fontSizes[4] }}
             >
-              <Typography
-                variant="body2"
-                sx={{
-                  fontSize: "14px",
-                  p: 1,
-                  color: theme.palette.text.secondary,
-                  border: `2px solid ${theme.palette.text.secondary}`,
-                  borderRadius: theme.spacing(1),
-                }}
-              >
-                All reviews
-              </Typography>
-            </Link>
+              Leave your feedback and help us become better!{" "}
+            </Typography>
+            <AverageRating />
           </Box>
-        </Box>
+
+          <Box sx={{ py: 4 }}>
+            <ReviewsCarousel />
+          </Box>
+
+          <Box sx={{ py: 4 }}>
+            <Box
+              component="div"
+              sx={{
+                display: "flex",
+                ml: "auto",
+                alignItems: "end",
+                flexDirection: "column",
+                gap: "1rem",
+                maxWidth: "200px",
+              }}
+            >
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleReviewClick}
+              >
+                <Send sx={{ mr: 2 }} />
+                Send feedback
+              </Button>
+
+              <Link
+                href="reviews"
+                style={{ display: "flex", textDecoration: "none" }}
+              >
+                <Typography
+                  variant="body2"
+                  sx={{
+                    fontSize: "14px",
+                    p: 1,
+                    color: theme.palette.text.secondary,
+                    border: `2px solid ${theme.palette.text.secondary}`,
+                    borderRadius: theme.spacing(1),
+                  }}
+                >
+                  All reviews
+                </Typography>
+              </Link>
+            </Box>
+          </Box>
+        </Container>
       </Box>
 
       {/* FAQ */}
-      <Box component="section" title="FAQ" sx={{ p: 4 }}>
-        <Typography variant="h4">FAQs</Typography>
-        <Box sx={{ pt: 4 }}>
-          <FAQ />
+      <Container maxWidth="md">
+        <Box component="section" title="FAQ" sx={{ p: 4 }}>
+          <Typography variant="h4">FAQs</Typography>
+          <Box sx={{ pt: 4 }}>
+            <FAQ />
+          </Box>
         </Box>
-      </Box>
 
-      {/* Призыв к действию */}
-      <Box component="section" sx={{ p: 4 }}>
-        <GetStartedButton
-          colors={["#40ffaa", "#4079ff", "#40ffaa", "#4079ff", "#40ffaa"]}
-          onClick={handleNavigation}
-        >
-          <span className="text-content">Get Started</span>
-          <span className="gradient-overlay"></span>
-        </GetStartedButton>
-      </Box>
+        {/* Призыв к действию */}
+        <Box component="section" sx={{ p: 4 }}>
+          <GetStartedButton
+            colors={["#40ffaa", "#4079ff", "#40ffaa", "#4079ff", "#40ffaa"]}
+            onClick={handleNavigation}
+          >
+            <span className="text-content">Get Started</span>
+            <span className="gradient-overlay"></span>
+          </GetStartedButton>
+        </Box>
+      </Container>
     </MainContainer>
   );
 };

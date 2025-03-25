@@ -66,10 +66,12 @@ export const lightTheme = createTheme({
       tertiary: "#ede7f6",
       paper: "#f4f4f4",
       advantages: "#fefae0",
-      reviews: "#E7F9FF",
+      reviews: "#DFD8FD",
+      //#E7F9FF
       reviewsList: "#dcdbdb",
       reviewsListItems: "#f5f5f5",
-      swiperSlide: "#2898BD",
+      swiperSlide: "#F3F0FF",
+      //#2898BD
       totalSum: "#F38A3F",
     },
 
