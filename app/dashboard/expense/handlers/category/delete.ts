@@ -1,11 +1,11 @@
 import axios from "axios";
-import { Category } from "@/interfaces";
+import { ICategory } from "@/interfaces";
 
 export const DeleteCategory = async (
   id: string,
   category: string,
   setCategory: React.Dispatch<React.SetStateAction<string>>,
-  setCategories: React.Dispatch<React.SetStateAction<Category[]>>,
+  setCategories: React.Dispatch<React.SetStateAction<ICategory[]>>,
   setSnackbarMessage: React.Dispatch<React.SetStateAction<string>>,
   setSnackbarSeverity: React.Dispatch<
     React.SetStateAction<"success" | "error">

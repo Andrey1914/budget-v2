@@ -1,10 +1,10 @@
-import { Category } from "@/interfaces";
+import { ICategory } from "@/interfaces";
 import axios from "axios";
 
 export const AddCategory = async (
   newCategory: string,
   newCategoryDescription: string,
-  setCategories: React.Dispatch<React.SetStateAction<Category[]>>,
+  setCategories: React.Dispatch<React.SetStateAction<ICategory[]>>,
   setNewCategory: React.Dispatch<React.SetStateAction<string>>,
   setNewCategoryDescription: React.Dispatch<React.SetStateAction<string>>,
   setOpen: React.Dispatch<React.SetStateAction<boolean>>,

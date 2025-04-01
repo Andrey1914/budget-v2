@@ -1,11 +1,11 @@
-import { Category } from "@/interfaces";
+import { ICategory } from "@/interfaces";
 import axios from "axios";
 
 export const EditCategory = async (
-  editingCategory: Category | null,
+  editingCategory: ICategory | null,
   newCategory: string,
   newCategoryDescription: string,
-  setCategories: React.Dispatch<React.SetStateAction<Category[]>>,
+  setCategories: React.Dispatch<React.SetStateAction<ICategory[]>>,
   setSnackbarMessage: React.Dispatch<React.SetStateAction<string>>,
   setSnackbarSeverity: React.Dispatch<
     React.SetStateAction<"success" | "error">
