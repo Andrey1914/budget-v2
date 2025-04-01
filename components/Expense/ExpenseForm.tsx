@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import { ExpenseFormProps, Category } from "@/interfaces";
+import { ExpenseFormProps, ICategory } from "@/interfaces";
 import SnackbarNotification from "@/components/Notification/Snackbar";
 import {
   getCategories,
@@ -35,13 +35,15 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ initialData }) => {
     { code: string; name: string }[]
   >([]);
 
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [categories, setCategories] = useState<ICategory[]>([]);
 
   const [newCategory, setNewCategory] = useState("");
   const [newCategoryDescription, setNewCategoryDescription] = useState("");
   const [open, setOpen] = useState(false);
 
-  const [editingCategory, setEditingCategory] = useState<Category | null>(null);
+  const [editingCategory, setEditingCategory] = useState<ICategory | null>(
+    null
+  );
   const [openEditDialog, setOpenEditDialog] = useState(false);
 
   const [popoverMessage, setPopoverMessage] = useState("");
@@ -127,7 +129,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ initialData }) => {
     }
   };
 
-  const handleOpenEditDialog = (category: Category) => {
+  const handleOpenEditDialog = (category: ICategory) => {
     if (!category) {
       console.error("Selected category not found");
       return;
@@ -148,6 +150,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ initialData }) => {
   return (
     <>
       <TransactionForm
+        type="expense"
         amount={amount}
         setAmount={setAmount}
         category={category}
