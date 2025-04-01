@@ -67,14 +67,10 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
       try {
         const response = await axios.get(`${apiUrl}?app_id=${appId}`);
 
-        // console.log("Response data:", response.data);
-
         const currenciesList = Object.keys(response.data).map((key) => ({
           code: key,
           name: response.data[key],
         }));
-
-        // console.log("Formatted currencies list:", currenciesList);
 
         setCurrencies(currenciesList);
       } catch (error) {

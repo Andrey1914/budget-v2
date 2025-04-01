@@ -1,6 +1,6 @@
 import { Schema, Document } from "mongoose";
 import { ObjectId } from "mongodb";
-import { Category } from "./category";
+import { ICategory } from "./category";
 
 export interface IBaseTransaction extends Document {
   _id: Schema.Types.ObjectId;
@@ -9,7 +9,7 @@ export interface IBaseTransaction extends Document {
   category: Schema.Types.ObjectId | string;
   description: string;
   date: Date;
-  categoryDetails?: Category;
+  categoryDetails?: ICategory;
   currency?: string;
 }
 
@@ -22,6 +22,7 @@ export interface Transaction {
 }
 
 export interface TransactionFormProps {
+  type: "income" | "expense";
   amount: number | string;
   setAmount: (value: string) => void;
   category: string;
@@ -35,20 +36,20 @@ export interface TransactionFormProps {
   setDate: (value: string) => void;
   loading: boolean;
   onSubmit: (e: React.FormEvent) => void;
-  categories: Category[];
+  categories: ICategory[];
   newCategory: string;
   newCategoryDescription: string;
   setNewCategory: (value: string) => void;
   setNewCategoryDescription: (value: string) => void;
   handleAddCategory: () => Promise<void>;
   handleEditCategory: () => Promise<void>;
-  handleOpenEditDialog: (category: Category) => void;
+  handleOpenEditDialog: (category: ICategory) => void;
   handleDeleteCategory: () => Promise<void>;
   openAddDialog: boolean;
   setOpenAddDialog: (open: boolean) => void;
   openEditDialog: boolean;
   setOpenEditDialog: (open: boolean) => void;
-  editingCategory: Category | null;
+  editingCategory: ICategory | null;
   handleCloseEditDialog: () => void;
 
   open: boolean;

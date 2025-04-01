@@ -1,12 +1,12 @@
-export interface Category {
+export interface ICategory {
   _id: string;
   name: string;
   description: string;
 }
 
 export interface CategoryFormProps {
-  initialData?: Category;
-  onSubmit: (data: Category) => void;
+  initialData?: ICategory;
+  onSubmit: (data: ICategory) => void;
 }
 
 export interface AddCategoryDialogProps {
@@ -22,7 +22,7 @@ export interface AddCategoryDialogProps {
 export interface EditCategoryDialogProps {
   open: boolean;
   onClose: () => void;
-  editingCategory: Category | null;
+  editingCategory: ICategory | null;
   newCategory: string;
   newCategoryDescription: string;
   setNewCategory: (value: string) => void;
@@ -31,7 +31,7 @@ export interface EditCategoryDialogProps {
 }
 
 export interface CategorySelectProps {
-  categories: Category[];
+  categories: ICategory[];
   category: string;
   setCategory: (value: string) => void;
   newCategory: string;
@@ -40,12 +40,12 @@ export interface CategorySelectProps {
   setNewCategoryDescription: (value: string) => void;
   handleAddCategory: () => Promise<void>;
   handleEditCategory: () => Promise<void>;
-  handleOpenEditDialog: (category: Category) => void;
+  handleOpenEditDialog: (category: ICategory) => void;
   handleDeleteCategory: () => Promise<void>;
   openAddDialog: boolean;
   setOpenAddDialog: (value: boolean) => void;
   openEditDialog: boolean;
   setOpenEditDialog: (value: boolean) => void;
-  editingCategory: Category | null;
+  editingCategory: ICategory | null;
   handleCloseEditDialog: () => void;
 }
