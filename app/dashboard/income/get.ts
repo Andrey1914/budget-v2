@@ -14,7 +14,9 @@ export const getIncomes = async (session: Session): Promise<IIncome[]> => {
       throw new Error("Token is not available");
     }
 
-    const res = await axios.get("/api/income/get", {
+    // const res = await axios.get("/api/income/get", {
+    const res = await axios.get("/api/transactions/get", {
+      params: { type: "income" },
       headers: {
         Authorization: `Bearer ${token}`,
       },

@@ -1,31 +1,31 @@
 // import { NextApiRequest, NextApiResponse } from "next";
 // import clientPromise from "@/lib/db";
-// import { getToken } from "next-auth/jwt";
+// import { getTokenFromRequest } from "@/utils/getTokenFromRequest";
 // import { ObjectId } from "mongodb";
 
-// const secret = process.env.JWT_SECRET;
-
-// const getTotalExpense = async (req: NextApiRequest, res: NextApiResponse) => {
+// const getTotalAmount = async (req: NextApiRequest, res: NextApiResponse) => {
 //   if (req.method !== "GET") {
 //     return res.status(405).json({ error: "Method not allowed" });
 //   }
 
 //   try {
-//     const token = await getToken({ req, secret });
-
+//     const token = await getTokenFromRequest(req);
 //     if (!token) {
 //       console.error("No token found");
-
 //       return res.status(401).json({ error: "Unauthorized - No token" });
 //     }
 
-//     const userId = new ObjectId(token.sub);
+//     const { type } = req.query;
+//     if (type !== "income" && type !== "expense") {
+//       return res.status(400).json({ error: "Invalid transaction type" });
+//     }
 
+//     const userId = new ObjectId(token.sub);
 //     const client = await clientPromise;
 //     const db = client.db("budget-v2");
 
 //     const startDate = new Date(
-//       Date.UTC(new Date().getFullYear(), new Date().getMonth(), 1, 0, 0, 0)
+//       Date.UTC(new Date().getFullYear(), new Date().getMonth(), 1)
 //     );
 //     const endDate = new Date(
 //       Date.UTC(
@@ -39,16 +39,12 @@
 //     );
 
 //     const total = await db
-//       .collection("expense")
+//       .collection(type)
 //       .aggregate([
 //         {
 //           $match: {
-//             userId: new ObjectId(userId),
-
-//             date: {
-//               $gte: startDate,
-//               $lte: endDate,
-//             },
+//             userId,
+//             date: { $gte: startDate, $lte: endDate },
 //           },
 //         },
 //         {
@@ -60,14 +56,17 @@
 //       ])
 //       .toArray();
 
-//     const totalExpense = total.length > 0 ? total[0].total : 0;
-
-//     res.status(200).json({ total: totalExpense });
+//     const totalAmount = total.length > 0 ? total[0].total : 0;
+//     res.status(200).json({ total: totalAmount });
 //   } catch (error: any) {
-//     console.error("Failed to calculate total expense:", error.message);
-//     console.error("Detailed Error:", JSON.stringify(error, null, 2));
-//     res.status(500).json({ error: "Failed to calculate total expense" });
+//     console.error(
+//       `Failed to calculate total ${req.query.type}:`,
+//       error.message
+//     );
+//     res
+//       .status(500)
+//       .json({ error: `Failed to calculate total ${req.query.type}` });
 //   }
 // };
 
-// export default getTotalExpense;
+// export default getTotalAmount;

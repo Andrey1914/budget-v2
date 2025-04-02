@@ -31,7 +31,10 @@ const EditIncomeForm = ({
   useEffect(() => {
     const getIncomeById = async () => {
       try {
-        const response = await axios.get(`/api/income/${incomeId}`);
+        // const response = await axios.get(`/api/income/${incomeId}`);
+        const response = await axios.get(
+          `/api/transactions/${incomeId}?type=income`
+        );
         const { amount, description, category, date } = response.data;
 
         setAmount(amount);
@@ -58,6 +61,7 @@ const EditIncomeForm = ({
         description,
         category,
         date,
+        type: "income",
       });
 
       if (result.success) {

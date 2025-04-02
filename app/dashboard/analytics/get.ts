@@ -18,7 +18,7 @@ export const getAnalyticsData = async (filters: FilterParams) => {
       },
     });
 
-    console.log("Ответ от сервера по аналитике:", res.data);
+    // console.log("Ответ от сервера по аналитике:", res.data);
 
     if (!res.data || !res.data.transactions) {
       return { transactions: [], totalSum: 0, totalIncome: 0, totalExpense: 0 };

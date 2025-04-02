@@ -30,7 +30,11 @@ const EditExpenseForm = ({
   useEffect(() => {
     const getExpenseById = async () => {
       try {
-        const response = await axios.get(`/api/expense/${expenseId}`);
+        // const response = await axios.get(`/api/expense/${expenseId}`);
+        const response = await axios.get(
+          `/api/transactions/${expenseId}?type=expense`
+        );
+
         const { amount, description, category, date } = response.data;
         setAmount(amount);
         setDescription(description);
@@ -56,6 +60,7 @@ const EditExpenseForm = ({
         description,
         category,
         date,
+        type: "expense",
       });
 
       if (result.success) {

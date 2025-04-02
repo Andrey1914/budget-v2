@@ -5,13 +5,23 @@ import login from "@/pages/api/auth/login";
 import logout from "@/pages/api/auth/logout";
 import profile from "@/pages/api/auth/profile";
 
-import addExpense from "@/pages/api/expense/add";
-import deleteExpense from "@/pages/api/expense/delete";
-import editExpense from "@/pages/api/expense/edit";
+// import addExpense from "@/pages/api/expense/add";
+import addExpense from "@/pages/api/transactions/add";
 
-import addIncome from "@/pages/api/income/add";
-import deleteIncome from "@/pages/api/income/delete";
-import editIncome from "@/pages/api/income/edit";
+// import deleteExpense from "@/pages/api/expense/delete";
+import deleteExpense from "@/pages/api/transactions/delete";
+
+// import editExpense from "@/pages/api/expense/edit";
+import editExpense from "@/pages/api/transactions/edit";
+
+// import addIncome from "@/pages/api/income/add";
+import addIncome from "@/pages/api/transactions/add";
+
+// import deleteIncome from "@/pages/api/income/delete";
+import deleteIncome from "@/pages/api/transactions/delete";
+
+// import editIncome from "@/pages/api/income/edit";
+import editIncome from "@/pages/api/transactions/edit";
 
 import addTask from "@/pages/api/tasks/add";
 import deleteTask from "@/pages/api/tasks/delete";

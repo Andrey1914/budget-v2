@@ -26,6 +26,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ initialData }) => {
     initialData?.description || ""
   );
 
+  const [type, setType] = useState<string>("expense");
   const [category, setCategory] = useState<string>("");
   const [date, setDate] = useState(initialData?.date || "");
   const [error, setError] = useState("");
@@ -104,6 +105,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ initialData }) => {
         category,
         currency,
         date,
+        type,
       });
 
       if (res.success) {
