@@ -4,6 +4,7 @@ interface FormData {
   description: string;
   date: string;
   currency: string;
+  type: string;
 }
 
 export interface BaseFormProps {

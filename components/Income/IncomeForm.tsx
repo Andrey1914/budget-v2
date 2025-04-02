@@ -27,6 +27,7 @@ const IncomeForm: React.FC<IncomeFormProps> = ({ initialData }) => {
     initialData?.description || ""
   );
 
+  const [type, setType] = useState<string>("income");
   const [category, setCategory] = useState<string>("");
   const [date, setDate] = useState(initialData?.date || "");
   const [error, setError] = useState("");
@@ -105,7 +106,9 @@ const IncomeForm: React.FC<IncomeFormProps> = ({ initialData }) => {
         category,
         currency,
         date,
+        type,
       });
+      console.log("Отправляем данные:", res);
 
       if (res.success) {
         setSnackbarMessage("Income added successfully");
