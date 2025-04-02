@@ -8,11 +8,12 @@ export const deleteExpense = async (id: string) => {
       throw new Error("No session available");
     }
 
-    const res = await axios.delete("/api/expense/delete", {
+    // const res = await axios.delete("/api/expense/delete", {
+    const res = await axios.delete("/api/transactions/delete", {
       headers: {
         "Content-Type": "application/json",
       },
-      data: { id },
+      data: { id, type: "expense" },
     });
 
     if (res.status !== 200) {

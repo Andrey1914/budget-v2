@@ -1,5 +1,4 @@
 import axios from "axios";
-// import { Expense } from "@/types";
 import { Session, IExpense } from "@/interfaces";
 
 export const refreshExpenses = async (
@@ -16,7 +15,9 @@ export const refreshExpenses = async (
       throw new Error("Token is not available");
     }
 
-    const res = await axios.get("/api/expense/get", {
+    // const res = await axios.get("/api/expense/get", {
+    const res = await axios.get("/api/transactions/get", {
+      params: { type: "expense" },
       headers: {
         Authorization: `Bearer ${token}`,
       },

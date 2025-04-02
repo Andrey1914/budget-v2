@@ -41,7 +41,7 @@ const AnalyticsPage: React.FC = () => {
         type: selectedType,
         page: currentPage,
       });
-      console.log("Data in page analytics:", data);
+      // console.log("Data in page analytics:", data);
 
       setTransactions(data.transactions);
       setTotalSum(data.totalSum);
