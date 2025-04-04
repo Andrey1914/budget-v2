@@ -2,8 +2,6 @@
 
 import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import axios from "axios";
-
 import { IncomeFormProps, ICategory } from "@/interfaces";
 import SnackbarNotification from "@/components/Notification/Snackbar";
 import {
@@ -175,14 +173,12 @@ const IncomeForm: React.FC<IncomeFormProps> = ({ initialData }) => {
         setNewCategoryDescription={setNewCategoryDescription}
         handleAddCategory={() =>
           AddCategory(
-            // "income",
             newCategory,
             newCategoryDescription,
             setCategories,
             setNewCategory,
             setNewCategoryDescription,
             setOpen,
-            // getCategories
             () => getCategories("income")
           )
         }

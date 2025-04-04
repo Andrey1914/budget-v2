@@ -2,7 +2,6 @@ import axios from "axios";
 
 export const getCategories = async (type: "income" | "expense") => {
   try {
-    // const res = await axios.get("/api/expense/categories");
     const res = await axios.get(`/api/transactions/categories?type=${type}`);
 
     return res.data || [];

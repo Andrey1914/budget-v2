@@ -11,7 +11,6 @@ export const AddCategory = async (
   fetchCategories: () => Promise<void>
 ) => {
   try {
-    // const res = await axios.post("/api/income/categories", {
     const res = await axios.post(`/api/transactions/categories?type=income`, {
       name: newCategory,
       description: newCategoryDescription,

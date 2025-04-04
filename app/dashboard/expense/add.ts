@@ -3,7 +3,6 @@ import { ExpenseFormProps } from "@/interfaces";
 
 const addExpense = async (data: ExpenseFormProps["initialData"]) => {
   try {
-    // const res = await axios.post("/api/expense/add", data);
     const res = await axios.post("/api/transactions/add", data);
 
     if (res.status !== 201) {

@@ -173,14 +173,12 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ initialData }) => {
         setNewCategoryDescription={setNewCategoryDescription}
         handleAddCategory={() =>
           AddCategory(
-            // "expense",
             newCategory,
             newCategoryDescription,
             setCategories,
             setNewCategory,
             setNewCategoryDescription,
             setOpen,
-            // getCategories
             () => getCategories("expense")
           )
         }

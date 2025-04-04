@@ -16,7 +16,6 @@ export const editIncome = async ({
   type: string;
 }) => {
   try {
-    // const response = await axios.put(`/api/income/edit`, {
     const response = await axios.put(`/api/transactions/edit`, {
       id: incomeId,
       amount,

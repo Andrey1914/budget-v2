@@ -13,7 +13,6 @@ export const DeleteCategory = async (
   setShowSnackbar: React.Dispatch<React.SetStateAction<boolean>>
 ) => {
   try {
-    // const res = await axios.delete("/api/income/categories", {
     const res = await axios.delete("/api/transactions/categories?type=income", {
       data: { id },
     });
