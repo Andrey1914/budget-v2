@@ -60,7 +60,7 @@ const IncomeForm: React.FC<IncomeFormProps> = ({ initialData }) => {
   useEffect(() => {
     const loadCategories = async () => {
       try {
-        const data = await getCategories();
+        const data = await getCategories("income");
         setCategories(data);
       } catch (error) {
         console.error("Failed to load categories", error);
@@ -175,13 +175,15 @@ const IncomeForm: React.FC<IncomeFormProps> = ({ initialData }) => {
         setNewCategoryDescription={setNewCategoryDescription}
         handleAddCategory={() =>
           AddCategory(
+            // "income",
             newCategory,
             newCategoryDescription,
             setCategories,
             setNewCategory,
             setNewCategoryDescription,
             setOpen,
-            getCategories
+            // getCategories
+            () => getCategories("income")
           )
         }
         handleEditCategory={() =>

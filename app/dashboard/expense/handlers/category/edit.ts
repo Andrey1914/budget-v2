@@ -16,7 +16,8 @@ export const EditCategory = async (
   if (!editingCategory) return;
 
   try {
-    const res = await axios.put("/api/expense/categories", {
+    // const res = await axios.put("/api/expense/categories", {
+    const res = await axios.put("/api/transactions/categories?type=expense", {
       id: editingCategory._id,
       name: newCategory,
       description: newCategoryDescription,

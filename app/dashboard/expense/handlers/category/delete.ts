@@ -13,9 +13,13 @@ export const DeleteCategory = async (
   setShowSnackbar: React.Dispatch<React.SetStateAction<boolean>>
 ) => {
   try {
-    const res = await axios.delete("/api/expense/categories", {
-      data: { id },
-    });
+    // const res = await axios.delete("/api/expense/categories", {
+    const res = await axios.delete(
+      "/api/transactions/categories?type=expense",
+      {
+        data: { id },
+      }
+    );
 
     if (res.status !== 200) {
       throw new Error("Failed to delete category");
