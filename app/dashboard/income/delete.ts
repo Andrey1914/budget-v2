@@ -8,7 +8,6 @@ export const deleteIncome = async (id: string) => {
       throw new Error("No session available");
     }
 
-    // const res = await axios.delete("/api/income/delete", {
     const res = await axios.delete("/api/transactions/delete", {
       headers: {
         "Content-Type": "application/json",

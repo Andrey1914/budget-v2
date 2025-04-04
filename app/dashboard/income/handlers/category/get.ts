@@ -1,8 +1,8 @@
 import axios from "axios";
 
-export const getCategories = async () => {
+export const getCategories = async (type: "income" | "expense") => {
   try {
-    const res = await axios.get("/api/income/categories");
+    const res = await axios.get(`/api/transactions/categories?type=${type}`);
 
     return res.data || [];
   } catch (error) {

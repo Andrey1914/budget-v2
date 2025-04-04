@@ -59,7 +59,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ initialData }) => {
   useEffect(() => {
     const loadCategories = async () => {
       try {
-        const data = await getCategories();
+        const data = await getCategories("expense");
         setCategories(data);
       } catch (error) {
         console.error("Failed to load categories", error);
@@ -179,7 +179,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ initialData }) => {
             setNewCategory,
             setNewCategoryDescription,
             setOpen,
-            getCategories
+            () => getCategories("expense")
           )
         }
         handleEditCategory={() =>

@@ -1,5 +1,4 @@
 import axios from "axios";
-// import { Expense } from "@/types";
 import { Session, IExpense } from "@/interfaces";
 
 export const getExpenses = async (session: Session): Promise<IExpense[]> => {
@@ -14,7 +13,6 @@ export const getExpenses = async (session: Session): Promise<IExpense[]> => {
       throw new Error("Token is not available");
     }
 
-    // const res = await axios.get("/api/expense/get", {
     const res = await axios.get("/api/transactions/get", {
       params: { type: "expense" },
       headers: {

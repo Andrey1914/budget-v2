@@ -3,7 +3,6 @@ import { IncomeFormProps } from "@/interfaces";
 
 const addIncome = async (data: IncomeFormProps["initialData"]) => {
   try {
-    // const res = await axios.post("/api/income/add", data);
     const res = await axios.post("/api/transactions/add", data);
 
     if (res.status !== 201) {

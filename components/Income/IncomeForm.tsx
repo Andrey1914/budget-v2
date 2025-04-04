@@ -2,8 +2,6 @@
 
 import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import axios from "axios";
-
 import { IncomeFormProps, ICategory } from "@/interfaces";
 import SnackbarNotification from "@/components/Notification/Snackbar";
 import {
@@ -60,7 +58,7 @@ const IncomeForm: React.FC<IncomeFormProps> = ({ initialData }) => {
   useEffect(() => {
     const loadCategories = async () => {
       try {
-        const data = await getCategories();
+        const data = await getCategories("income");
         setCategories(data);
       } catch (error) {
         console.error("Failed to load categories", error);
@@ -181,7 +179,7 @@ const IncomeForm: React.FC<IncomeFormProps> = ({ initialData }) => {
             setNewCategory,
             setNewCategoryDescription,
             setOpen,
-            getCategories
+            () => getCategories("income")
           )
         }
         handleEditCategory={() =>
