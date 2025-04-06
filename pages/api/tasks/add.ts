@@ -14,7 +14,8 @@ const addTask = async (req: NextApiRequest, res: NextApiResponse) => {
 
     const { title, content, date } = req.body;
 
-    const userId = new ObjectId(token);
+    // const userId = new ObjectId(token);
+    const userId = new ObjectId(token.sub);
 
     const client = await clientPromise;
     const db = client.db("budget-v2");

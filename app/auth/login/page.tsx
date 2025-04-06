@@ -17,6 +17,9 @@ import {
   InputAdornment,
   Typography,
   useTheme,
+  FormControlLabel,
+  Checkbox,
+  Divider,
 } from "@mui/material";
 
 import { Visibility, VisibilityOff } from "@mui/icons-material";
@@ -29,6 +32,7 @@ const Login: React.FC = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
 
   const [showSnackbar, setShowSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
@@ -37,6 +41,14 @@ const Login: React.FC = () => {
   );
 
   const theme = useTheme();
+
+  const handleGoogleLogin = async () => {
+    try {
+      await signIn("google", { callbackUrl: "/dashboard" });
+    } catch (error) {
+      console.error("Google login error:", error);
+    }
+  };
 
   const handleTogglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
@@ -53,6 +65,7 @@ const Login: React.FC = () => {
         redirect: false,
         email,
         password,
+        rememberMe: rememberMe ? "true" : "false",
       });
 
       console.log(res);
@@ -144,6 +157,15 @@ const Login: React.FC = () => {
               }}
             />
           </Box>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
+              />
+            }
+            label="Запомнить меня"
+          />
           <Button
             type="submit"
             variant="contained"
@@ -163,6 +185,16 @@ const Login: React.FC = () => {
             )}
           </Button>
         </form>
+        <Divider sx={{ my: 3 }}>or</Divider>
+
+        <Button
+          fullWidth
+          variant="outlined"
+          color="secondary"
+          onClick={handleGoogleLogin}
+        >
+          Войти через Google
+        </Button>
         <Box sx={{ p: 4, textAlign: "center" }}>
           <Link href="/auth/reset-password" style={{ textDecoration: "none" }}>
             <Typography

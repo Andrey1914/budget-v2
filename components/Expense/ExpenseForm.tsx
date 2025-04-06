@@ -31,7 +31,10 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ initialData }) => {
   const [date, setDate] = useState(initialData?.date || "");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [currency, setCurrency] = useState<string>("USD");
+  // const [currency, setCurrency] = useState<string>("USD");
+  const [currency, setCurrency] = useState<string>(
+    session?.user.currency || "USD"
+  );
   const [currencies, setCurrencies] = useState<
     { code: string; name: string }[]
   >([]);

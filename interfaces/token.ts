@@ -4,4 +4,5 @@ export interface Token {
   name: string;
   iat: number;
   exp: number;
+  rememberMe?: boolean;
 }
