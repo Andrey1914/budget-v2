@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { signIn } from "next-auth/react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 
@@ -21,6 +22,9 @@ import {
   IconButton,
   InputAdornment,
   useTheme,
+  FormControlLabel,
+  Checkbox,
+  Divider,
 } from "@mui/material";
 
 import { Visibility, VisibilityOff } from "@mui/icons-material";
@@ -35,6 +39,7 @@ const Register: React.FC = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
 
   const [showSnackbar, setShowSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
@@ -44,6 +49,14 @@ const Register: React.FC = () => {
 
   const [popoverMessage, setPopoverMessage] = useState("");
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+
+  const handleGoogleLogin = async () => {
+    try {
+      await signIn("google", { callbackUrl: "/dashboard" });
+    } catch (error) {
+      console.error("Google login error:", error);
+    }
+  };
 
   const handleTogglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
@@ -189,6 +202,15 @@ const Register: React.FC = () => {
               }}
             />
           </Box>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
+              />
+            }
+            label="Запомнить меня"
+          />
           <Button
             type="submit"
             variant="contained"
@@ -208,6 +230,16 @@ const Register: React.FC = () => {
             )}
           </Button>
         </form>
+        <Divider sx={{ my: 3 }}>or</Divider>
+
+        <Button
+          fullWidth
+          variant="outlined"
+          color="secondary"
+          onClick={handleGoogleLogin}
+        >
+          Войти через Google
+        </Button>
 
         <Popover
           open={Boolean(popoverMessage)}

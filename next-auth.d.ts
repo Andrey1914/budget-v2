@@ -6,6 +6,7 @@ declare module "next-auth" {
     token: string;
     currency?: string;
     isVerified: boolean;
+    rememberMe?: boolean;
   }
   interface Session {
     token?: string;
@@ -21,8 +22,17 @@ declare module "next-auth" {
   }
 
   interface JWT {
+    name: string;
+    email: string;
+    image?: string;
+    currency?: string;
+    token?: string;
+    isVerified?: boolean;
     id: string;
     token: string;
     sub: string;
+    rememberMe?: boolean;
+    iat?: number;
+    exp?: number;
   }
 }
