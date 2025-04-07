@@ -38,7 +38,11 @@ export const handleDelete = async (
     if (success) {
       setExpenses(expenses.filter((expense) => expense._id !== id));
 
-      const totalRes = await axios.get("/api/expense/total");
+      const totalRes = await axios.get("/api/transactions/total", {
+        params: {
+          type: "expense",
+        },
+      });
 
       if (totalRes.status === 200) {
         const totalData = totalRes.data;
@@ -49,6 +53,5 @@ export const handleDelete = async (
     }
   } catch (err) {
     console.error("Failed to delete expense", err);
-    alert("Failed to delete expense. Please try again.");
   }
 };

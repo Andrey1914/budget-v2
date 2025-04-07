@@ -137,6 +137,7 @@ const IncomesList: React.FC<{
           display: "flex",
           flexDirection: "column",
           gap: 1,
+          minHeight: "520px",
         }}
       >
         {income.length === 0 ? (

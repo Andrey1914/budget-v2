@@ -38,7 +38,11 @@ export const handleDelete = async (
     if (success) {
       setIncomes(incomes.filter((income) => income._id !== id));
 
-      const totalRes = await axios.get("/api/income/total");
+      const totalRes = await axios.get("/api/transactions/total", {
+        params: {
+          type: "income",
+        },
+      });
 
       if (totalRes.status === 200) {
         const totalData = await totalRes.data;
@@ -49,6 +53,5 @@ export const handleDelete = async (
     }
   } catch (err) {
     console.error("Failed to delete income", err);
-    alert("Failed to delete income. Please try again.");
   }
 };
