@@ -68,8 +68,12 @@ const IncomeForm: React.FC<IncomeFormProps> = ({ initialData }) => {
       }
     };
 
+    if (session?.user?.currency) {
+      setCurrency(session.user.currency);
+    }
+
     loadCategories();
-  }, []);
+  }, [session]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

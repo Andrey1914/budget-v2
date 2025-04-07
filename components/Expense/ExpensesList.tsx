@@ -138,6 +138,7 @@ const ExpensesList: React.FC<{
           display: "flex",
           flexDirection: "column",
           gap: 1,
+          minHeight: "520px",
         }}
       >
         {expense.length === 0 ? (

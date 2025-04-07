@@ -144,7 +144,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
           <Select
             labelId="currency-label"
             id="currency"
-            value={userCurrency || currency || "PLN"}
+            value={currency}
             label="Currency"
             onChange={(e) => setCurrency(e.target.value)}
           >

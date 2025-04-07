@@ -69,8 +69,12 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ initialData }) => {
       }
     };
 
+    if (session?.user?.currency) {
+      setCurrency(session.user.currency);
+    }
+
     loadCategories();
-  }, []);
+  }, [session]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

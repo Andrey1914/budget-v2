@@ -157,64 +157,6 @@ export default NextAuth({
       return token;
     },
 
-    // async jwt({ token, user, account }) {
-    //   if (user) {
-    //     if (account?.provider === "google") {
-    //       const client = await clientPromise;
-    //       const db = client.db("budget-v2");
-
-    //       const existingUser = await db
-    //         .collection("users")
-    //         .findOne({ email: user.email });
-
-    //       if (!existingUser) {
-    //         const newUser = {
-    //           name: user.name,
-    //           email: user.email,
-    //           image: user.image,
-    //           isVerified: true,
-    //           createdAt: new Date(),
-    //           currency: "USD",
-    //         };
-    //         const inserted = await db.collection("users").insertOne(newUser);
-    //         token.id = inserted.insertedId.toString();
-    //         token.sub = inserted.insertedId.toString();
-    //       } else {
-    //         token.id = existingUser._id.toString();
-    //         token.sub = existingUser._id.toString();
-    //         token.currency = existingUser.currency || "USD";
-    //         token.isVerified = existingUser.isVerified ?? true;
-    //       }
-    //     } else {
-    //       token.id = user.id;
-    //       token.sub = user.id;
-    //       token.name = user.name;
-    //       token.image = user.image;
-    //       token.currency = user.currency;
-    //       // token.token = user.token;
-    //       token.isVerified = user.isVerified;
-
-    //       token.rememberMe = user.rememberMe;
-    //       const now = Math.floor(Date.now() / 1000);
-    //       token.iat = now;
-    //       token.exp = now + (user.rememberMe ? 7 * 24 * 60 * 60 : 20 * 60);
-    //     }
-    //   } else {
-    //     const client = await clientPromise;
-    //     const db = client.db("budget-v2");
-
-    //     const dbUser = await db
-    //       .collection("users")
-    //       .findOne({ email: token.email });
-
-    //     if (dbUser) {
-    //       token.name = dbUser.name;
-    //       token.image = dbUser.image;
-    //     }
-    //   }
-    //   return token;
-    // },
-
     async session({ session, token }) {
       if (session?.user) {
         session.user.id = token.id as string;
