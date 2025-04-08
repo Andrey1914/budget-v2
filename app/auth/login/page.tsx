@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
+import googleIcon from "@/public/google.png";
 
 import SnackbarNotification from "@/components/Notification/Snackbar";
 import { Oval } from "react-loader-spinner";
@@ -20,6 +22,7 @@ import {
   FormControlLabel,
   Checkbox,
   Divider,
+  Icon,
 } from "@mui/material";
 
 import { Visibility, VisibilityOff } from "@mui/icons-material";
@@ -164,7 +167,7 @@ const Login: React.FC = () => {
                 onChange={(e) => setRememberMe(e.target.checked)}
               />
             }
-            label="Запомнить меня"
+            label="Запам'ятати мене"
           />
           <Button
             type="submit"
@@ -193,7 +196,23 @@ const Login: React.FC = () => {
           color="secondary"
           onClick={handleGoogleLogin}
         >
-          Войти через Google
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              width: "100%",
+            }}
+          >
+            Увійти за допомогою Google
+            <Image
+              src={googleIcon.src}
+              alt="Google"
+              width={20}
+              height={20}
+              style={{ marginLeft: 8 }}
+            />
+          </Box>
         </Button>
         <Box sx={{ p: 4, textAlign: "center" }}>
           <Link href="/auth/reset-password" style={{ textDecoration: "none" }}>
@@ -205,7 +224,7 @@ const Login: React.FC = () => {
                 color: theme.palette.text.secondary,
               }}
             >
-              Забыли пароль?
+              Забули пароль?
             </Typography>
           </Link>
         </Box>

@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import { signIn } from "next-auth/react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+import googleIcon from "@/public/google.png";
 
 import { validateFormRegistration } from "@/utils/validators/validateFormRegistration";
 import { validateFieldName } from "@/utils/validators/validateFieldName";
@@ -209,7 +211,7 @@ const Register: React.FC = () => {
                 onChange={(e) => setRememberMe(e.target.checked)}
               />
             }
-            label="Запомнить меня"
+            label="Запам'ятати мене"
           />
           <Button
             type="submit"
@@ -238,7 +240,23 @@ const Register: React.FC = () => {
           color="secondary"
           onClick={handleGoogleLogin}
         >
-          Войти через Google
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              width: "100%",
+            }}
+          >
+            Увійти за допомогою Google
+            <Image
+              src={googleIcon.src}
+              alt="Google"
+              width={20}
+              height={20}
+              style={{ marginLeft: 8 }}
+            />
+          </Box>
         </Button>
 
         <Popover
