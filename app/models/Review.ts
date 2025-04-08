@@ -2,6 +2,9 @@ import { Schema, model, models } from "mongoose";
 import { IReview } from "@/interfaces";
 
 const reviewSchema = new Schema<IReview>({
+  _id: {
+    type: String,
+  },
   userId: {
     type: Schema.Types.ObjectId,
     ref: "User",

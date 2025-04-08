@@ -8,7 +8,8 @@ import "swiper/css/autoplay";
 import "swiper/css/effect-coverflow";
 import "swiper/css/navigation";
 
-import { IReview } from "@/interfaces";
+import { IReview, IClientReview } from "@/interfaces";
+import placeholderReviews from "@/components/ReviewsCarousel/PlaceholderReviews";
 
 import axios from "axios";
 import {
@@ -28,9 +29,20 @@ import {
 SwiperCore.use([Autoplay, EffectCoverflow, Navigation]);
 
 const ReviewsCarousel: React.FC = () => {
-  const [latestReviews, setLatestReviews] = useState<IReview[]>([]);
-  const [selectedReview, setSelectedReview] = useState<IReview | null>(null);
+  // const [latestReviews, setLatestReviews] = useState<IReview[]>([]);
+  const [latestReviews, setLatestReviews] = useState<IClientReview[]>([]);
+  // const [selectedReview, setSelectedReview] = useState<IReview | null>(null);
+  const [selectedReview, setSelectedReview] = useState<IClientReview | null>(
+    null
+  );
   const [open, setOpen] = useState(false);
+  const reviewsToShow =
+    latestReviews.length < 5
+      ? [
+          ...latestReviews,
+          ...placeholderReviews.slice(0, 5 - latestReviews.length),
+        ]
+      : latestReviews;
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -39,15 +51,32 @@ const ReviewsCarousel: React.FC = () => {
     const fetchLatestReviews = async () => {
       const response = await axios.get<IReview[]>("/api/review/getAll");
 
-      setLatestReviews(response.data);
+      const transformed = response.data.map((review) => ({
+        _id: {
+          toString: () => review._id.toString(),
+        },
+        username: review.username,
+        avatar: review.avatar,
+        rating: review.rating,
+        text: review.text,
+      }));
+
+      setLatestReviews(transformed);
+
+      // setLatestReviews(response.data);
     };
     fetchLatestReviews();
   }, []);
 
-  const handleOpen = (review: IReview) => {
+  const handleOpen = (review: IClientReview) => {
     setSelectedReview(review);
     setOpen(true);
   };
+
+  // const handleOpen = (review: IReview) => {
+  //   setSelectedReview(review);
+  //   setOpen(true);
+  // };
 
   const handleClose = () => {
     setOpen(false);
@@ -79,7 +108,10 @@ const ReviewsCarousel: React.FC = () => {
           overflow: "hidden",
         }}
       >
-        {latestReviews.map((review) => (
+        {/* {latestReviews.map((review) => ( */}
+        {/* {(latestReviews.length > 0 ? latestReviews : placeholderReviews).map( */}
+        {reviewsToShow.map((review) => (
+          // (review) => (
           <SwiperSlide key={review._id.toString()}>
             <Box
               sx={{
