@@ -22,12 +22,6 @@ const ReviewsList: React.FC<ReviewListProps> = ({
 
   const theme = useTheme();
 
-  // const handleEditClick = (review: IReview) => {
-  //   setEditingReviewId(review._id.toString());
-  //   setEditedText(review.text);
-  //   setEditedRating(review.rating);
-  // };
-
   const handleEditClick = (review: IReview, reviewId: string) => {
     setEditingReviewId(reviewId);
     setEditedText(review.text);

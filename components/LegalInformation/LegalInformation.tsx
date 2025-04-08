@@ -24,19 +24,19 @@ const LegalInformation: React.FC = () => {
 
   const links = [
     {
-      text: "Условия использования",
+      text: "Умови використання",
       handler: () => handleLinkAgreement(),
     },
     {
-      text: "Политика конфиденциальности",
+      text: "Політика конфіденційності",
       handler: () => handleLinkPrivacy(),
     },
     {
-      text: "Политика в отношении файлов cookie",
+      text: "Політика в отношении файлов cookie",
       handler: () => handleLinkCookie(),
     },
     {
-      text: "Лицензионное соглашение",
+      text: "Ліцензійна угода",
       handler: () => handleLinkLicense(),
     },
   ];

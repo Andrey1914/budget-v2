@@ -20,12 +20,12 @@ const CarryOverBalance: React.FC<BalanceComparisonProps> = ({
     <>
       <Box sx={{ p: 4 }}>
         <Typography variant="h3" component="h2">
-          Ваш текущий баланс
+          Поточний баланс:
         </Typography>
       </Box>
       <Box sx={{ p: 2 }}>
         <Typography variant="subtitle1" component="p" color="textSecondary">
-          Перенесенный остаток:
+          Перенесений залишок:
         </Typography>
         <Typography variant="body1" component="p" color="primary">
           {carryOverBalance} {userCurrency}
@@ -34,7 +34,7 @@ const CarryOverBalance: React.FC<BalanceComparisonProps> = ({
       <Divider />
       <Box sx={{ p: 2 }}>
         <Typography variant="subtitle1" component="p" color="textSecondary">
-          Доходы текущего месяца:
+          Доходи поточного місяця:
         </Typography>
         <Typography variant="body1" component="p" color="success.main">
           +{totalIncome} {userCurrency}
@@ -43,7 +43,7 @@ const CarryOverBalance: React.FC<BalanceComparisonProps> = ({
       <Divider />
       <Box sx={{ p: 2 }}>
         <Typography variant="subtitle1" component="p" color="textSecondary">
-          Расходы текущего месяца:
+          Витрати поточного місяця:
         </Typography>
         <Typography variant="body1" component="p" color="error.main">
           -{totalExpense} {userCurrency}
@@ -52,7 +52,7 @@ const CarryOverBalance: React.FC<BalanceComparisonProps> = ({
       <Divider />
       <Box sx={{ p: 2 }}>
         <Typography variant="subtitle1" component="p" color="textSecondary">
-          Итоговый баланс:
+          Загальний баланс:
         </Typography>
         <Typography
           variant="body1"
