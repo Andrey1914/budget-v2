@@ -26,7 +26,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
           onChange={(e) => onYearChange(e.target.value as number)}
           displayEmpty
         >
-          <MenuItem value="">Все годы</MenuItem>
+          <MenuItem value="">Всі роки</MenuItem>
           {years.map((year) => (
             <MenuItem key={year} value={year}>
               {year}
@@ -38,19 +38,19 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
           onChange={(e) => onMonthChange(e.target.value as number)}
           displayEmpty
         >
-          <MenuItem value="">Все месяцы</MenuItem>
-          <MenuItem value={1}>Январь</MenuItem>
-          <MenuItem value={2}>Февраль</MenuItem>
-          <MenuItem value={3}>Март</MenuItem>
-          <MenuItem value={4}>Апрель</MenuItem>
-          <MenuItem value={5}>Май</MenuItem>
-          <MenuItem value={6}>Июнь</MenuItem>
-          <MenuItem value={7}>Июль</MenuItem>
-          <MenuItem value={8}>Август</MenuItem>
-          <MenuItem value={9}>Сентябрь</MenuItem>
-          <MenuItem value={10}>Октябрь</MenuItem>
-          <MenuItem value={11}>Ноябрь</MenuItem>
-          <MenuItem value={12}>Декабрь</MenuItem>
+          <MenuItem value="">Всі місяці</MenuItem>
+          <MenuItem value={1}>Січень</MenuItem>
+          <MenuItem value={2}>Лютий</MenuItem>
+          <MenuItem value={3}>Березень</MenuItem>
+          <MenuItem value={4}>Квітень</MenuItem>
+          <MenuItem value={5}>Травень</MenuItem>
+          <MenuItem value={6}>Червень</MenuItem>
+          <MenuItem value={7}>Липень</MenuItem>
+          <MenuItem value={8}>Серпень</MenuItem>
+          <MenuItem value={9}>Вересень</MenuItem>
+          <MenuItem value={10}>Жовтень</MenuItem>
+          <MenuItem value={11}>Листопад</MenuItem>
+          <MenuItem value={12}>Грудень</MenuItem>
         </StyledSelect>
 
         <StyledSelect
@@ -58,13 +58,13 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
           onChange={(e) => onTypeChange(e.target.value as string)}
           displayEmpty
         >
-          <MenuItem value="all">Все</MenuItem>
-          <MenuItem value="income">Доходы</MenuItem>
-          <MenuItem value="expense">Расходы</MenuItem>
+          <MenuItem value="all">Всі трансакції</MenuItem>
+          <MenuItem value="income">Доходи</MenuItem>
+          <MenuItem value="expense">Витрати</MenuItem>
         </StyledSelect>
       </Box>
       <StyledButton variant="contained" onClick={onApplyFilters}>
-        Применить фильтр
+        Застосувати фільтри.
       </StyledButton>
     </FilterContainer>
   );

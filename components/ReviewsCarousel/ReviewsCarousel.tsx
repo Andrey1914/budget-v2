@@ -29,9 +29,7 @@ import {
 SwiperCore.use([Autoplay, EffectCoverflow, Navigation]);
 
 const ReviewsCarousel: React.FC = () => {
-  // const [latestReviews, setLatestReviews] = useState<IReview[]>([]);
   const [latestReviews, setLatestReviews] = useState<IClientReview[]>([]);
-  // const [selectedReview, setSelectedReview] = useState<IReview | null>(null);
   const [selectedReview, setSelectedReview] = useState<IClientReview | null>(
     null
   );
@@ -62,8 +60,6 @@ const ReviewsCarousel: React.FC = () => {
       }));
 
       setLatestReviews(transformed);
-
-      // setLatestReviews(response.data);
     };
     fetchLatestReviews();
   }, []);
@@ -72,11 +68,6 @@ const ReviewsCarousel: React.FC = () => {
     setSelectedReview(review);
     setOpen(true);
   };
-
-  // const handleOpen = (review: IReview) => {
-  //   setSelectedReview(review);
-  //   setOpen(true);
-  // };
 
   const handleClose = () => {
     setOpen(false);
@@ -108,10 +99,7 @@ const ReviewsCarousel: React.FC = () => {
           overflow: "hidden",
         }}
       >
-        {/* {latestReviews.map((review) => ( */}
-        {/* {(latestReviews.length > 0 ? latestReviews : placeholderReviews).map( */}
         {reviewsToShow.map((review) => (
-          // (review) => (
           <SwiperSlide key={review._id.toString()}>
             <Box
               sx={{
@@ -206,7 +194,7 @@ const ReviewsCarousel: React.FC = () => {
                     }}
                     onClick={() => handleOpen(review)}
                   >
-                    Читать дальше...
+                    Читати більше...
                   </Typography>
                 )}
               </Box>
@@ -222,7 +210,7 @@ const ReviewsCarousel: React.FC = () => {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">
-            Закрыть
+            Закрити
           </Button>
         </DialogActions>
       </Dialog>

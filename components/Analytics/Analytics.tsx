@@ -45,7 +45,7 @@ const CategoryChart: React.FC<CategoryChartProps> = ({
       if (Array.isArray(transactions)) {
         transactions.forEach((transaction) => {
           const categoryName =
-            transaction.categoryDetails?.name || "Без категории";
+            transaction.categoryDetails?.name || "Без категорії";
           categoryTotals[categoryName] =
             (categoryTotals[categoryName] || 0) + transaction.amount;
         });
@@ -60,7 +60,7 @@ const CategoryChart: React.FC<CategoryChartProps> = ({
         labels: Object.keys(categoryTotals),
         datasets: [
           {
-            label: `Транзакции за месяц ${selectedMonth}`,
+            label: `Трансакції за місяць ${selectedMonth}`,
             data: Object.values(categoryTotals),
             backgroundColor: "rgba(75, 192, 192, 0.5)",
             borderColor: "rgba(75, 192, 192, 1)",
@@ -75,7 +75,7 @@ const CategoryChart: React.FC<CategoryChartProps> = ({
 
   return (
     <div>
-      <h2>Расходы по категориям за месяц {selectedMonth}</h2>
+      <h2>Витрати по категоріям за місяць {selectedMonth}</h2>
       <Bar
         data={chartData}
         options={{
@@ -86,7 +86,7 @@ const CategoryChart: React.FC<CategoryChartProps> = ({
             },
             title: {
               display: true,
-              text: "График расходов по категориям",
+              text: "Графік витрат по категоріям",
             },
           },
         }}
