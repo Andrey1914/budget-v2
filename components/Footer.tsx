@@ -4,17 +4,18 @@ import React from "react";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 
-import { Box, Container } from "@mui/material";
+import { Box, Container, useTheme } from "@mui/material";
 import LegalInformation from "@/components/LegalInformation/LegalInformation";
 import Logo from "@/components/Logo/Logo";
 
 const Footer: React.FC = () => {
   const { data: session } = useSession();
+  const theme = useTheme();
 
   return (
-    <footer style={{ padding: "2rem 0", minHeight: "310px" }}>
+    <Box component="footer" sx={{ py: theme.spacing(4), px: theme.spacing(5) }}>
       <Container maxWidth="lg">
-        <Box sx={{ p: 4 }}>
+        <Box sx={{ p: 2, display: "flex", gap: theme.spacing(6) }}>
           <Link
             href={session ? "/dashboard" : "/landing"}
             style={{ color: "#fff" }}
@@ -24,7 +25,7 @@ const Footer: React.FC = () => {
           <LegalInformation />
         </Box>
       </Container>
-    </footer>
+    </Box>
   );
 };
 

@@ -8,10 +8,11 @@ import { Box, Typography, Button, useTheme, Container } from "@mui/material";
 import { Send } from "@mui/icons-material";
 import { MainContainer } from "@/app/styles/Container";
 import Hero from "@/components/Hero/Hero";
-import Advantages from "@/components/Advantages/Advantages";
+import AdvantagesCarousel from "@/components/Advantages/AdvantagesCarousel";
+// import Advantages from "@/components/Advantages/Advantages";
 import ReviewsCarousel from "@/components/ReviewsCarousel/ReviewsCarousel";
 import FAQ from "@/components/faq/FAQ";
-import AverageRating from "@/components/Review/AverageRating";
+// import AverageRating from "@/components/Review/AverageRating";
 import Feature from "@/components/Features/Features";
 import { GetStartedButton } from "@/app/styles/Buttons";
 
@@ -39,8 +40,9 @@ const Landing: React.FC = () => {
         <Hero />
       </Box>
 
-      <Box component="section" title="advantages">
-        <Advantages />
+      <Box component="section" title="advantages" sx={{ py: "72px" }}>
+        {/* <Advantages /> */}
+        <AdvantagesCarousel />
       </Box>
 
       {/* Основные функции */}
@@ -52,7 +54,11 @@ const Landing: React.FC = () => {
       <Box
         component="section"
         title="reviews"
-        sx={{ py: 6, px: 2, backgroundColor: theme.palette.background.reviews }}
+        sx={{
+          py: 6,
+          px: 2,
+          background: theme.palette.gradients.reviews,
+        }}
       >
         <Container maxWidth="md">
           <Box sx={{ py: 4 }}>
@@ -73,12 +79,12 @@ const Landing: React.FC = () => {
               gutterBottom
               sx={{ fontSize: theme.typography.fontSizes[4] }}
             >
-              Leave your feedback and help us become better!{" "}
+              Sign in and leave your feedback. It helps us to became better!
             </Typography>
-            <AverageRating />
+            {/* <AverageRating /> */}
           </Box>
 
-          <Box sx={{ py: 4 }}>
+          <Box sx={{ py: 4, width: "750px" }}>
             <ReviewsCarousel />
           </Box>
 
