@@ -2,6 +2,13 @@ import { styled, Button } from "@mui/material";
 
 import { GetStartedButtonProps } from "@/interfaces";
 
+export const MainButton = styled(Button)(({ theme }) => ({
+  width: "204px",
+  height: "48px",
+  backgroundColor: "#26793B",
+  color: "#fff",
+}));
+
 export const GetStartedButton = styled(Button)<GetStartedButtonProps>(
   ({ theme, colors }) => ({
     position: "relative",
