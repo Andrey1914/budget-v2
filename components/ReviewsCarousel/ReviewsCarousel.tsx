@@ -33,6 +33,7 @@ const ReviewsCarousel: React.FC = () => {
   const [selectedReview, setSelectedReview] = useState<IClientReview | null>(
     null
   );
+  const [activeIndex, setActiveIndex] = useState(0);
   const [open, setOpen] = useState(false);
   const reviewsToShow =
     latestReviews.length < 5
@@ -77,30 +78,35 @@ const ReviewsCarousel: React.FC = () => {
   return (
     <>
       <Swiper
-        navigation
+        // navigation
+
         effect="coverflow"
         coverflowEffect={{
           rotate: 0,
-          depth: 200,
-          stretch: 30,
+          // depth: 200,
+          depth: 0,
 
+          stretch: 185.5,
+          // stretch: 137,
           modifier: 1,
-          slideShadows: true,
+          slideShadows: false,
         }}
         centeredSlides={true}
         slidesPerView={2}
-        spaceBetween={30}
+        spaceBetween={5}
         modules={[Autoplay, EffectCoverflow, Navigation]}
         autoplay={{ delay: 3000, disableOnInteraction: false }}
         loop={true}
         initialSlide={3}
+        onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
         style={{
-          height: isMobile ? "auto" : "170px",
+          height: isMobile ? "auto" : "212px",
           overflow: "hidden",
+          // overflow: "visible",
         }}
       >
-        {reviewsToShow.map((review) => (
-          <SwiperSlide key={review._id.toString()}>
+        {reviewsToShow.map((review, index) => (
+          <SwiperSlide key={review._id.toString()} style={{ width: "365px" }}>
             <Box
               sx={{
                 display: "flex",
@@ -109,11 +115,18 @@ const ReviewsCarousel: React.FC = () => {
                 textAlign: "center",
                 color: "#571862",
                 backgroundColor: theme.palette.background.swiperSlide,
-
+                // border: "1px solid red",
                 boxShadow: "2px 2px 5px rgba(0, 0, 0, 0.1)",
                 borderRadius: 1,
-                height: isMobile ? "90%" : "100%",
-                margin: isMobile ? "0 auto" : "unset",
+                width: isMobile ? "365px" : "365px",
+                height: isMobile ? "180px" : "180px",
+                // margin: isMobile ? "0 auto" : "unset",
+              }}
+              style={{
+                transform:
+                  index === activeIndex
+                    ? "translateY(32px)"
+                    : "translateY(0px)",
               }}
             >
               <Box

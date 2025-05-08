@@ -17,7 +17,7 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import CurrencySelector from "@/components/CurrencySelector/CurrencySelector";
-
+import DangerZone from "@/components/Profile/DangerZone";
 import { CloudUpload } from "@mui/icons-material";
 import { Oval } from "react-loader-spinner";
 
@@ -376,6 +376,9 @@ const ProfilePage = () => {
               >
                 Change Password
               </Button>
+            </Box>
+            <Box>
+              <DangerZone />
             </Box>
           </Container>
         </Box>

@@ -1,10 +1,12 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Box, Link, List, ListItem } from "@mui/material";
+import { Link, List, ListItem, useTheme } from "@mui/material";
 
 const LegalInformation: React.FC = () => {
   const router = useRouter();
+
+  const theme = useTheme();
 
   const handleLinkAgreement = () => {
     router.push("/landing/user-agreement");
@@ -32,7 +34,7 @@ const LegalInformation: React.FC = () => {
       handler: () => handleLinkPrivacy(),
     },
     {
-      text: "Політика в отношении файлов cookie",
+      text: "cookie",
       handler: () => handleLinkCookie(),
     },
     {
@@ -42,17 +44,29 @@ const LegalInformation: React.FC = () => {
   ];
 
   return (
-    <Box>
-      <List sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-        {links.map((link, index) => (
-          <ListItem key={index}>
-            <Link onClick={link.handler} underline="hover" target="_blank">
-              {link.text}
-            </Link>
-          </ListItem>
-        ))}
-      </List>
-    </Box>
+    <List
+      sx={{
+        display: "flex",
+        flexDirection: "row",
+        gap: theme.spacing(6),
+      }}
+    >
+      {links.map((link, index) => (
+        <ListItem key={index} sx={{ p: 0, whiteSpace: "nowrap" }}>
+          <Link
+            onClick={link.handler}
+            underline="hover"
+            target="_blank"
+            sx={{
+              cursor: "pointer",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {link.text}
+          </Link>
+        </ListItem>
+      ))}
+    </List>
   );
 };
 

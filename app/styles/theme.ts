@@ -3,12 +3,23 @@
 import { createTheme } from "@mui/material";
 
 declare module "@mui/material/styles" {
+  interface Palette {
+    gradients: {
+      reviews: string;
+    };
+  }
+  interface PaletteOptions {
+    gradients?: {
+      reviews?: string;
+    };
+  }
   interface TypeBackground {
     primary?: string;
     secondary?: string;
     tertiary?: string;
     advantages?: string;
     reviews?: string;
+
     reviewsList?: string;
     reviewsListItems?: string;
     swiperSlide?: string;
@@ -26,7 +37,7 @@ declare module "@mui/material/styles" {
 
 export const lightTheme = createTheme({
   typography: {
-    fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
+    fontFamily: '"Roboto", "Pavanam", "Helvetica", "Arial", sans-serif',
     fontSize: 12,
     fontSizes: [14, 16, 18, 20, 24, 32, 48, 64, 96],
 
@@ -40,7 +51,7 @@ export const lightTheme = createTheme({
     values: {
       xs: 0,
       sm: 600,
-      md: 900,
+      md: 980,
       lg: 1200,
       xl: 1536,
     },
@@ -58,16 +69,18 @@ export const lightTheme = createTheme({
     secondary: {
       main: "#dc004e",
     },
-
+    gradients: {
+      reviews: "linear-gradient(to top, #26793B 0%, #FFFFFF 100%)",
+    },
     background: {
       default: "#ffffff",
       primary: "#fefae0",
       secondary: "#e0f7fa",
       tertiary: "#ede7f6",
       paper: "#f4f4f4",
-      advantages: "#fefae0",
-      reviews: "#DFD8FD",
-      //#E7F9FF
+      // advantages: "#fefae0",
+      advantages: "rgba(0, 120, 38, 0.03)",
+
       reviewsList: "#dcdbdb",
       reviewsListItems: "#f5f5f5",
       swiperSlide: "#F3F0FF",
@@ -110,6 +123,9 @@ export const darkTheme = createTheme({
     },
     secondary: {
       main: "#f48fb1",
+    },
+    gradients: {
+      reviews: "linear-gradient(to top, #26793B 0%, #FFFFFF 100%)",
     },
     background: {
       default: "#121212",

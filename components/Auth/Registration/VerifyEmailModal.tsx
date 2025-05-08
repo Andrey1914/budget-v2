@@ -8,15 +8,25 @@ import { Oval } from "react-loader-spinner";
 import SnackbarNotification from "@/components/Notification/Snackbar";
 
 import {
-  Box,
+  Dialog,
+  DialogTitle,
+  DialogContent,
   TextField,
   Button,
+  IconButton,
+  Box,
   Container,
   Typography,
   useTheme,
 } from "@mui/material";
+import { Close } from "@mui/icons-material";
 
-const VerifyEmail: React.FC = () => {
+interface Props {
+  open: boolean;
+  onClose: () => void;
+}
+
+const VerifyEmailModal: React.FC<Props> = ({ open, onClose }) => {
   const { data: session } = useSession();
   const router = useRouter();
   const theme = useTheme();
@@ -28,6 +38,7 @@ const VerifyEmail: React.FC = () => {
   const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">(
     "success"
   );
+  const [verifyEmailOpen, setVerifyEmailOpen] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -73,19 +84,17 @@ const VerifyEmail: React.FC = () => {
   }, [session, router]);
 
   return (
-    <Box component="section">
-      <Container maxWidth="sm">
-        <Typography
-          variant="h1"
-          component="h1"
-          sx={{
-            textAlign: "center",
-            fontSize: theme.typography.fontSizes[4],
-            py: 3,
-          }}
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth="xs">
+      <DialogTitle>
+        Verify Email
+        <IconButton
+          onClick={onClose}
+          sx={{ position: "absolute", right: 8, top: 8 }}
         >
-          Verify Email
-        </Typography>
+          <Close />
+        </IconButton>
+      </DialogTitle>
+      <DialogContent dividers>
         <form onSubmit={handleSubmit}>
           <Box mb={3}>
             <TextField
@@ -123,9 +132,9 @@ const VerifyEmail: React.FC = () => {
             severity={snackbarSeverity}
           />
         )}
-      </Container>
-    </Box>
+      </DialogContent>
+    </Dialog>
   );
 };
 
-export default VerifyEmail;
+export default VerifyEmailModal;

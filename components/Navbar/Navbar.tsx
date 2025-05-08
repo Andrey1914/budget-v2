@@ -31,10 +31,17 @@ import ThemeSwitcher from "@/components/ThemeSwitcher/ThemeSwitcher";
 import { SwitcherProps } from "@/interfaces";
 import Logo from "@/components/Logo/Logo";
 
+import AuthTabsModal from "@/components/Auth/AuthModal";
+
 const Navbar: React.FC<SwitcherProps> = ({ toggleTheme, isDarkMode }) => {
   const { data: session, status } = useSession();
   const router = useRouter();
   const pathname = usePathname();
+
+  const [authModalOpen, setAuthModalOpen] = useState(false);
+
+  const handleOpenAuthModal = () => setAuthModalOpen(true);
+  const handleCloseAuthModal = () => setAuthModalOpen(false);
 
   const [drawerOpen, setDrawerOpen] = useState(false);
   const theme = useTheme();
@@ -59,8 +66,7 @@ const Navbar: React.FC<SwitcherProps> = ({ toggleTheme, isDarkMode }) => {
   const homeLink = [{ href: "/landing", label: "Home", icon: <Home /> }];
 
   const authLinks = [
-    { href: "/auth/login", label: "SignIn", icon: <Login /> },
-    { href: "/auth/register", label: "SignUp", icon: <AppRegistration /> },
+    { label: "SignIn/SignUp", icon: <Login />, onClick: handleOpenAuthModal },
   ];
 
   const mobileLinks = [
@@ -139,27 +145,21 @@ const Navbar: React.FC<SwitcherProps> = ({ toggleTheme, isDarkMode }) => {
     ));
 
   const renderAuthLinks = () =>
-    authLinks.map((link) => (
-      <ListItem key={link.href}>
-        <Link
-          key={link.href}
-          href={link.href}
-          style={{
-            textDecoration: "none",
-            color: isActive(link.href) ? "#0066ff" : "inherit",
+    authLinks.map((link, i) => (
+      <ListItem key={i} onClick={link.onClick} sx={{ cursor: "pointer" }}>
+        <Box
+          sx={{
+            display: "flex",
+            gap: 2,
+            padding: "6px 16px",
+            "&:hover": {
+              backgroundColor: "#f0f0f0",
+            },
           }}
         >
-          <Box
-            sx={{
-              display: "flex",
-              gap: 2,
-              borderBottom: isActive(link.href) ? "2px solid #0066ff" : "none",
-            }}
-          >
-            <Icon>{link.icon}</Icon>
-            <ListItemText primary={link.label} />
-          </Box>
-        </Link>
+          <Icon>{link.icon}</Icon>
+          <ListItemText primary={link.label} />
+        </Box>
       </ListItem>
     ));
 
@@ -323,6 +323,12 @@ const Navbar: React.FC<SwitcherProps> = ({ toggleTheme, isDarkMode }) => {
           </Box>
         )}
       </Container>
+
+      <AuthTabsModal
+        open={authModalOpen}
+        onClose={handleCloseAuthModal}
+        initialTab={0}
+      />
     </>
   );
 };

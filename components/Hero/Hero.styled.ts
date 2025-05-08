@@ -1,5 +1,6 @@
 import { styled, Box, Container, Typography } from "@mui/material";
-import hero from "../../public/finance-background.png";
+// import hero from "../../public/finance-background.png";
+import hero from "@/public/hero.jpg";
 
 export const HeroSection = styled("div")(({ theme }) => ({
   backgroundImage: `url(${hero.src})`,
