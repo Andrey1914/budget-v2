@@ -6,27 +6,17 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import { Oval } from "react-loader-spinner";
 import SnackbarNotification from "@/components/Notification/Snackbar";
+import StyledTextField from "@/components/Auth/Input.styled";
+import { MainButton } from "@/app/styles/Buttons";
 
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  TextField,
-  Button,
-  IconButton,
-  Box,
-  Container,
-  Typography,
-  useTheme,
-} from "@mui/material";
-import { Close } from "@mui/icons-material";
+import { Button, Box, Typography, useTheme } from "@mui/material";
 
 interface Props {
-  open: boolean;
-  onClose: () => void;
+  onVerified: () => void;
+  onCancel: () => void;
 }
 
-const VerifyEmailModal: React.FC<Props> = ({ open, onClose }) => {
+const VerifyEmailModal: React.FC<Props> = ({ onVerified, onCancel }) => {
   const { data: session } = useSession();
   const router = useRouter();
   const theme = useTheme();
@@ -38,7 +28,6 @@ const VerifyEmailModal: React.FC<Props> = ({ open, onClose }) => {
   const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">(
     "success"
   );
-  const [verifyEmailOpen, setVerifyEmailOpen] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -56,6 +45,8 @@ const VerifyEmailModal: React.FC<Props> = ({ open, onClose }) => {
         setSnackbarMessage("Email verified successfully!");
         setSnackbarSeverity("success");
         setShowSnackbar(true);
+
+        onVerified?.();
 
         setTimeout(() => {
           router.push("/dashboard");
@@ -84,29 +75,20 @@ const VerifyEmailModal: React.FC<Props> = ({ open, onClose }) => {
   }, [session, router]);
 
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="xs">
-      <DialogTitle>
-        Verify Email
-        <IconButton
-          onClick={onClose}
-          sx={{ position: "absolute", right: 8, top: 8 }}
-        >
-          <Close />
-        </IconButton>
-      </DialogTitle>
-      <DialogContent dividers>
-        <form onSubmit={handleSubmit}>
-          <Box mb={3}>
-            <TextField
-              label="Verification Code"
-              variant="outlined"
-              fullWidth
-              value={verificationCode}
-              onChange={(e) => setVerificationCode(e.target.value)}
-              required
-            />
-          </Box>
-          <Button
+    <>
+      <form onSubmit={handleSubmit} style={{ height: "454.58px" }}>
+        <Box mb={3}>
+          <StyledTextField
+            label="Verification Code"
+            variant="outlined"
+            fullWidth
+            value={verificationCode}
+            onChange={(e) => setVerificationCode(e.target.value)}
+            required
+          />
+        </Box>
+        <Box sx={{ display: "flex", justifyContent: "center" }}>
+          <MainButton
             type="submit"
             variant="contained"
             color="primary"
@@ -121,19 +103,23 @@ const VerifyEmailModal: React.FC<Props> = ({ open, onClose }) => {
                 secondaryColor="#6fb5e7"
               />
             ) : (
-              "Verify"
+              <Typography>CONTINUE</Typography>
             )}
-          </Button>
-        </form>
+          </MainButton>
+        </Box>
 
-        {showSnackbar && (
-          <SnackbarNotification
-            message={snackbarMessage}
-            severity={snackbarSeverity}
-          />
-        )}
-      </DialogContent>
-    </Dialog>
+        <Button onClick={onCancel} fullWidth sx={{ mt: 1, color: "#26793B" }}>
+          Back to Login
+        </Button>
+      </form>
+
+      {showSnackbar && (
+        <SnackbarNotification
+          message={snackbarMessage}
+          severity={snackbarSeverity}
+        />
+      )}
+    </>
   );
 };
 

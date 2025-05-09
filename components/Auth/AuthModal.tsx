@@ -20,6 +20,7 @@ import { Close } from "@mui/icons-material";
 import LoginTab from "@/components/Auth/Login/LoginForm";
 import RegisterTab from "@/components/Auth/Registration/RegisterForm";
 import ResetPasswordModal from "@/components/Auth/Login/ResetPasswordForm";
+import VerifyEmailModal from "@/components/Auth/Registration/VerifyEmailForm";
 import authBg from "@/public/auth-bg.jpg";
 
 interface Props {
@@ -30,6 +31,7 @@ interface Props {
 
 const AuthTabsModal: React.FC<Props> = ({ open, onClose, initialTab = 0 }) => {
   const [showResetPassword, setShowResetPassword] = useState(false);
+  const [showEmailVerification, setShowEmailVerification] = useState(false);
 
   const [tabIndex, setTabIndex] = useState(initialTab);
   const theme = useTheme();
@@ -72,42 +74,66 @@ const AuthTabsModal: React.FC<Props> = ({ open, onClose, initialTab = 0 }) => {
           }}
         >
           <Box>
-            <Typography
-              variant="h2"
-              sx={{
-                color: "#fff",
-                fontSize: "20px",
-                textAlign: "center",
-                mb: 2,
-              }}
-            >
-              {showResetPassword
-                ? "Введіть новий пароль"
-                : "Для початку роботи, будь ласка, авторизуйтесь."}
-            </Typography>
-
-            {!showResetPassword && (
-              <Tabs
-                value={tabIndex}
-                onChange={handleTabChange}
-                centered
-                TabIndicatorProps={{ style: { display: "none" } }}
+            {showResetPassword ? (
+              <Typography
+                variant="h2"
                 sx={{
-                  "& .MuiTab-root": {
-                    color: "#fff",
-                    fontWeight: "bold",
-                    minWidth: "50%",
-                    borderBottom: "2px solid #fff",
-                  },
-                  "& .MuiTab-root.Mui-selected": {
-                    color: "#3A9A5B",
-                    borderBottom: "2px solid #3A9A5B",
-                  },
+                  color: "#fff",
+                  fontSize: "20px",
+                  textAlign: "center",
+                  mb: 2,
                 }}
               >
-                <Tab label="LOGIN" />
-                <Tab label="REGISTRATION" />
-              </Tabs>
+                Введіть новий пароль
+              </Typography>
+            ) : showEmailVerification ? (
+              <Typography
+                variant="h2"
+                sx={{
+                  color: "#fff",
+                  fontSize: "20px",
+                  textAlign: "center",
+                  mb: 2,
+                }}
+              >
+                Ми надіслали код на вашу пошту. Перевірте пошту та введіть код
+                нижче.
+              </Typography>
+            ) : (
+              <>
+                <Typography
+                  variant="h2"
+                  sx={{
+                    color: "#fff",
+                    fontSize: "20px",
+                    textAlign: "center",
+                    mb: 2,
+                  }}
+                >
+                  Для початку роботи, будь ласка, авторизуйтесь.
+                </Typography>
+                <Tabs
+                  value={tabIndex}
+                  onChange={handleTabChange}
+                  centered
+                  TabIndicatorProps={{ style: { display: "none" } }}
+                  sx={{
+                    "& .MuiTab-root": {
+                      color: "#fff",
+                      fontWeight: "bold",
+                      minWidth: "50%",
+                      borderBottom: "2px solid #fff",
+                    },
+                    "& .MuiTab-root.Mui-selected": {
+                      color: "#3A9A5B",
+                      borderBottom: "2px solid #3A9A5B",
+                    },
+                  }}
+                >
+                  <Tab label="LOGIN" />
+                  <Tab label="REGISTRATION" />
+                </Tabs>
+              </>
             )}
 
             <Box sx={{ mt: 2 }}>
@@ -125,6 +151,13 @@ const AuthTabsModal: React.FC<Props> = ({ open, onClose, initialTab = 0 }) => {
                       onCancel={() => setShowResetPassword(false)}
                     />
                   </SwiperSlide>
+                ) : showEmailVerification ? (
+                  <SwiperSlide>
+                    <VerifyEmailModal
+                      onVerified={() => setShowEmailVerification(false)}
+                      onCancel={() => setShowEmailVerification(false)}
+                    />
+                  </SwiperSlide>
                 ) : (
                   <>
                     <SwiperSlide>
@@ -133,7 +166,11 @@ const AuthTabsModal: React.FC<Props> = ({ open, onClose, initialTab = 0 }) => {
                       />
                     </SwiperSlide>
                     <SwiperSlide>
-                      <RegisterTab />
+                      <RegisterTab
+                        onSuccessRegistration={() =>
+                          setShowEmailVerification(true)
+                        }
+                      />
                     </SwiperSlide>
                   </>
                 )}

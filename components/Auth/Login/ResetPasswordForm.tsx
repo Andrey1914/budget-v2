@@ -11,7 +11,7 @@ import {
   useTheme,
 } from "@mui/material";
 
-import { Visibility, VisibilityOff, Close } from "@mui/icons-material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { Oval } from "react-loader-spinner";
 
 import SnackbarNotification from "@/components/Notification/Snackbar";

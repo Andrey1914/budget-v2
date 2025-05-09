@@ -26,11 +26,14 @@ import { validateFormRegistration } from "@/utils/validators/validateFormRegistr
 import { validateFieldName } from "@/utils/validators/validateFieldName";
 import validateFieldEmail from "@/utils/validators/validateFieldEmail";
 import validateFieldPassword from "@/utils/validators/validateFieldPassword";
-import VerifyEmailModal from "@/components/Auth/Registration/VerifyEmailModal";
 import StyledTextField from "@/components/Auth/Input.styled";
 import { MainButton } from "@/app/styles/Buttons";
 
-const RegisterTab: React.FC = () => {
+interface RegisterTabProps {
+  onSuccessRegistration: () => void;
+}
+
+const RegisterTab: React.FC<RegisterTabProps> = ({ onSuccessRegistration }) => {
   const theme = useTheme();
   const router = useRouter();
 
@@ -38,7 +41,7 @@ const RegisterTab: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
+  // const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const [popoverMessage, setPopoverMessage] = useState("");
@@ -51,7 +54,6 @@ const RegisterTab: React.FC = () => {
   );
 
   const handleTogglePasswordVisibility = () => setShowPassword((prev) => !prev);
-  const [verifyEmailModalOpen, setVerifyEmailModalOpen] = useState(false);
 
   const handleGoogleLogin = async () => {
     try {
@@ -95,7 +97,7 @@ const RegisterTab: React.FC = () => {
         setShowSnackbar(true);
 
         setTimeout(() => {
-          setVerifyEmailModalOpen(true);
+          onSuccessRegistration();
         }, 1500);
       }
     } catch (error: any) {
@@ -223,11 +225,6 @@ const RegisterTab: React.FC = () => {
           severity={snackbarSeverity}
         />
       )}
-
-      <VerifyEmailModal
-        open={verifyEmailModalOpen}
-        onClose={() => setVerifyEmailModalOpen(false)}
-      />
     </>
   );
 };
