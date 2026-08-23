@@ -11,6 +11,7 @@ import { Session, IExpense } from "@/interfaces";
 import EditExpenseForm from "@/components/Expense/EditExpenseForm";
 import emptyList from "@/public/empty-list.webp";
 import { Delete, Edit, Add } from "@mui/icons-material";
+import ForeignCurrencySummary from "@/components/Expense/ForeignCurrency";
 
 import {
   Box,
@@ -48,10 +49,10 @@ const ExpensesList: React.FC<{
 
           setExpense(expensesData);
 
-          const total = expensesData.reduce(
-            (acc: number, item: IExpense) => acc + item.amount,
-            0
-          );
+          const total = expensesData
+            .filter((item) => item.currency === session.user.currency)
+            .reduce((acc: number, item: IExpense) => acc + item.amount, 0);
+
           onUpdate(total);
         } catch (err) {
           console.error("Error fetching expenses:", err);
@@ -80,10 +81,9 @@ const ExpensesList: React.FC<{
 
       setExpense(expensesData);
 
-      const total = expensesData.reduce(
-        (acc: number, item: IExpense) => acc + item.amount,
-        0
-      );
+      const total = expensesData
+        .filter((item) => item.currency === session.user.currency)
+        .reduce((acc: number, item: IExpense) => acc + item.amount, 0);
 
       onUpdate(total);
     } catch (err) {
@@ -118,13 +118,16 @@ const ExpensesList: React.FC<{
           border: "1px solid #FEA362",
         }}
       >
-        <Typography
-          variant="h5"
-          component="p"
-          sx={{ color: theme.palette.text.primary }}
-        >
-          Total Expenses for this month: {totalExpense} {userCurrency}
-        </Typography>
+        <Box>
+          <Typography
+            variant="h5"
+            component="p"
+            sx={{ color: theme.palette.text.primary }}
+          >
+            Total Expenses for this month: {totalExpense} {userCurrency}
+          </Typography>
+          <ForeignCurrencySummary />
+        </Box>
         <Box>
           <Fab color="primary" aria-label="add" onClick={hendleAddClick}>
             <Add />
@@ -174,7 +177,7 @@ const ExpensesList: React.FC<{
                 }}
               >
                 <Typography variant="h6" component="p">
-                  {item.amount} {userCurrency} - {item.description}
+                  {item.amount} {item.currency} - {item.description}
                 </Typography>
                 <Box sx={{ display: "flex", gap: 3 }}>
                   <Edit onClick={() => handleEdit(item._id.toString())} />

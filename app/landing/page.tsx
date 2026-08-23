@@ -3,19 +3,24 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import axios from "axios";
+
 import Link from "next/link";
 import { Box, Typography, Button, useTheme, Container } from "@mui/material";
 import { Send } from "@mui/icons-material";
 import { MainContainer } from "@/app/styles/Container";
 import Hero from "@/components/Hero/Hero";
 import AdvantagesCarousel from "@/components/Advantages/AdvantagesCarousel";
-// import Advantages from "@/components/Advantages/Advantages";
+import Advantages from "@/components/Advantages/Advantages";
 import ReviewsCarousel from "@/components/ReviewsCarousel/ReviewsCarousel";
 import FAQ from "@/components/faq/FAQ";
 // import AverageRating from "@/components/Review/AverageRating";
 import Feature from "@/components/Features/Features";
-import { GetStartedButton } from "@/app/styles/Buttons";
+import { GetStartedButton, MainButton } from "@/app/styles/Buttons";
+
 import AuthTabsModal from "@/components/Auth/AuthModal";
+import ReviewForm from "@/components/Review/ReviewForm";
+import { IReview } from "@/interfaces";
 
 const Landing: React.FC = () => {
   const { data: session, status } = useSession();
@@ -25,14 +30,50 @@ const Landing: React.FC = () => {
   const handleOpenAuthModal = () => setAuthModalOpen(true);
   const handleCloseAuthModal = () => setAuthModalOpen(false);
 
+  const [reviews, setReviews] = useState<IReview[]>([]);
+
+  const [showSnackbar, setShowSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">(
+    "success",
+  );
+
   const theme = useTheme();
 
-  const handleReviewClick = () => {
-    if (status === "authenticated") {
-      router.push("/dashboard/reviews");
-    } else {
-      setAuthModalOpen(true);
+  const handleAddReview = async (newReview: {
+    rating: number | null;
+    text: string;
+  }) => {
+    try {
+      const response = await axios.post("/api/review/add", newReview);
+
+      if (response.data) {
+        setReviews((prevReviews) => [...prevReviews, response.data]);
+
+        setSnackbarMessage("Отзыв успешно добавлен");
+        setSnackbarSeverity("success");
+        setShowSnackbar(true);
+      } else {
+        throw new Error("Отзыв не был добавлен");
+      }
+    } catch (error) {
+      console.error("Ошибка при добавлении отзыва:", error);
+      setSnackbarMessage("Не удалось добавить отзыв");
+      setSnackbarSeverity("error");
+      setShowSnackbar(true);
     }
+  };
+
+  // const handleReviewClick = () => {
+  //   if (status === "authenticated") {
+  //     router.push("/dashboard/reviews");
+  //   } else {
+  //     setAuthModalOpen(true);
+  //   }
+  // };
+
+  const handleReviewClick = () => {
+    setAuthModalOpen(true);
   };
 
   return (
@@ -42,8 +83,8 @@ const Landing: React.FC = () => {
           <Hero />
         </Box>
 
-        <Box component="section" title="advantages" sx={{ py: "72px" }}>
-          {/* <Advantages /> */}
+        <Box component="section" title="advantages">
+          <Advantages />
           <AdvantagesCarousel />
         </Box>
 
@@ -59,38 +100,103 @@ const Landing: React.FC = () => {
           sx={{
             py: 6,
             px: 2,
-            background: theme.palette.gradients.reviews,
+            // background: theme.palette.gradients.reviews,
           }}
         >
-          <Container maxWidth="md">
-            <Box sx={{ py: 4 }}>
-              <Typography
-                variant="h2"
-                component="h2"
-                gutterBottom
+          <Container maxWidth="lg">
+            <Box sx={{ display: "flex", gap: "52px" }}>
+              <Box>
+                <ReviewsCarousel />
+              </Box>
+
+              <Box
                 sx={{
-                  fontSize: theme.typography.fontSizes[6],
-                  fontWeight: theme.typography.fontWeightLight,
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
                 }}
               >
-                We hope you enjoy our app!
-              </Typography>
-              <Typography
-                variant="h4"
-                component="p"
-                gutterBottom
-                sx={{ fontSize: theme.typography.fontSizes[4] }}
-              >
-                Sign in and leave your feedback. It helps us to became better!
-              </Typography>
-              {/* <AverageRating /> */}
+                <Typography
+                  variant="h2"
+                  component="h2"
+                  gutterBottom
+                  sx={{
+                    fontSize: theme.typography.fontSizes[5],
+                    fontWeight: theme.typography.fontWeightRegular,
+                    lineHeight: "40px",
+                  }}
+                >
+                  We hope you enjoy our app!
+                </Typography>
+
+                {session && session.user.isVerified ? (
+                  <Box>
+                    <Typography
+                      variant="h4"
+                      component="p"
+                      gutterBottom
+                      sx={{
+                        fontSize: theme.typography.fontSizes[4],
+                        fontWeight: theme.typography.fontWeightRegular,
+                        lineHeight: "32px",
+                        mb: theme.spacing(5),
+                      }}
+                    >
+                      Leave your feedback. It helps us to became better!{" "}
+                    </Typography>
+                    <ReviewForm onAddReview={handleAddReview} />
+                    <Link
+                      href="reviews"
+                      style={{ display: "flex", textDecoration: "none" }}
+                    >
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          fontSize: "14px",
+                          p: 1,
+                          color: theme.palette.text.secondary,
+                          border: `2px solid ${theme.palette.text.secondary}`,
+                          borderRadius: theme.spacing(1),
+                        }}
+                      >
+                        All reviews
+                      </Typography>
+                    </Link>
+                  </Box>
+                ) : (
+                  <>
+                    <Typography
+                      variant="h4"
+                      component="p"
+                      gutterBottom
+                      sx={{
+                        fontSize: theme.typography.fontSizes[4],
+                        fontWeight: theme.typography.fontWeightRegular,
+                        lineHeight: "32px",
+                        mb: theme.spacing(5),
+                      }}
+                    >
+                      Sign in and leave your feedback. It helps us to became
+                      better!
+                    </Typography>
+                    <Box sx={{ display: "flex", justifyContent: "center" }}>
+                      <MainButton
+                        variant="contained"
+                        color="primary"
+                        onClick={handleReviewClick}
+                      >
+                        {/* <Send sx={{ mr: 2 }} /> */}
+                        Get started
+                      </MainButton>
+                    </Box>
+                  </>
+                )}
+
+                {/* <AverageRating /> */}
+              </Box>
             </Box>
 
-            <Box sx={{ py: 4, width: "750px" }}>
-              <ReviewsCarousel />
-            </Box>
-
-            <Box sx={{ py: 4 }}>
+            {/* <Box sx={{ py: 4 }}>
               <Box
                 component="div"
                 sx={{
@@ -129,7 +235,7 @@ const Landing: React.FC = () => {
                   </Typography>
                 </Link>
               </Box>
-            </Box>
+            </Box> */}
           </Container>
         </Box>
 

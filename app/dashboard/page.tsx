@@ -8,6 +8,7 @@ import ExpensesList from "@/components/Expense/ExpensesList";
 import IncomesList from "@/components/Income/IncomesList";
 import TasksList from "@/components/Tasks/TasksList";
 import CarryOverBalance from "@/components/CarryOverBalance/CarryOverBalance";
+// import ForeignCurrencySummary from "@/components/Transactions/ForeignCurrencySummary";
 
 import { Box, Grid2, Typography } from "@mui/material";
 
@@ -36,10 +37,14 @@ const Dashboard: React.FC = () => {
 
   const fetchCarryOverBalanceData = async () => {
     try {
-      const response = await fetch(`/api/transactions/getAllTransactions`);
+      // const response = await fetch(`/api/transactions/getAllTransactions`);
+      const response = await fetch(`/api/transactions/getFinancialSummary`);
+
       const data = await response.json();
 
-      setCarryOverBalance(data.carryOverBalance);
+      // setCarryOverBalance(data.carryOverBalance);
+      setCarryOverBalance(data.carryOver);
+
       setTotalIncome(data.totalIncome);
       setTotalExpense(data.totalExpense);
     } catch (error) {
@@ -74,6 +79,10 @@ const Dashboard: React.FC = () => {
           Welcome to Finance App, {session.user.name}
         </Typography>
 
+        {/* <Box>
+          <ForeignCurrencySummary />
+        </Box> */}
+
         <Grid2 container spacing={4} direction={{ xs: "column", md: "row" }}>
           <Grid2
             container
@@ -102,9 +111,10 @@ const Dashboard: React.FC = () => {
               <Grid2 container direction="column" spacing={4}>
                 <Grid2 size={6} component="div">
                   <CarryOverBalance
-                    carryOverBalance={carryOverBalance}
-                    totalIncome={totalIncome}
-                    totalExpense={totalExpense}
+                  // carryOverBalance={carryOverBalance}
+
+                  // totalIncome={totalIncome}
+                  // totalExpense={totalExpense}
                   />
                 </Grid2>
                 <Grid2 size={6} component="div">
