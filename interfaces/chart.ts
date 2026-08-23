@@ -5,7 +5,19 @@ export interface CategoryChartProps {
   selectedMonth: number | "";
   selectedType: string;
   transactions: IIncome[] | IExpense[];
+  currencyTotals: CurrencyTotal[];
 }
+
+export interface CurrencyTotal {
+  currency: string;
+  income: number;
+  expense: number;
+  balance: number;
+}
+
+export type AnalyticsTransaction = (IIncome | IExpense) & {
+  type: "income" | "expense";
+};
 
 export interface ChartData {
   labels: string[];

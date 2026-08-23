@@ -10,7 +10,7 @@ import {
   Legend,
 } from "chart.js";
 
-import { CategoryChartProps, ChartData } from "@/interfaces";
+import { CategoryChartProps, ChartData, IIncome, IExpense } from "@/interfaces";
 
 ChartJS.register(
   CategoryScale,
@@ -18,10 +18,21 @@ ChartJS.register(
   BarElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
 );
 
-const CategoryChart: React.FC<CategoryChartProps> = ({
+interface CategoryChartTransaction extends IIncome, IExpense {
+  type: "income" | "expense";
+}
+
+interface CategoryChartPropsExtended extends Omit<
+  CategoryChartProps,
+  "transactions"
+> {
+  transactions: CategoryChartTransaction[];
+}
+
+const CategoryChart: React.FC<CategoryChartPropsExtended> = ({
   selectedMonth,
   transactions,
 }) => {
@@ -39,43 +50,74 @@ const CategoryChart: React.FC<CategoryChartProps> = ({
   });
 
   useEffect(() => {
-    const loadData = async () => {
-      const categoryTotals: { [key: string]: number } = {};
+    if (!Array.isArray(transactions)) {
+      console.error(
+        "analyticsData is not an array or is undefined:",
+        transactions,
+      );
+      return;
+    }
 
-      if (Array.isArray(transactions)) {
-        transactions.forEach((transaction) => {
-          const categoryName =
-            transaction.categoryDetails?.name || "Без категорії";
-          categoryTotals[categoryName] =
-            (categoryTotals[categoryName] || 0) + transaction.amount;
-        });
-      } else {
-        console.error(
-          "analyticsData is not an array or is undefined:",
-          transactions
-        );
+    const totals: {
+      [key: string]: {
+        income: number;
+        expense: number;
+      };
+    } = {};
+
+    transactions.forEach((transaction) => {
+      const categoryName = transaction.categoryDetails?.name || "Без категорії";
+
+      const currency = transaction.currency || "N/A";
+
+      const key = `${categoryName} — ${currency}`;
+
+      if (!totals[key]) {
+        totals[key] = {
+          income: 0,
+          expense: 0,
+        };
       }
 
-      setChartData({
-        labels: Object.keys(categoryTotals),
-        datasets: [
-          {
-            label: `Трансакції за місяць ${selectedMonth}`,
-            data: Object.values(categoryTotals),
-            backgroundColor: "rgba(75, 192, 192, 0.5)",
-            borderColor: "rgba(75, 192, 192, 1)",
-            borderWidth: 1,
-          },
-        ],
-      });
-    };
+      if (transaction.type === "income") {
+        totals[key].income += transaction.amount;
+      }
 
-    loadData();
+      if (transaction.type === "expense") {
+        totals[key].expense += transaction.amount;
+      }
+    });
+
+    const labels = Object.keys(totals);
+
+    const incomeData = labels.map((label) => totals[label].income);
+    const expenseData = labels.map((label) => totals[label].expense);
+
+    setChartData({
+      labels,
+      datasets: [
+        {
+          label: "Доход",
+          data: incomeData,
+          backgroundColor: "rgba(75, 192, 192, 0.5)",
+          borderColor: "rgba(75, 192, 192, 1)",
+          borderWidth: 1,
+        },
+        {
+          label: "Расход",
+          data: expenseData,
+          backgroundColor: "rgba(255, 99, 132, 0.5)",
+          borderColor: "rgba(255, 99, 132, 1)",
+          borderWidth: 1,
+        },
+      ],
+    });
   }, [transactions, selectedMonth]);
 
   return (
     <div>
-      <h2>Витрати по категоріям за місяць {selectedMonth}</h2>
+      <h2>Доходы и расходы за месяц {selectedMonth}</h2>
+
       <Bar
         data={chartData}
         options={{
@@ -86,7 +128,17 @@ const CategoryChart: React.FC<CategoryChartProps> = ({
             },
             title: {
               display: true,
-              text: "Графік витрат по категоріям",
+              text: "График доходов и расходов по категориям и валютам",
+            },
+            tooltip: {
+              callbacks: {
+                label: (context) => {
+                  const value = context.parsed.y ?? 0;
+                  const label = context.dataset.label || "";
+
+                  return `${label}: ${value.toFixed(2)}`;
+                },
+              },
             },
           },
         }}

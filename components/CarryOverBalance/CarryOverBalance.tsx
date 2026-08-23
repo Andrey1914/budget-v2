@@ -1,70 +1,58 @@
 "use client";
 
-import React from "react";
-import { useSession } from "next-auth/react";
 import { Box, Typography, Divider } from "@mui/material";
-import { Session, BalanceComparisonProps } from "@/interfaces";
+import { useFinancialSummary } from "@/hooks/useFinancialSummary";
+import ForeignCurrencySummary from "@/components/Transactions/ForeignCurrencySummary";
 
-const CarryOverBalance: React.FC<BalanceComparisonProps> = ({
-  carryOverBalance = 0,
-  totalIncome,
-  totalExpense,
-}) => {
-  const { data: session } = useSession() as {
-    data: Session | null;
-  };
-  const currentBalance = carryOverBalance + totalIncome - totalExpense;
-  const userCurrency = session?.user?.currency;
+const CarryOverBalance: React.FC = () => {
+  const { data, loading, error } = useFinancialSummary();
+
+  if (loading) return <p>Загрузка...</p>;
+  if (error || !data) return <p>Ошибка: {error}</p>;
+
+  const { carryOver, totalIncome, totalExpense, currency } = data;
+
+  const currentBalance = carryOver + totalIncome - totalExpense;
 
   return (
     <>
       <Box sx={{ p: 4 }}>
-        <Typography variant="h3" component="h2">
-          Поточний баланс:
-        </Typography>
+        <Typography variant="h3">Поточний баланс:</Typography>
       </Box>
       <Box sx={{ p: 2 }}>
-        <Typography variant="subtitle1" component="p" color="textSecondary">
-          Перенесений залишок:
-        </Typography>
-        <Typography variant="body1" component="p" color="primary">
-          {carryOverBalance} {userCurrency}
+        <Typography variant="subtitle1">Перенесений залишок:</Typography>
+        <Typography variant="body1" color="primary">
+          {carryOver} {currency}
         </Typography>
       </Box>
       <Divider />
       <Box sx={{ p: 2 }}>
-        <Typography variant="subtitle1" component="p" color="textSecondary">
-          Доходи поточного місяця:
-        </Typography>
-        <Typography variant="body1" component="p" color="success.main">
-          +{totalIncome} {userCurrency}
+        <Typography variant="subtitle1">Доходи поточного місяця:</Typography>
+        <Typography variant="body1" color="success.main">
+          +{totalIncome} {currency}
         </Typography>
       </Box>
       <Divider />
       <Box sx={{ p: 2 }}>
-        <Typography variant="subtitle1" component="p" color="textSecondary">
-          Витрати поточного місяця:
-        </Typography>
-        <Typography variant="body1" component="p" color="error.main">
-          -{totalExpense} {userCurrency}
+        <Typography variant="subtitle1">Витрати поточного місяця:</Typography>
+        <Typography variant="body1" color="error.main">
+          -{totalExpense} {currency}
         </Typography>
       </Box>
       <Divider />
       <Box sx={{ p: 2 }}>
-        <Typography variant="subtitle1" component="p" color="textSecondary">
-          Загальний баланс:
-        </Typography>
+        <Typography variant="subtitle1">Загальний баланс:</Typography>
         <Typography
           variant="body1"
-          component="p"
           color={currentBalance >= 0 ? "primary" : "error.main"}
         >
           {currentBalance >= 0
             ? currentBalance
             : `-${Math.abs(currentBalance)}`}{" "}
-          {userCurrency}
+          {currency}
         </Typography>
       </Box>
+      <ForeignCurrencySummary />
     </>
   );
 };
