@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import clientPromise from "@/lib/db";
 import { getToken } from "next-auth/jwt";
 import { ObjectId } from "mongodb";
-import Review from "@/app/models/Review";
+import Review from "@/lib/models/Review";
 
 const secret = process.env.JWT_SECRET;
 

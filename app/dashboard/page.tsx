@@ -8,11 +8,8 @@ import ExpensesList from "@/components/Expense/ExpensesList";
 import IncomesList from "@/components/Income/IncomesList";
 import TasksList from "@/components/Tasks/TasksList";
 import CarryOverBalance from "@/components/CarryOverBalance/CarryOverBalance";
-// import ForeignCurrencySummary from "@/components/Transactions/ForeignCurrencySummary";
 
 import { Box, Grid2, Typography } from "@mui/material";
-
-// import { Oval } from "react-loader-spinner";
 
 const Dashboard: React.FC = () => {
   const { data: session, status } = useSession();
@@ -37,12 +34,10 @@ const Dashboard: React.FC = () => {
 
   const fetchCarryOverBalanceData = async () => {
     try {
-      // const response = await fetch(`/api/transactions/getAllTransactions`);
       const response = await fetch(`/api/transactions/getFinancialSummary`);
 
       const data = await response.json();
 
-      // setCarryOverBalance(data.carryOverBalance);
       setCarryOverBalance(data.carryOver);
 
       setTotalIncome(data.totalIncome);
@@ -62,12 +57,6 @@ const Dashboard: React.FC = () => {
     setTotalIncome(updatedIncomes);
   };
 
-  // if (status === "loading") {
-  //   return (
-  //     <Oval height="80" width="80" color="#1727b7" secondaryColor="#6fb5e7" />
-  //   );
-  // }
-
   if (!session || !session.user.isVerified) {
     return null;
   }
@@ -78,10 +67,6 @@ const Dashboard: React.FC = () => {
         <Typography variant="h3" component="h1">
           Welcome to Finance App, {session.user.name}
         </Typography>
-
-        {/* <Box>
-          <ForeignCurrencySummary />
-        </Box> */}
 
         <Grid2 container spacing={4} direction={{ xs: "column", md: "row" }}>
           <Grid2
@@ -110,12 +95,7 @@ const Dashboard: React.FC = () => {
             <Grid2 size={{ xs: 12, md: 6 }} component="div">
               <Grid2 container direction="column" spacing={4}>
                 <Grid2 size={6} component="div">
-                  <CarryOverBalance
-                  // carryOverBalance={carryOverBalance}
-
-                  // totalIncome={totalIncome}
-                  // totalExpense={totalExpense}
-                  />
+                  <CarryOverBalance />
                 </Grid2>
                 <Grid2 size={6} component="div">
                   <TasksList />

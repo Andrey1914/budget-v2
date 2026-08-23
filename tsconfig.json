@@ -29,7 +29,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "pages/api/migrate-expenses.js"
+    "scripts/migrate-expenses.js"
   ],
   "exclude": ["node_modules"]
 }

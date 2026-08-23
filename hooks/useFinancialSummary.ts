@@ -19,13 +19,10 @@ export const useFinancialSummary = () => {
   useEffect(() => {
     const fetchSummary = async () => {
       try {
-        // const res = await fetch("/api/getFinancialSummary");
         const res = await axios.get("/api/transactions/getFinancialSummary");
 
-        // if (!res.ok) throw new Error("Ошибка при загрузке финансовых данных");
         if (res.status !== 200)
           throw new Error("Ошибка при загрузке финансовых данных");
-        // const json = await res.json();
         const json = res.data;
         setData(json);
       } catch (err: any) {
