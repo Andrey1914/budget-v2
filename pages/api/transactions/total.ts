@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import clientPromise from "@/lib/db";
+// import clientPromise from "@/lib/db";
+import { getDb } from "@/lib/db";
 import { getTokenFromRequest } from "@/utils/getTokenFromRequest";
 import { ObjectId } from "mongodb";
 
@@ -21,11 +22,12 @@ const getTotalAmount = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     const userId = new ObjectId(token.sub);
-    const client = await clientPromise;
-    const db = client.db("budget-v2");
+    // const client = await clientPromise;
+    // const db = client.db("budget-v2");
+    const db = await getDb();
 
     const startDate = new Date(
-      Date.UTC(new Date().getFullYear(), new Date().getMonth(), 1)
+      Date.UTC(new Date().getFullYear(), new Date().getMonth(), 1),
     );
     const endDate = new Date(
       Date.UTC(
@@ -34,8 +36,8 @@ const getTotalAmount = async (req: NextApiRequest, res: NextApiResponse) => {
         0,
         23,
         59,
-        59
-      )
+        59,
+      ),
     );
 
     const total = await db
@@ -61,7 +63,7 @@ const getTotalAmount = async (req: NextApiRequest, res: NextApiResponse) => {
   } catch (error: any) {
     console.error(
       `Failed to calculate total ${req.query.type}:`,
-      error.message
+      error.message,
     );
     res
       .status(500)

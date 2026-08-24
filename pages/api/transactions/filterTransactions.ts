@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import clientPromise from "@/lib/db";
+// import clientPromise from "@/lib/db";
+import { getDb } from "@/lib/db";
 import { getToken } from "next-auth/jwt";
 import { ObjectId } from "mongodb";
 
@@ -43,8 +44,9 @@ const filterTransactions = async (
   const skip = (parseInt(page as string) - 1) * 10;
 
   try {
-    const client = await clientPromise;
-    const db = client.db("budget-v2");
+    // const client = await clientPromise;
+    // const db = client.db("budget-v2");
+    const db = await getDb();
 
     const user = await db.collection("users").findOne({ _id: userId });
     const userCurrency = user?.currency || "";

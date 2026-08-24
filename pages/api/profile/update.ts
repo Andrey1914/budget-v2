@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { getToken } from "next-auth/jwt";
-import clientPromise from "@/lib/db";
+// import clientPromise from "@/lib/db";
+import { getDb } from "@/lib/db";
 import { ObjectId } from "mongodb";
 
 const secret = process.env.JWT_SECRET;
@@ -29,8 +30,9 @@ const updateProfile = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   try {
-    const client = await clientPromise;
-    const db = client.db("budget-v2");
+    // const client = await clientPromise;
+    // const db = client.db("budget-v2");
+    const db = await getDb();
 
     const updateFields: any = {
       name,
@@ -46,7 +48,7 @@ const updateProfile = async (req: NextApiRequest, res: NextApiResponse) => {
 
       {
         $set: updateFields,
-      }
+      },
     );
 
     if (result.modifiedCount === 0) {
@@ -59,7 +61,7 @@ const updateProfile = async (req: NextApiRequest, res: NextApiResponse) => {
       .collection("reviews")
       .updateMany(
         { userId: new ObjectId(userId) },
-        { $set: { username: name } }
+        { $set: { username: name } },
       );
 
     if (reviewResult.modifiedCount === 0) {

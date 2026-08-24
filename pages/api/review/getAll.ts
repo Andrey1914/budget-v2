@@ -1,11 +1,12 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import clientPromise from "@/lib/db";
+// import clientPromise from "@/lib/db";
+import { getDb } from "@/lib/db";
 
 const getAllReviews = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "GET") {
-    const client = await clientPromise;
-
-    const db = client.db("budget-v2");
+    // const client = await clientPromise;
+    // const db = client.db("budget-v2");
+    const db = await getDb();
 
     try {
       const reviews = await db.collection("reviews").find({}).toArray();
@@ -18,7 +19,7 @@ const getAllReviews = async (req: NextApiRequest, res: NextApiResponse) => {
 
           if (!user) {
             console.error(
-              `User not found for review with userId: ${review.userId}`
+              `User not found for review with userId: ${review.userId}`,
             );
           }
 
@@ -28,7 +29,7 @@ const getAllReviews = async (req: NextApiRequest, res: NextApiResponse) => {
             ...review,
             avatar,
           };
-        })
+        }),
       );
 
       res.status(200).json(reviewsWithAvatars);

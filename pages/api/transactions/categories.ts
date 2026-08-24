@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import clientPromise from "@/lib/db";
+// import clientPromise from "@/lib/db";
+import { getDb } from "@/lib/db";
 import { getTokenFromRequest } from "@/utils/getTokenFromRequest";
 import { ObjectId } from "mongodb";
 
@@ -21,8 +22,9 @@ const handleCategories = async (req: NextApiRequest, res: NextApiResponse) => {
 
     const collectionName = `${type}-categories`;
     const userId = new ObjectId(token.sub);
-    const client = await clientPromise;
-    const db = client.db("budget-v2");
+    // const client = await clientPromise;
+    // const db = client.db("budget-v2");
+    const db = await getDb();
 
     if (req.method === "POST") {
       const { name, description } = req.body;
@@ -54,7 +56,7 @@ const handleCategories = async (req: NextApiRequest, res: NextApiResponse) => {
         .collection(collectionName)
         .updateOne(
           { _id: new ObjectId(id), userId },
-          { $set: { name, description } }
+          { $set: { name, description } },
         );
       if (result.matchedCount === 0)
         return res.status(404).json({ error: "Category not found" });

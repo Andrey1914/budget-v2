@@ -1,10 +1,12 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import clientPromise from "@/lib/db";
+// import clientPromise from "@/lib/db";
+import { getDb } from "@/lib/db";
 
 const getAverageRating = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "GET") {
-    const client = await clientPromise;
-    const db = client.db("budget-v2");
+    // const client = await clientPromise;
+    // const db = client.db("budget-v2");
+    const db = await getDb();
 
     try {
       const reviews = await db.collection("reviews").find({}).toArray();
@@ -15,7 +17,7 @@ const getAverageRating = async (req: NextApiRequest, res: NextApiResponse) => {
 
       const totalRating = reviews.reduce(
         (acc, review) => acc + review.rating,
-        0
+        0,
       );
 
       const averageRating = totalRating / reviews.length;

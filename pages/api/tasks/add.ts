@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import clientPromise from "@/lib/db";
+// import clientPromise from "@/lib/db";
+import { getDb } from "@/lib/db";
 import { getToken } from "next-auth/jwt";
 import { ObjectId } from "mongodb";
 
@@ -14,11 +15,11 @@ const addTask = async (req: NextApiRequest, res: NextApiResponse) => {
 
     const { title, content, date } = req.body;
 
-    // const userId = new ObjectId(token);
     const userId = new ObjectId(token.sub);
 
-    const client = await clientPromise;
-    const db = client.db("budget-v2");
+    // const client = await clientPromise;
+    // const db = client.db("budget-v2");
+    const db = await getDb();
 
     const taskDate = new Date(date);
 

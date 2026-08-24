@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import clientPromise from "@/lib/db";
+// import clientPromise from "@/lib/db";
+import { getDb } from "@/lib/db";
 import { getToken } from "next-auth/jwt";
 import { ObjectId } from "mongodb";
 
@@ -13,11 +14,12 @@ const getReviews = async (req: NextApiRequest, res: NextApiResponse) => {
       return res.status(401).json({ error: "Unauthorized" });
     }
 
-    const client = await clientPromise;
+    // const client = await clientPromise;
+    const db = await getDb();
 
     const userId = new ObjectId(token.sub);
 
-    const db = client.db("budget-v2");
+    // const db = client.db("budget-v2");
 
     try {
       const reviews = await db

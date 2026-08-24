@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import bcrypt from "bcrypt";
-import clientPromise from "@/lib/db";
+// import clientPromise from "@/lib/db";
+import { getDb } from "@/lib/db";
 import sendConfirmationEmail from "@/pages/api/confirmEmail/sendConfirmationEmail";
 
 const generateVerificationCode = () => {
@@ -11,8 +12,9 @@ const register = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "POST") {
     const { name, email, password } = req.body;
 
-    const client = await clientPromise;
-    const db = client.db("budget-v2");
+    // const client = await clientPromise;
+    // const db = client.db("budget-v2");
+    const db = await getDb();
 
     try {
       const existingUser = await db.collection("users").findOne({ email });
