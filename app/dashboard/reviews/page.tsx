@@ -16,7 +16,7 @@ const Review: React.FC = () => {
   const [showSnackbar, setShowSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">(
-    "success"
+    "success",
   );
 
   const theme = useTheme();
@@ -26,7 +26,7 @@ const Review: React.FC = () => {
     text: string;
   }) => {
     try {
-      const response = await axios.post("/api/review/add", newReview);
+      const response = await axios.post("/api/review", newReview);
 
       if (response.data) {
         setReviews((prevReviews) => [...prevReviews, response.data]);
@@ -47,21 +47,18 @@ const Review: React.FC = () => {
 
   const handleEditReview = async (
     id: string,
-    updatedData: { rating: number; text: string }
+    updatedData: { rating: number; text: string },
   ) => {
     try {
-      const response = await axios.put(`/api/review/edit`, {
-        id,
-        ...updatedData,
-      });
+      const response = await axios.put(`/api/review/${id}`, updatedData);
 
       if (response.status === 200) {
         setReviews((prevReviews) =>
           prevReviews.map((review) =>
             review._id.toString() === id
               ? ({ ...review, ...updatedData } as IReview)
-              : review
-          )
+              : review,
+          ),
         );
         console.log("Отзыв успешно обновлен");
       }
@@ -72,13 +69,11 @@ const Review: React.FC = () => {
 
   const handleDeleteReview = async (id: string) => {
     try {
-      const response = await axios.delete("/api/review/delete", {
-        data: { id },
-      });
+      const response = await axios.delete(`/api/review/${id}`);
 
       if (response.status === 200) {
         setReviews((prevReviews) =>
-          prevReviews.filter((review) => review._id.toString() !== id)
+          prevReviews.filter((review) => review._id.toString() !== id),
         );
         console.log("Отзыв успешно удален");
       }
@@ -90,7 +85,7 @@ const Review: React.FC = () => {
   useEffect(() => {
     const fetchReviews = async () => {
       try {
-        const response = await axios.get<IReview[]>("/api/review/get");
+        const response = await axios.get<IReview[]>("/api/review");
         setReviews(response.data);
       } catch (error) {
         console.error("Ошибка при получении отзывов:", error);

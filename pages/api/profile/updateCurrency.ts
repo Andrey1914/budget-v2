@@ -1,35 +1,30 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextApiResponse } from "next";
 import { getDb } from "@/lib/db";
+import { withAuth, AuthenticatedNextApiRequest } from "@/lib/withAuth";
 
-export default async function handler(
-  req: NextApiRequest,
+export default withAuth(async function handler(
+  req: AuthenticatedNextApiRequest,
   res: NextApiResponse,
 ) {
   if (req.method !== "PUT") {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const { email, currency } = req.body;
+  const { currency } = req.body;
+  const email = req.body.email || req.user.email;
 
   if (!email || !currency) {
     return res.status(400).json({ error: "Email and currency are required" });
   }
 
-  try {
-    const db = await getDb();
-    const result = await db
-      .collection("users")
-      .updateOne({ email }, { $set: { currency } });
+  const db = await getDb();
+  const result = await db
+    .collection("users")
+    .updateOne({ email }, { $set: { currency } });
 
-    if (result.modifiedCount === 0) {
-      return res
-        .status(404)
-        .json({ error: "User not found or no changes made" });
-    }
-
-    res.status(200).json({ message: "Currency updated successfully" });
-  } catch (error) {
-    console.error("Error updating currency:", error);
-    res.status(500).json({ error: "Internal server error" });
+  if (result.matchedCount === 0) {
+    return res.status(404).json({ error: "User not found or no changes made" });
   }
-}
+
+  return res.status(200).json({ message: "Currency updated successfully" });
+});

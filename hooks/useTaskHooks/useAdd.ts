@@ -13,11 +13,11 @@ export const useAddTask = () => {
       content: string;
     }) => {
       const res = await axios.post(
-        "/api/tasks/add",
+        "/api/tasks",
         { title, content },
         {
           headers: { "Content-Type": "application/json" },
-        }
+        },
       );
 
       if (res.status !== 201) {

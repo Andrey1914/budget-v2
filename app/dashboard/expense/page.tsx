@@ -18,7 +18,7 @@ const AddExpense: React.FC = () => {
     currency: string;
     type: string;
   }) => {
-    const res = await axios.post("/api/transactions/add", data, {
+    const res = await axios.post("/api/transactions", data, {
       headers: {
         "Content-Type": "application/json",
       },

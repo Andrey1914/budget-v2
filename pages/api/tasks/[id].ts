@@ -1,43 +1,102 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextApiResponse } from "next";
 import { getDb } from "@/lib/db";
+import { withAuth, AuthenticatedNextApiRequest } from "@/lib/withAuth";
 import { ObjectId } from "mongodb";
-import { getToken } from "next-auth/jwt";
 
-const secret = process.env.JWT_SECRET;
+export default withAuth(async function handler(
+  req: AuthenticatedNextApiRequest,
+  res: NextApiResponse,
+) {
+  const { id } = req.query;
 
-const getTaskById = async (req: NextApiRequest, res: NextApiResponse) => {
-  if (req.method === "GET") {
-    const token = await getToken({ req, secret });
+  if (!id || typeof id !== "string" || !ObjectId.isValid(id)) {
+    return res.status(400).json({ error: "Invalid task ID" });
+  }
 
-    if (!token) {
-      return res.status(401).json({ error: "Unauthorized" });
-    }
+  const taskId = new ObjectId(id);
+  const userId = new ObjectId(req.user.userId);
+  const db = await getDb();
 
-    const { id } = req.query;
-
-    if (!ObjectId.isValid(id as string)) {
-      return res.status(400).json({ error: "Invalid task ID" });
-    }
-
-    const db = await getDb();
-
-    try {
+  switch (req.method) {
+    case "GET":
       const task = await db.collection("tasks").findOne({
-        _id: new ObjectId(id as string),
-        userId: new ObjectId(token.sub),
+        _id: taskId,
+        userId,
       });
 
       if (!task) {
         return res.status(404).json({ error: "Task not found" });
       }
 
-      res.status(200).json(task);
-    } catch (error: any) {
-      res.status(500).json({ error: error.message || "Failed to fetch task" });
-    }
-  } else {
-    res.status(405).json({ error: "Method not allowed" });
-  }
-};
+      return res.status(200).json(task);
 
-export default getTaskById;
+    case "PUT":
+      const { title, content, date } = req.body;
+
+      if (!title || !content) {
+        return res
+          .status(400)
+          .json({ error: "Title and content are required" });
+      }
+
+      const updateData: Record<string, any> = {
+        title,
+        content,
+        updatedAt: new Date(),
+      };
+
+      if (date) {
+        updateData.date = new Date(date);
+      }
+
+      const putResult = await db
+        .collection("tasks")
+        .updateOne({ _id: taskId, userId }, { $set: updateData });
+
+      if (putResult.matchedCount === 0) {
+        return res.status(404).json({ error: "Task not found" });
+      }
+
+      return res.status(200).json({ message: "Task updated successfully" });
+
+    case "PATCH":
+      const { completed } = req.body;
+
+      if (typeof completed !== "boolean") {
+        return res.status(400).json({ error: "Invalid completed status" });
+      }
+
+      const patchResult = await db
+        .collection("tasks")
+        .updateOne(
+          { _id: taskId, userId },
+          { $set: { completed, updatedAt: new Date() } },
+        );
+
+      if (patchResult.matchedCount === 0) {
+        return res.status(404).json({ error: "Task not found" });
+      }
+
+      return res
+        .status(200)
+        .json({ message: "Task status updated successfully" });
+
+    case "DELETE":
+      const deleteResult = await db.collection("tasks").deleteOne({
+        _id: taskId,
+        userId,
+      });
+
+      if (deleteResult.deletedCount === 0) {
+        return res.status(404).json({ error: "Task not found" });
+      }
+
+      return res.status(200).json({ message: "Task deleted successfully" });
+
+    default:
+      res.setHeader("Allow", ["GET", "PUT", "PATCH", "DELETE"]);
+      return res
+        .status(405)
+        .json({ error: `Method ${req.method} not allowed` });
+  }
+});

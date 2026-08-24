@@ -16,13 +16,12 @@ export const editExpense = async ({
   type: string;
 }) => {
   try {
-    const response = await axios.put(`/api/transactions/edit`, {
-      id: expenseId,
+    const response = await axios.put(`/api/transactions/${expenseId}`, {
+      type: "expense",
       amount,
       description,
       category,
       date,
-      type,
     });
     return { success: true, data: response.data };
   } catch (err: any) {

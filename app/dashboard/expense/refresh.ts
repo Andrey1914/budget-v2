@@ -2,7 +2,7 @@ import axios from "axios";
 import { Session, IExpense } from "@/interfaces";
 
 export const refreshExpenses = async (
-  session: Session
+  session: Session,
 ): Promise<IExpense[]> => {
   try {
     if (!session || !session.user) {
@@ -15,7 +15,7 @@ export const refreshExpenses = async (
       throw new Error("Token is not available");
     }
 
-    const res = await axios.get("/api/transactions/get", {
+    const res = await axios.get("/api/transactions", {
       params: { type: "expense" },
       headers: {
         Authorization: `Bearer ${token}`,

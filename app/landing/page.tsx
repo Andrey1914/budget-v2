@@ -45,7 +45,7 @@ const Landing: React.FC = () => {
     text: string;
   }) => {
     try {
-      const response = await axios.post("/api/review/add", newReview);
+      const response = await axios.post("/api/review", newReview);
 
       if (response.data) {
         setReviews((prevReviews) => [...prevReviews, response.data]);

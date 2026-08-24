@@ -8,12 +8,7 @@ export const deleteExpense = async (id: string) => {
       throw new Error("No session available");
     }
 
-    const res = await axios.delete("/api/transactions/delete", {
-      headers: {
-        "Content-Type": "application/json",
-      },
-      data: { id, type: "expense" },
-    });
+    const res = await axios.delete(`/api/transactions/${id}?type=expense`);
 
     if (res.status !== 200) {
       throw new Error("Failed to delete expense");
@@ -30,7 +25,7 @@ export const handleDelete = async (
   id: string,
   expenses: any[],
   setExpenses: React.Dispatch<React.SetStateAction<any[]>>,
-  setTotalExpense: React.Dispatch<React.SetStateAction<number>>
+  setTotalExpense: React.Dispatch<React.SetStateAction<number>>,
 ) => {
   try {
     const success = await deleteExpense(id);
