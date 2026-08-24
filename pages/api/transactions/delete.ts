@@ -1,5 +1,4 @@
 import { NextApiRequest, NextApiResponse } from "next";
-// import clientPromise from "@/lib/db";
 import { getDb } from "@/lib/db";
 import { getTokenFromRequest } from "@/utils/getTokenFromRequest";
 import { ObjectId } from "mongodb";
@@ -26,8 +25,7 @@ const deleteTransaction = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     const userId = new ObjectId(token.sub);
-    // const client = await clientPromise;
-    // const db = client.db("budget-v2");
+
     const db = await getDb();
 
     const result = await db.collection(type).deleteOne({

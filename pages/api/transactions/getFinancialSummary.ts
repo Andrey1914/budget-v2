@@ -1,5 +1,4 @@
 import { NextApiRequest, NextApiResponse } from "next";
-// import clientPromise from "@/lib/db";
 import { getDb } from "@/lib/db";
 import { getToken } from "next-auth/jwt";
 import { ObjectId } from "mongodb";
@@ -20,8 +19,7 @@ const getFinancialSummary = async (
   }
 
   const userId = new ObjectId(token.sub);
-  // const client = await clientPromise;
-  // const db = client.db("budget-v2");
+
   const db = await getDb();
 
   const now = new Date();

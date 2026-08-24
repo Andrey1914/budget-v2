@@ -1,6 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import bcrypt from "bcrypt";
-// import clientPromise from "@/lib/db";
 import { getDb } from "@/lib/db";
 import sendPasswordChangeEmail from "@/pages/api/forgotPassword/sendPasswordChangeEmail";
 
@@ -21,8 +20,6 @@ export default async function forgotPassword(
   }
 
   try {
-    // const client = await clientPromise;
-    // const db = client.db("budget-v2");
     const db = await getDb();
     const usersCollection = db.collection("users");
 

@@ -1,5 +1,4 @@
 import { NextApiRequest, NextApiResponse } from "next";
-// import clientPromise from "@/lib/db";
 import { getDb } from "@/lib/db";
 import { getTokenFromRequest } from "@/utils/getTokenFromRequest";
 import { ObjectId } from "mongodb";
@@ -22,8 +21,7 @@ const handleCategories = async (req: NextApiRequest, res: NextApiResponse) => {
 
     const collectionName = `${type}-categories`;
     const userId = new ObjectId(token.sub);
-    // const client = await clientPromise;
-    // const db = client.db("budget-v2");
+
     const db = await getDb();
 
     if (req.method === "POST") {

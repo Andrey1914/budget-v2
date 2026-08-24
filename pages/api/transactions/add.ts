@@ -1,5 +1,4 @@
 import { NextApiRequest, NextApiResponse } from "next";
-// import clientPromise from "@/lib/db";
 import { getDb } from "@/lib/db";
 import { getTokenFromRequest } from "@/utils/getTokenFromRequest";
 import { ObjectId } from "mongodb";
@@ -35,8 +34,6 @@ const addTransaction = async (req: NextApiRequest, res: NextApiResponse) => {
     const categoryId =
       typeof category === "string" ? new ObjectId(category) : category;
 
-    // const client = await clientPromise;
-    // const db = client.db("budget-v2");
     const db = await getDb();
 
     const collection = db.collection(type);

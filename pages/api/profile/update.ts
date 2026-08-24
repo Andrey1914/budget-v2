@@ -1,6 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { getToken } from "next-auth/jwt";
-// import clientPromise from "@/lib/db";
 import { getDb } from "@/lib/db";
 import { ObjectId } from "mongodb";
 
@@ -30,8 +29,6 @@ const updateProfile = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   try {
-    // const client = await clientPromise;
-    // const db = client.db("budget-v2");
     const db = await getDb();
 
     const updateFields: any = {

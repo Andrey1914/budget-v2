@@ -1,7 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getToken } from "next-auth/jwt";
 import { ObjectId } from "mongodb";
-// import clientPromise from "@/lib/db";
 import { getDb } from "@/lib/db";
 
 const secret = process.env.JWT_SECRET;
@@ -23,8 +22,6 @@ export default async function confirmEmail(
   const userId = new ObjectId(token.sub);
 
   try {
-    // const client = await clientPromise;
-    // const db = client.db("budget-v2");
     const db = await getDb();
 
     const user = await db.collection("users").findOne({ _id: userId });

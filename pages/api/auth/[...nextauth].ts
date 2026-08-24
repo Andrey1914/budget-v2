@@ -1,7 +1,6 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
-// import clientPromise from "@/lib/db";
 import { getDb } from "@/lib/db";
 import bcrypt from "bcrypt";
 
@@ -26,8 +25,6 @@ export default NextAuth({
           throw new Error("No credentials provided");
         }
 
-        // const client = await clientPromise;
-        // const db = client.db("budget-v2");
         const db = await getDb();
 
         const user = await db
@@ -95,8 +92,6 @@ export default NextAuth({
     async jwt({ token, user, account }) {
       if (user) {
         if (account?.provider === "google") {
-          // const client = await clientPromise;
-          // const db = client.db("budget-v2");
           const db = await getDb();
 
           const existingUser = await db
@@ -124,12 +119,10 @@ export default NextAuth({
             token.isVerified = existingUser.isVerified ?? true;
           }
 
-          // Google doesn't support rememberMe, default to 7 days
           const now = Math.floor(Date.now() / 1000);
           token.iat = now;
           token.exp = now + 7 * 24 * 60 * 60;
         } else {
-          // Credentials provider
           token.id = user.id;
           token.sub = user.id;
           token.currency = user.currency;
@@ -144,8 +137,6 @@ export default NextAuth({
         token.name = user.name;
         token.image = user.image;
       } else {
-        // const client = await clientPromise;
-        // const db = client.db("budget-v2");
         const db = await getDb();
 
         const dbUser = await db
