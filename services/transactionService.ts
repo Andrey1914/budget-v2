@@ -1,5 +1,4 @@
 import { NextApiRequest, NextApiResponse } from "next";
-// import clientPromise from "@/lib/db";
 import { getDb } from "@/lib/db";
 import { ObjectId } from "mongodb";
 import { getTokenFromRequest } from "@/utils/getTokenFromRequest";
@@ -23,8 +22,6 @@ export const getTransactionById = async (
     return res.status(400).json({ error: "Invalid ID." });
   }
 
-  // const client = await clientPromise;
-  // const db = client.db("budget-v2");
   const db = await getDb();
 
   try {

@@ -1,11 +1,8 @@
 import { NextApiRequest, NextApiResponse } from "next";
-// import clientPromise from "@/lib/db";
 import { getDb } from "@/lib/db";
 
 const getAverageRating = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "GET") {
-    // const client = await clientPromise;
-    // const db = client.db("budget-v2");
     const db = await getDb();
 
     try {

@@ -1,5 +1,4 @@
 import { NextApiRequest, NextApiResponse } from "next";
-// import clientPromise from "@/lib/db";
 import { getDb } from "@/lib/db";
 
 export default async function handler(
@@ -16,8 +15,6 @@ export default async function handler(
   }
 
   try {
-    // const client = await clientPromise;
-    // const db = client.db("budget-v2");
     const db = await getDb();
     const user = await db.collection("users").findOne({ email });
 
