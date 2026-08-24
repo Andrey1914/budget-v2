@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import clientPromise from "@/lib/db";
+// import clientPromise from "@/lib/db";
+import { getDb } from "@/lib/db";
 import { ObjectId } from "mongodb";
 
 const updateTask = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -14,8 +15,9 @@ const updateTask = async (req: NextApiRequest, res: NextApiResponse) => {
       return res.status(400).json({ error: "Invalid request body" });
     }
 
-    const client = await clientPromise;
-    const db = client.db("budget-v2");
+    // const client = await clientPromise;
+    // const db = client.db("budget-v2");
+    const db = await getDb();
 
     const result = await db
       .collection("tasks")

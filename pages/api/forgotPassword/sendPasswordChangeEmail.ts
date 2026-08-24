@@ -5,8 +5,6 @@ const sendPasswordChangeEmail = async (email: string) => {
   const apiKey = client.authentications["api-key"];
   apiKey.apiKey = process.env.BREVO_API_KEY!;
   const { BREEVO_SENDER_EMAIL, BREEVO_SENDER_NAME } = process.env;
-  //   const SENDER_EMAIL = process.env.BREEVO_SENDER_EMAIL;
-  //   const SENDER_NAME = process.env.BREEVO_SENDER_NAME;
 
   const emailApi = new Brevo.TransactionalEmailsApi();
 

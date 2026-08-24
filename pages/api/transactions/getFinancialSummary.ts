@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import clientPromise from "@/lib/db";
+// import clientPromise from "@/lib/db";
+import { getDb } from "@/lib/db";
 import { getToken } from "next-auth/jwt";
 import { ObjectId } from "mongodb";
 
@@ -7,7 +8,7 @@ const secret = process.env.JWT_SECRET;
 
 const getFinancialSummary = async (
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) => {
   if (req.method !== "GET") {
     return res.status(405).json({ error: "Method not allowed" });
@@ -19,8 +20,9 @@ const getFinancialSummary = async (
   }
 
   const userId = new ObjectId(token.sub);
-  const client = await clientPromise;
-  const db = client.db("budget-v2");
+  // const client = await clientPromise;
+  // const db = client.db("budget-v2");
+  const db = await getDb();
 
   const now = new Date();
   const currentMonthStart = new Date(now.getFullYear(), now.getMonth(), 1);
@@ -30,7 +32,7 @@ const getFinancialSummary = async (
     0,
     23,
     59,
-    59
+    59,
   );
 
   try {
@@ -41,7 +43,7 @@ const getFinancialSummary = async (
     const getTotal = async (
       collection: "income" | "expense",
       dateFilter: any,
-      currencyFilter: any
+      currencyFilter: any,
     ) => {
       const [result] = await db
         .collection(collection)
@@ -90,12 +92,12 @@ const getFinancialSummary = async (
     const carryOverIncome = await getTotal(
       "income",
       { $lt: currentMonthStart },
-      userCurrency
+      userCurrency,
     );
     const carryOverExpense = await getTotal(
       "expense",
       { $lt: currentMonthStart },
-      userCurrency
+      userCurrency,
     );
     const carryOver = carryOverIncome - carryOverExpense;
 
@@ -105,7 +107,7 @@ const getFinancialSummary = async (
         $gte: currentMonthStart,
         $lte: currentMonthEnd,
       },
-      userCurrency
+      userCurrency,
     );
 
     const totalExpenseMain = await getTotal(
@@ -114,7 +116,7 @@ const getFinancialSummary = async (
         $gte: currentMonthStart,
         $lte: currentMonthEnd,
       },
-      userCurrency
+      userCurrency,
     );
 
     const foreignIncome = await getGroupedByCurrency("income");

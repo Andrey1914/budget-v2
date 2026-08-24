@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import clientPromise from "@/lib/db";
+// import clientPromise from "@/lib/db";
+import { getDb } from "@/lib/db";
 import { getToken } from "next-auth/jwt";
 import { ObjectId } from "mongodb";
 
@@ -31,8 +32,9 @@ const editReview = async (req: NextApiRequest, res: NextApiResponse) => {
 
     const userId = token.sub;
 
-    const client = await clientPromise;
-    const db = client.db("budget-v2");
+    // const client = await clientPromise;
+    // const db = client.db("budget-v2");
+    const db = await getDb();
 
     try {
       const result = await db.collection("reviews").updateOne(
@@ -43,7 +45,7 @@ const editReview = async (req: NextApiRequest, res: NextApiResponse) => {
             text,
             updatedAt: new Date(),
           },
-        }
+        },
       );
 
       if (result.matchedCount === 0) {

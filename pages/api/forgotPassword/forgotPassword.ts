@@ -1,11 +1,12 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import bcrypt from "bcrypt";
-import clientPromise from "@/lib/db";
+// import clientPromise from "@/lib/db";
+import { getDb } from "@/lib/db";
 import sendPasswordChangeEmail from "@/pages/api/forgotPassword/sendPasswordChangeEmail";
 
 export default async function forgotPassword(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   if (req.method !== "POST") {
     return res.status(405).json({ message: "Method not allowed" });
@@ -20,15 +21,16 @@ export default async function forgotPassword(
   }
 
   try {
-    const client = await clientPromise;
-    const db = client.db("budget-v2");
+    // const client = await clientPromise;
+    // const db = client.db("budget-v2");
+    const db = await getDb();
     const usersCollection = db.collection("users");
 
     const hashedPassword = await bcrypt.hash(newPassword, 10);
 
     const result = await usersCollection.updateOne(
       { email },
-      { $set: { password: hashedPassword } }
+      { $set: { password: hashedPassword } },
     );
 
     if (result.matchedCount === 0) {

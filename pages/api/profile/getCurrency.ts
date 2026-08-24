@@ -1,9 +1,10 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import clientPromise from "@/lib/db";
+// import clientPromise from "@/lib/db";
+import { getDb } from "@/lib/db";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   if (req.method !== "GET") {
     return res.status(405).json({ error: "Method not allowed" });
@@ -15,8 +16,9 @@ export default async function handler(
   }
 
   try {
-    const client = await clientPromise;
-    const db = client.db("budget-v2");
+    // const client = await clientPromise;
+    // const db = client.db("budget-v2");
+    const db = await getDb();
     const user = await db.collection("users").findOne({ email });
 
     if (!user) {

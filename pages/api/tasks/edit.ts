@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import clientPromise from "@/lib/db";
+// import clientPromise from "@/lib/db";
+import { getDb } from "@/lib/db";
 import { getToken } from "next-auth/jwt";
 import { ObjectId } from "mongodb";
 
@@ -19,18 +20,18 @@ const editTask = async (req: NextApiRequest, res: NextApiResponse) => {
       return res.status(400).json({ error: "Invalid input" });
     }
 
-    // const userId = new ObjectId(token);
-    const userId = new ObjectId(token.sub); // Use token.sub instead of token.id
+    const userId = new ObjectId(token.sub);
 
-    const client = await clientPromise;
-    const db = client.db("budget-v2");
+    // const client = await clientPromise;
+    // const db = client.db("budget-v2");
+    const db = await getDb();
 
     try {
       const result = await db
         .collection("tasks")
         .updateOne(
           { _id: new ObjectId(id), userId: userId },
-          { $set: { title, content, updatedAt: new Date() } }
+          { $set: { title, content, updatedAt: new Date() } },
         );
 
       if (result.matchedCount === 0) {
