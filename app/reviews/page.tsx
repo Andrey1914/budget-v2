@@ -16,7 +16,7 @@ const AllReviewsPage: React.FC = () => {
   useEffect(() => {
     const fetchReviews = async () => {
       try {
-        const response = await axios.get<IReview[]>("/api/review/getAll");
+        const response = await axios.get<IReview[]>("/api/review?all=true");
         setReviews(response.data);
       } catch (error) {
         console.error("Ошибка при получении отзывов:", error);

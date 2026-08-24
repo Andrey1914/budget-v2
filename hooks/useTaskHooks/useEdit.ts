@@ -14,10 +14,9 @@ export const useEditTask = () => {
       taskId: string;
       title: string;
       content: string;
-      date: string;
+      date?: string;
     }) => {
-      const res = await axios.put(`/api/tasks/edit`, {
-        id: taskId,
+      const res = await axios.put(`/api/tasks/${taskId}`, {
         title,
         content,
         date,

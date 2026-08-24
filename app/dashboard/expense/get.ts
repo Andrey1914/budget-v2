@@ -13,7 +13,7 @@ export const getExpenses = async (session: Session): Promise<IExpense[]> => {
       throw new Error("Token is not available");
     }
 
-    const res = await axios.get("/api/transactions/get", {
+    const res = await axios.get("/api/transactions", {
       params: { type: "expense" },
       headers: {
         Authorization: `Bearer ${token}`,

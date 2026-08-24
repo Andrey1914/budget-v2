@@ -17,18 +17,12 @@ export const useUpdateTaskStatus = (session: Session | null) => {
         throw new Error("Session or token is not available");
       }
 
-      const res = await axios.patch(
-        "/api/tasks/update",
-        { id, completed: !completed },
-        {
-          headers: {
-            Authorization: `Bearer ${session.user}`,
-          },
-        }
-      );
+      const res = await axios.patch(`/api/tasks/${id}`, {
+        completed: !completed,
+      });
 
       if (res.status !== 200) {
-        throw new Error("Failed to update task");
+        throw new Error("Failed to update task status");
       }
 
       return res.data;

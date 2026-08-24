@@ -11,11 +11,7 @@ export const useDeleteTask = (session: Session | null) => {
         throw new Error("Session or token is not available");
       }
 
-      const res = await axios.delete(`/api/tasks/delete?id=${id}`, {
-        headers: {
-          Authorization: `Bearer ${session.user}`,
-        },
-      });
+      const res = await axios.delete(`/api/tasks/${id}`);
 
       if (res.status !== 200) {
         throw new Error("Failed to delete task");

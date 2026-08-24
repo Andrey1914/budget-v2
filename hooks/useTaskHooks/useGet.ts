@@ -10,13 +10,7 @@ export const useGetTasks = (session: Session | null) => {
         throw new Error("Session or token is not available");
       }
 
-      const token = session.user;
-
-      const res = await axios.get("/api/tasks/get", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const res = await axios.get("/api/tasks");
 
       if (res.status !== 200) {
         throw new Error("Failed to fetch tasks");
