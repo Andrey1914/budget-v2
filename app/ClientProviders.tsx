@@ -5,17 +5,42 @@ import { signOut, SessionProvider } from "next-auth/react";
 import { Session } from "next-auth";
 import { CacheProvider } from "@emotion/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ThemeProvider, Box } from "@mui/material";
-import CssBaseline from "@mui/material/CssBaseline";
-import { lightTheme, darkTheme } from "@/app/styles/theme";
+import { Box } from "@mui/material";
 import createEmotionCache from "@/lib/createEmotionCache";
 import useIdleLogout from "@/hooks/useIdleLogout";
+import { CustomThemeProvider, useColorMode } from "@/context/ThemeContext";
 
 import Footer from "@/components/Footer";
 import Header from "@/components/Header/Header";
 
 const clientSideEmotionCache = createEmotionCache();
-const queryClient = new QueryClient();
+
+function LayoutContent({ children }: { children: React.ReactNode }) {
+  const { isDarkMode, toggleTheme } = useColorMode();
+
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        minHeight: "100vh",
+      }}
+    >
+      <Header toggleTheme={toggleTheme} isDarkMode={isDarkMode} />
+      <Box
+        sx={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          minHeight: "600px",
+        }}
+      >
+        {children}
+      </Box>
+      <Footer />
+    </Box>
+  );
+}
 
 export default function ClientProviders({
   children,
@@ -24,14 +49,29 @@ export default function ClientProviders({
   children: React.ReactNode;
   pageProps?: { session?: Session };
 }) {
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            staleTime: 60 * 1000,
+            refetchOnWindowFocus: false,
+          },
+        },
+      }),
+  );
+
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
 
     const handleVisibilityChange = () => {
       if (document.hidden) {
-        timeoutId = setTimeout(() => {
-          signOut();
-        }, 20 * 60 * 1000);
+        timeoutId = setTimeout(
+          () => {
+            signOut();
+          },
+          20 * 60 * 1000,
+        );
       } else {
         clearTimeout(timeoutId);
       }
@@ -44,57 +84,18 @@ export default function ClientProviders({
       clearTimeout(timeoutId);
     };
   }, []);
+
   useIdleLogout();
 
-  const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
-    if (typeof window === "undefined") return false;
-    return localStorage.getItem("theme") === "dark";
-  });
-
-  const [hydrated, setHydrated] = useState(false);
-
-  useEffect(() => {
-    setHydrated(true);
-  }, []);
-
-  if (!hydrated) {
-    return null;
-  }
-
-  const toggleTheme = () => {
-    const newTheme = !isDarkMode;
-    setIsDarkMode(newTheme);
-    localStorage.setItem("theme", newTheme ? "dark" : "light");
-  };
   return (
     <CacheProvider value={clientSideEmotionCache}>
-      <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
-        <CssBaseline />
+      <CustomThemeProvider>
         <SessionProvider session={pageProps.session}>
           <QueryClientProvider client={queryClient}>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                minHeight: "100vh",
-              }}
-            >
-              <Header toggleTheme={toggleTheme} isDarkMode={isDarkMode} />
-              <Box
-                sx={{
-                  flex: 1,
-                  display: "flex",
-                  flexDirection: "column",
-                  minHeight: "600px",
-                }}
-              >
-                {children}
-              </Box>
-              <Footer />
-            </Box>
+            <LayoutContent>{children}</LayoutContent>
           </QueryClientProvider>
         </SessionProvider>
-      </ThemeProvider>
+      </CustomThemeProvider>
     </CacheProvider>
   );
 }
