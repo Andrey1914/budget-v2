@@ -1,6 +1,6 @@
 import { NextApiResponse } from "next";
-import { getDb } from "@/lib/db";
 import { withAuth, AuthenticatedNextApiRequest } from "@/lib/withAuth";
+import { userService } from "@/services/userService";
 
 export default withAuth(async function handler(
   req: AuthenticatedNextApiRequest,
@@ -17,12 +17,8 @@ export default withAuth(async function handler(
     return res.status(400).json({ error: "Email and currency are required" });
   }
 
-  const db = await getDb();
-  const result = await db
-    .collection("users")
-    .updateOne({ email }, { $set: { currency } });
-
-  if (result.matchedCount === 0) {
+  const updated = await userService.updateUserCurrency(email, currency);
+  if (!updated) {
     return res.status(404).json({ error: "User not found or no changes made" });
   }
 

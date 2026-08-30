@@ -1,7 +1,6 @@
 import { NextApiResponse } from "next";
-import { getDb } from "@/lib/db";
 import { withAuth, AuthenticatedNextApiRequest } from "@/lib/withAuth";
-import { ObjectId } from "mongodb";
+import { taskService } from "@/services/taskService";
 
 export default withAuth(async function handler(
   req: AuthenticatedNextApiRequest,
@@ -9,88 +8,37 @@ export default withAuth(async function handler(
 ) {
   const { id } = req.query;
 
-  if (!id || typeof id !== "string" || !ObjectId.isValid(id)) {
+  if (!id || typeof id !== "string") {
     return res.status(400).json({ error: "Invalid task ID" });
   }
 
-  const taskId = new ObjectId(id);
-  const userId = new ObjectId(req.user.userId);
-  const db = await getDb();
+  const userId = req.user.userId;
 
   switch (req.method) {
     case "GET":
-      const task = await db.collection("tasks").findOne({
-        _id: taskId,
-        userId,
-      });
-
-      if (!task) {
-        return res.status(404).json({ error: "Task not found" });
-      }
-
+      const task = await taskService.getTaskById(id, userId);
+      if (!task) return res.status(404).json({ error: "Task not found" });
       return res.status(200).json(task);
 
     case "PUT":
-      const { title, content, date } = req.body;
-
-      if (!title || !content) {
-        return res
-          .status(400)
-          .json({ error: "Title and content are required" });
-      }
-
-      const updateData: Record<string, any> = {
-        title,
-        content,
-        updatedAt: new Date(),
-      };
-
-      if (date) {
-        updateData.date = new Date(date);
-      }
-
-      const putResult = await db
-        .collection("tasks")
-        .updateOne({ _id: taskId, userId }, { $set: updateData });
-
-      if (putResult.matchedCount === 0) {
-        return res.status(404).json({ error: "Task not found" });
-      }
-
+      const updated = await taskService.updateTask(id, userId, req.body);
+      if (!updated) return res.status(404).json({ error: "Task not found" });
       return res.status(200).json({ message: "Task updated successfully" });
 
     case "PATCH":
       const { completed } = req.body;
-
       if (typeof completed !== "boolean") {
         return res.status(400).json({ error: "Invalid completed status" });
       }
-
-      const patchResult = await db
-        .collection("tasks")
-        .updateOne(
-          { _id: taskId, userId },
-          { $set: { completed, updatedAt: new Date() } },
-        );
-
-      if (patchResult.matchedCount === 0) {
-        return res.status(404).json({ error: "Task not found" });
-      }
-
+      const patched = await taskService.updateTaskStatus(id, userId, completed);
+      if (!patched) return res.status(404).json({ error: "Task not found" });
       return res
         .status(200)
         .json({ message: "Task status updated successfully" });
 
     case "DELETE":
-      const deleteResult = await db.collection("tasks").deleteOne({
-        _id: taskId,
-        userId,
-      });
-
-      if (deleteResult.deletedCount === 0) {
-        return res.status(404).json({ error: "Task not found" });
-      }
-
+      const deleted = await taskService.deleteTask(id, userId);
+      if (!deleted) return res.status(404).json({ error: "Task not found" });
       return res.status(200).json({ message: "Task deleted successfully" });
 
     default:

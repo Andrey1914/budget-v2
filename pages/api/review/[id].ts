@@ -1,7 +1,6 @@
 import { NextApiResponse } from "next";
-import { getDb } from "@/lib/db";
 import { withAuth, AuthenticatedNextApiRequest } from "@/lib/withAuth";
-import { ObjectId } from "mongodb";
+import { reviewService } from "@/services/reviewService";
 
 export default withAuth(async function handler(
   req: AuthenticatedNextApiRequest,
@@ -9,13 +8,11 @@ export default withAuth(async function handler(
 ) {
   const { id } = req.query;
 
-  if (!id || typeof id !== "string" || !ObjectId.isValid(id)) {
+  if (!id || typeof id !== "string") {
     return res.status(400).json({ error: "Invalid review ID" });
   }
 
-  const reviewId = new ObjectId(id);
-  const userId = new ObjectId(req.user.userId);
-  const db = await getDb();
+  const userId = req.user.userId;
 
   switch (req.method) {
     case "PUT":
@@ -33,32 +30,17 @@ export default withAuth(async function handler(
           .json({ error: "Text must be a non-empty string" });
       }
 
-      const result = await db.collection("reviews").updateOne(
-        { _id: reviewId, userId },
-        {
-          $set: {
-            rating,
-            text,
-            updatedAt: new Date(),
-          },
-        },
-      );
-
-      if (result.matchedCount === 0) {
-        return res.status(404).json({ error: "Review not found" });
-      }
+      const updated = await reviewService.updateReview(id, userId, {
+        rating,
+        text,
+      });
+      if (!updated) return res.status(404).json({ error: "Review not found" });
 
       return res.status(200).json({ message: "Review updated successfully" });
 
     case "DELETE":
-      const deleteResult = await db.collection("reviews").deleteOne({
-        _id: reviewId,
-        userId,
-      });
-
-      if (deleteResult.deletedCount === 0) {
-        return res.status(404).json({ error: "Review not found" });
-      }
+      const deleted = await reviewService.deleteReview(id, userId);
+      if (!deleted) return res.status(404).json({ error: "Review not found" });
 
       return res.status(200).json({ message: "Review deleted successfully" });
 
