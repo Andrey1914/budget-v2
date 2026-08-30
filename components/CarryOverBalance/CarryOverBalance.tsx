@@ -5,10 +5,11 @@ import { useFinancialSummary } from "@/hooks/useFinancialSummary";
 import ForeignCurrencySummary from "@/components/Transactions/ForeignCurrencySummary";
 
 const CarryOverBalance: React.FC = () => {
-  const { data, loading, error } = useFinancialSummary();
+  const { data, isLoading, error } = useFinancialSummary();
 
-  if (loading) return <p>Загрузка...</p>;
-  if (error || !data) return <p>Ошибка: {error}</p>;
+  if (isLoading) return <p>Загрузка...</p>;
+  if (error || !data)
+    return <p>Ошибка: {error?.message || "Ошибка загрузки"}</p>;
 
   const { carryOver, totalIncome, totalExpense, currency } = data;
 

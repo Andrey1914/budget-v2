@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
@@ -8,18 +8,17 @@ import ExpensesList from "@/components/Expense/ExpensesList";
 import IncomesList from "@/components/Income/IncomesList";
 import TasksList from "@/components/Tasks/TasksList";
 import CarryOverBalance from "@/components/CarryOverBalance/CarryOverBalance";
+import { useFinancialSummary } from "@/hooks/useFinancialSummary";
 
-import { Box, Grid2, Typography } from "@mui/material";
+import { Box, Grid2, Typography, CircularProgress } from "@mui/material";
 
 const Dashboard: React.FC = () => {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const { data: summary, isLoading } = useFinancialSummary();
 
-  const [carryOverBalance, setCarryOverBalance] = useState<number>(0);
   const [totalIncome, setTotalIncome] = useState<number>(0);
   const [totalExpense, setTotalExpense] = useState<number>(0);
-
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (status === "loading") return;
@@ -27,34 +26,22 @@ const Dashboard: React.FC = () => {
       router.push("/auth/login");
     } else if (!session.user.isVerified) {
       router.push("/auth/verify-email");
-    } else {
-      fetchCarryOverBalanceData();
     }
   }, [session, status, router]);
 
-  const fetchCarryOverBalanceData = async () => {
-    try {
-      const response = await fetch(`/api/transactions/getFinancialSummary`);
-
-      const data = await response.json();
-
-      setCarryOverBalance(data.carryOver);
-
-      setTotalIncome(data.totalIncome);
-      setTotalExpense(data.totalExpense);
-    } catch (error) {
-      console.error("Ошибка загрузки данных:", error);
-    } finally {
-      setLoading(false);
+  useEffect(() => {
+    if (summary) {
+      setTotalIncome(summary.totalIncome);
+      setTotalExpense(summary.totalExpense);
     }
+  }, [summary]);
+
+  const handleIncomesUpdate = (updatedIncomes: number) => {
+    setTotalIncome(updatedIncomes);
   };
 
   const handleExpensesUpdate = (updatedExpenses: number) => {
     setTotalExpense(updatedExpenses);
-  };
-
-  const handleIncomesUpdate = (updatedIncomes: number) => {
-    setTotalIncome(updatedIncomes);
   };
 
   if (!session || !session.user.isVerified) {
@@ -62,12 +49,16 @@ const Dashboard: React.FC = () => {
   }
 
   return (
-    <>
-      <Box sx={{ p: 4 }}>
-        <Typography variant="h3" component="h1">
-          Welcome to Finance App, {session.user.name}
-        </Typography>
+    <Box sx={{ p: 4 }}>
+      <Typography variant="h3" component="h1" gutterBottom>
+        Welcome to Finance App, {session.user.name}
+      </Typography>
 
+      {isLoading ? (
+        <Box sx={{ display: "flex", justifyContent: "center", py: 8 }}>
+          <CircularProgress />
+        </Box>
+      ) : (
         <Grid2 container spacing={4} direction={{ xs: "column", md: "row" }}>
           <Grid2
             container
@@ -104,8 +95,8 @@ const Dashboard: React.FC = () => {
             </Grid2>
           </Grid2>
         </Grid2>
-      </Box>
-    </>
+      )}
+    </Box>
   );
 };
 
