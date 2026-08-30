@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
+import apiClient from "@/lib/apiClient";
 
-interface SummaryData {
+export interface SummaryData {
   currency: string;
   carryOver: number;
   totalIncome: number;
@@ -12,28 +12,14 @@ interface SummaryData {
 }
 
 export const useFinancialSummary = () => {
-  const [data, setData] = useState<SummaryData | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchSummary = async () => {
-      try {
-        const res = await axios.get("/api/transactions/getFinancialSummary");
-
-        if (res.status !== 200)
-          throw new Error("Ошибка при загрузке финансовых данных");
-        const json = res.data;
-        setData(json);
-      } catch (err: any) {
-        setError(err.message || "Неизвестная ошибка");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchSummary();
-  }, []);
-
-  return { data, loading, error };
+  return useQuery<SummaryData, Error>({
+    queryKey: ["financialSummary"],
+    queryFn: async () => {
+      const response = await apiClient.get<SummaryData>(
+        "/api/transactions/getFinancialSummary",
+      );
+      return response.data;
+    },
+    staleTime: 60 * 1000,
+  });
 };
