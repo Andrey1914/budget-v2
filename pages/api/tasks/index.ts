@@ -1,48 +1,26 @@
 import { NextApiResponse } from "next";
-import { getDb } from "@/lib/db";
 import { withAuth, AuthenticatedNextApiRequest } from "@/lib/withAuth";
-import { ObjectId } from "mongodb";
+import { taskService } from "@/services/taskService";
 
 export default withAuth(async function handler(
   req: AuthenticatedNextApiRequest,
   res: NextApiResponse,
 ) {
-  const userId = new ObjectId(req.user.userId);
-  const db = await getDb();
-
   switch (req.method) {
     case "GET":
-      const tasks = await db.collection("tasks").find({ userId }).toArray();
+      const tasks = await taskService.getTasks(req.user.userId);
       return res.status(200).json(tasks);
 
     case "POST":
-      const { title, content, date } = req.body;
-
+      const { title, content } = req.body;
       if (!title || !content) {
         return res
           .status(400)
           .json({ error: "Title and content are required" });
       }
 
-      const taskDate = date ? new Date(date) : new Date();
-
-      const result = await db.collection("tasks").insertOne({
-        userId,
-        title,
-        content,
-        date: taskDate,
-        completed: false,
-        createdAt: new Date(),
-      });
-
-      return res.status(201).json({
-        _id: result.insertedId,
-        userId,
-        title,
-        content,
-        date: taskDate,
-        completed: false,
-      });
+      const newTask = await taskService.createTask(req.user.userId, req.body);
+      return res.status(201).json(newTask);
 
     default:
       res.setHeader("Allow", ["GET", "POST"]);

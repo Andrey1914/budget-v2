@@ -1,7 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { getDb } from "@/lib/db";
+import { reviewService } from "@/services/reviewService";
 import { getToken } from "next-auth/jwt";
-import { ObjectId } from "mongodb";
 
 const secret = process.env.JWT_SECRET;
 
@@ -9,29 +8,14 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  const db = await getDb();
-
   switch (req.method) {
     case "GET":
       try {
         const { all } = req.query;
 
         if (all === "true") {
-          const reviews = await db.collection("reviews").find({}).toArray();
-
-          const reviewsWithAvatars = await Promise.all(
-            reviews.map(async (review) => {
-              const user = await db
-                .collection("users")
-                .findOne({ _id: review.userId });
-              return {
-                ...review,
-                avatar: user ? user.image : null,
-              };
-            }),
-          );
-
-          return res.status(200).json(reviewsWithAvatars);
+          const publicReviews = await reviewService.getAllPublicReviews();
+          return res.status(200).json(publicReviews);
         }
 
         const token = await getToken({ req, secret });
@@ -39,12 +23,7 @@ export default async function handler(
           return res.status(401).json({ error: "Unauthorized" });
         }
 
-        const userId = new ObjectId(token.sub);
-        const userReviews = await db
-          .collection("reviews")
-          .find({ userId })
-          .toArray();
-
+        const userReviews = await reviewService.getUserReviews(token.sub);
         return res.status(200).json(userReviews);
       } catch (error: any) {
         console.error("GET /api/review error:", error);
@@ -72,23 +51,14 @@ export default async function handler(
             .json({ error: "Text must be a non-empty string" });
         }
 
-        const userId = new ObjectId(token.sub);
         const username = token.name || "Anonymous";
-
-        const newReview = {
-          userId,
-          username,
+        const newReview = await reviewService.createReview(token.sub, {
           rating,
           text,
-          createdAt: new Date(),
-        };
-
-        const result = await db.collection("reviews").insertOne(newReview);
-
-        return res.status(201).json({
-          _id: result.insertedId,
-          ...newReview,
+          username,
         });
+
+        return res.status(201).json(newReview);
       } catch (error: any) {
         console.error("POST /api/review error:", error);
         return res.status(500).json({ error: "Failed to add review" });

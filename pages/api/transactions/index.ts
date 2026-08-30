@@ -1,14 +1,12 @@
 import { NextApiResponse } from "next";
-import { getDb } from "@/lib/db";
 import { withAuth, AuthenticatedNextApiRequest } from "@/lib/withAuth";
-import { ObjectId } from "mongodb";
+import { transactionService } from "@/services/transactionService";
 
 export default withAuth(async function handler(
   req: AuthenticatedNextApiRequest,
   res: NextApiResponse,
 ) {
-  const userId = new ObjectId(req.user.userId);
-  const db = await getDb();
+  const userId = req.user.userId;
 
   switch (req.method) {
     case "GET":
@@ -18,39 +16,17 @@ export default withAuth(async function handler(
         return res.status(400).json({ error: "Invalid transaction type" });
       }
 
-      const start = startDate
-        ? new Date(startDate as string)
-        : new Date(new Date().getFullYear(), new Date().getMonth(), 1);
-      const end = endDate
-        ? new Date(endDate as string)
-        : new Date(
-            new Date().getFullYear(),
-            new Date().getMonth() + 1,
-            0,
-            23,
-            59,
-            59,
-          );
-
-      const transactions = await db
-        .collection(type as string)
-        .find({
-          userId,
-          date: { $gte: start, $lte: end },
-        })
-        .toArray();
+      const transactions = await transactionService.getTransactions(
+        type,
+        userId,
+        startDate as string,
+        endDate as string,
+      );
 
       return res.status(200).json(transactions);
 
     case "POST":
-      const {
-        type: bodyType,
-        amount,
-        description,
-        category,
-        date,
-        currency,
-      } = req.body;
+      const { type: bodyType, amount, category, date, currency } = req.body;
 
       if (bodyType !== "income" && bodyType !== "expense") {
         return res.status(400).json({ error: "Invalid transaction type" });
@@ -60,31 +36,11 @@ export default withAuth(async function handler(
         return res.status(400).json({ error: "Missing required fields" });
       }
 
-      const transactionDate = new Date(date);
-      const categoryId =
-        typeof category === "string" ? new ObjectId(category) : category;
-
-      const collection = db.collection(bodyType);
-
-      const result = await collection.insertOne({
+      const newTransaction = await transactionService.createTransaction(
         userId,
-        amount: parseFloat(amount),
-        description: description || "",
-        category: categoryId,
-        date: transactionDate,
-        createdAt: new Date(),
-        currency,
-      });
-
-      return res.status(201).json({
-        _id: result.insertedId,
-        userId,
-        amount: parseFloat(amount),
-        description: description || "",
-        category: categoryId,
-        date: transactionDate,
-        currency,
-      });
+        req.body,
+      );
+      return res.status(201).json(newTransaction);
 
     default:
       res.setHeader("Allow", ["GET", "POST"]);
