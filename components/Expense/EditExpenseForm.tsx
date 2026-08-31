@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { editExpense } from "@/app/dashboard/expense/edit";
+import { useEditTransaction } from "@/hooks/useTransactions";
 
 import { Oval } from "react-loader-spinner";
 import { Box, TextField, Button } from "@mui/material";
@@ -18,21 +18,15 @@ const EditExpenseForm = ({
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
   const [date, setDate] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
-  const [showSnackbar, setShowSnackbar] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState("");
-  const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">(
-    "success"
-  );
+  const editTransactionMutation = useEditTransaction();
 
   useEffect(() => {
     const getExpenseById = async () => {
       try {
-        // const response = await axios.get(`/api/expense/${expenseId}`);
         const response = await axios.get(
-          `/api/transactions/${expenseId}?type=expense`
+          `/api/transactions/${expenseId}?type=expense`,
         );
 
         const { amount, description, category, date } = response.data;
@@ -50,43 +44,27 @@ const EditExpenseForm = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
     setError(null);
 
-    try {
-      const result = await editExpense({
-        expenseId,
+    editTransactionMutation.mutate(
+      {
+        id: expenseId,
+        type: "expense",
         amount,
         description,
         category,
         date,
-        type: "expense",
-      });
-
-      if (result.success) {
-        refreshExpenses(result.data);
-        onClose(result.data);
-
-        setSnackbarMessage("Expense edited successfully!");
-        setSnackbarSeverity("success");
-        setShowSnackbar(true);
-
-        console.log("Expense edited successfully");
-      } else {
-        setError(result.error);
-        setSnackbarMessage("Failed to edit Expense");
-        setSnackbarSeverity("error");
-        setShowSnackbar(true);
-      }
-    } catch (error: any) {
-      setError(error.message || "An unexpected error occurred.");
-      setSnackbarMessage("Failed to edit expense");
-      setSnackbarSeverity("error");
-      setShowSnackbar(true);
-      console.error("Error editing expense:", error);
-    } finally {
-      setLoading(false);
-    }
+      },
+      {
+        onSuccess: (data) => {
+          refreshExpenses(data);
+          onClose(data);
+        },
+        onError: (err: any) => {
+          setError(err.message || "Failed to edit expense");
+        },
+      },
+    );
   };
 
   return (
@@ -144,8 +122,12 @@ const EditExpenseForm = ({
           onChange={(e) => setDate(e.target.value)}
         />
       </div>
-      <Button variant="outlined" type="submit" disabled={loading}>
-        {loading ? (
+      <Button
+        variant="outlined"
+        type="submit"
+        disabled={editTransactionMutation.isPending}
+      >
+        {editTransactionMutation.isPending ? (
           <Oval
             height="30"
             width="30"

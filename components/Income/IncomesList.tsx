@@ -4,9 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
-import { handleDelete } from "@/app/dashboard/income/delete";
-import { getIncomes } from "@/app/dashboard/income/get";
-import { refreshIncomes } from "@/app/dashboard/income/refresh";
+import { useTransactions, useDeleteTransaction } from "@/hooks/useTransactions";
 import { Session, IIncome } from "@/interfaces";
 import EditIncomeForm from "@/components/Income/EditIncomeForm";
 import emptyList from "@/public/empty-list.webp";
@@ -27,67 +25,39 @@ const IncomesList: React.FC<{
   totalIncome: number;
   onUpdate: (updatedIncomes: number) => void;
 }> = ({ totalIncome, onUpdate }) => {
-  const { data: session, status } = useSession() as {
+  const { data: session } = useSession() as {
     data: Session | null;
     status: string;
   };
   const router = useRouter();
   const theme = useTheme();
 
-  const [income, setIncome] = useState<IIncome[]>([]);
-  const [error, setError] = useState<string | null>(null);
+  const { data: incomesData, error, refetch } = useTransactions("income");
+  const deleteTransactionMutation = useDeleteTransaction();
   const [editingIncomeId, setEditingIncomeId] = useState<string | null>(null);
 
   const userCurrency = session?.user?.currency;
 
   useEffect(() => {
-    if (session) {
-      const getIncomesData = async () => {
-        try {
-          const incomesData = await getIncomes(session);
+    if (incomesData && session?.user?.currency) {
+      const total = (incomesData as IIncome[])
+        .filter((item) => item.currency === session.user.currency)
+        .reduce((acc: number, item: IIncome) => acc + item.amount, 0);
 
-          setIncome(incomesData);
-
-          const total = incomesData
-            .filter((item) => item.currency === session.user.currency)
-            .reduce((acc: number, item: IIncome) => acc + item.amount, 0);
-
-          onUpdate(total);
-        } catch (err) {
-          console.error("Error fetching incomes:", err);
-          setError((err as Error).message);
-        }
-      };
-
-      if (session) {
-        getIncomesData();
-      }
+      onUpdate(total);
     }
-  }, [session, status, onUpdate]);
+  }, [incomesData, session, onUpdate]);
 
   const handleEdit = (id: string) => {
     setEditingIncomeId(id);
   };
 
-  const reloadData = async () => {
-    if (!session) {
-      setError("Session or token is not available");
-      return;
-    }
+  const handleDeleteIncome = (id: string) => {
+    deleteTransactionMutation.mutate({ id, type: "income" });
+  };
 
-    try {
-      const incomesData = await refreshIncomes(session);
-
-      setIncome(incomesData);
-
-      const total = incomesData
-        .filter((item) => item.currency === session.user.currency)
-        .reduce((acc: number, item: IIncome) => acc + item.amount, 0);
-
-      onUpdate(total);
-    } catch (err) {
-      setError((err as Error).message);
-    }
+  const reloadData = () => {
+    refetch();
   };
 
   const hendleAddClick = () => {
@@ -98,9 +68,11 @@ const IncomesList: React.FC<{
     return null;
   }
 
+  const income = (incomesData || []) as IIncome[];
+
   return (
     <>
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {error && <p style={{ color: "red" }}>{(error as Error).message}</p>}
       <Box sx={{ p: 4 }}>
         <Typography variant="h3" component="h2">
           Incomes
@@ -179,17 +151,14 @@ const IncomesList: React.FC<{
                   {item.amount} {item.currency} - {item.description}
                 </Typography>
                 <Box sx={{ display: "flex", gap: 3 }}>
-                  <Edit onClick={() => handleEdit(item._id.toString())} />
+                  <Edit
+                    sx={{ cursor: "pointer" }}
+                    onClick={() => handleEdit(item._id.toString())}
+                  />
 
                   <Delete
-                    onClick={() =>
-                      handleDelete(
-                        item._id.toString(),
-                        income,
-                        setIncome,
-                        reloadData
-                      )
-                    }
+                    sx={{ cursor: "pointer" }}
+                    onClick={() => handleDeleteIncome(item._id.toString())}
                   />
                 </Box>
               </Paper>
