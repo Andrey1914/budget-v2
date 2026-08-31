@@ -1,19 +1,22 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import apiClient from "@/lib/apiClient";
 import { useEditTransaction } from "@/hooks/useTransactions";
-
 import { Oval } from "react-loader-spinner";
 import { Box, TextField, Button } from "@mui/material";
 
-const EditExpenseForm = ({
-  expenseId,
-  refreshExpenses,
+interface EditTransactionFormProps {
+  transactionId: string;
+  type: "income" | "expense";
+  refreshData?: (data: any) => void;
+  onClose: (data?: any) => void;
+}
+
+const EditTransactionForm = ({
+  transactionId,
+  type,
+  refreshData,
   onClose,
-}: {
-  expenseId: string;
-  refreshExpenses: (task: any) => void;
-  onClose: (task: any) => void;
-}) => {
+}: EditTransactionFormProps) => {
   const [amount, setAmount] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
@@ -23,10 +26,10 @@ const EditExpenseForm = ({
   const editTransactionMutation = useEditTransaction();
 
   useEffect(() => {
-    const getExpenseById = async () => {
+    const getTransactionById = async () => {
       try {
-        const response = await axios.get(
-          `/api/transactions/${expenseId}?type=expense`,
+        const response = await apiClient.get(
+          `/api/transactions/${transactionId}?type=${type}`,
         );
 
         const { amount, description, category, date } = response.data;
@@ -35,12 +38,12 @@ const EditExpenseForm = ({
         setCategory(category);
         setDate(date);
       } catch (err: any) {
-        setError(err.message || "Failed to load expense");
+        setError(err.message || `Failed to load ${type}`);
       }
     };
 
-    getExpenseById();
-  }, [expenseId]);
+    getTransactionById();
+  }, [transactionId, type]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,8 +51,8 @@ const EditExpenseForm = ({
 
     editTransactionMutation.mutate(
       {
-        id: expenseId,
-        type: "expense",
+        id: transactionId,
+        type,
         amount,
         description,
         category,
@@ -57,11 +60,11 @@ const EditExpenseForm = ({
       },
       {
         onSuccess: (data) => {
-          refreshExpenses(data);
+          if (refreshData) refreshData(data);
           onClose(data);
         },
         onError: (err: any) => {
-          setError(err.message || "Failed to edit expense");
+          setError(err.message || `Failed to edit ${type}`);
         },
       },
     );
@@ -138,11 +141,11 @@ const EditExpenseForm = ({
           "Save"
         )}
       </Button>
-      <Button variant="outlined" type="button" onClick={onClose}>
+      <Button variant="outlined" type="button" onClick={() => onClose()}>
         Cancel
       </Button>
     </Box>
   );
 };
 
-export default EditExpenseForm;
+export default EditTransactionForm;

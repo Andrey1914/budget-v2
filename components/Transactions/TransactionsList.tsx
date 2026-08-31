@@ -5,11 +5,12 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 import { useTransactions, useDeleteTransaction } from "@/hooks/useTransactions";
-import { Session, IIncome } from "@/interfaces";
-import EditIncomeForm from "@/components/Income/EditIncomeForm";
+import { Session, IBaseTransaction } from "@/interfaces";
+import EditTransactionForm from "@/components/Transactions/EditTransactionForm";
 import emptyList from "@/public/empty-list.webp";
 import { Delete, Edit, Add } from "@mui/icons-material";
-import ForeignCurrencySummary from "@/components/Income/ForeignCorrency";
+import ForeignCurrency from "@/components/Transactions/ForeignCurrency";
+
 import {
   Box,
   List,
@@ -21,10 +22,17 @@ import {
 } from "@mui/material";
 import Image from "next/image";
 
-const IncomesList: React.FC<{
-  totalIncome: number;
-  onUpdate: (updatedIncomes: number) => void;
-}> = ({ totalIncome, onUpdate }) => {
+interface TransactionsListProps {
+  type: "income" | "expense";
+  totalAmount: number;
+  onUpdate: (updatedAmount: number) => void;
+}
+
+const TransactionsList: React.FC<TransactionsListProps> = ({
+  type,
+  totalAmount,
+  onUpdate,
+}) => {
   const { data: session } = useSession() as {
     data: Session | null;
     status: string;
@@ -32,50 +40,57 @@ const IncomesList: React.FC<{
   const router = useRouter();
   const theme = useTheme();
 
-  const { data: incomesData, error, refetch } = useTransactions("income");
+  const isIncome = type === "income";
+  const title = isIncome ? "Incomes" : "Expenses";
+  const totalLabel = isIncome
+    ? "Total Incomes for this month:"
+    : "Total Expenses for this month:";
+  const emptyText = isIncome ? "No incomes yet" : "No expenses to show";
+
+  const { data: transactionsData, error, refetch } = useTransactions(type);
   const deleteTransactionMutation = useDeleteTransaction();
-  const [editingIncomeId, setEditingIncomeId] = useState<string | null>(null);
+  const [editingId, setEditingId] = useState<string | null>(null);
 
   const userCurrency = session?.user?.currency;
 
   useEffect(() => {
-    if (incomesData && session?.user?.currency) {
-      const total = (incomesData as IIncome[])
+    if (transactionsData && session?.user?.currency) {
+      const total = (transactionsData as IBaseTransaction[])
         .filter((item) => item.currency === session.user.currency)
-        .reduce((acc: number, item: IIncome) => acc + item.amount, 0);
+        .reduce((acc: number, item: IBaseTransaction) => acc + item.amount, 0);
 
       onUpdate(total);
     }
-  }, [incomesData, session, onUpdate]);
+  }, [transactionsData, session, onUpdate]);
 
   const handleEdit = (id: string) => {
-    setEditingIncomeId(id);
+    setEditingId(id);
   };
 
-  const handleDeleteIncome = (id: string) => {
-    deleteTransactionMutation.mutate({ id, type: "income" });
+  const handleDeleteItem = (id: string) => {
+    deleteTransactionMutation.mutate({ id, type });
   };
 
   const reloadData = () => {
     refetch();
   };
 
-  const hendleAddClick = () => {
-    router.push("/dashboard/income");
+  const handleAddClick = () => {
+    router.push(`/dashboard/${type}`);
   };
 
   if (!session) {
     return null;
   }
 
-  const income = (incomesData || []) as IIncome[];
+  const items = (transactionsData || []) as IBaseTransaction[];
 
   return (
     <>
       {error && <p style={{ color: "red" }}>{(error as Error).message}</p>}
       <Box sx={{ p: 4 }}>
         <Typography variant="h3" component="h2">
-          Incomes
+          {title}
         </Typography>
       </Box>
       <Box
@@ -95,12 +110,12 @@ const IncomesList: React.FC<{
             component="p"
             sx={{ color: theme.palette.text.primary }}
           >
-            Total Incomes for this month: {totalIncome} {userCurrency}
+            {totalLabel} {totalAmount} {userCurrency}
           </Typography>
-          <ForeignCurrencySummary />
+          <ForeignCurrency type={type} />
         </Box>
         <Box>
-          <Fab color="primary" aria-label="add" onClick={hendleAddClick}>
+          <Fab color="primary" aria-label="add" onClick={handleAddClick}>
             <Add />
           </Fab>
         </Box>
@@ -115,7 +130,7 @@ const IncomesList: React.FC<{
           minHeight: "320px",
         }}
       >
-        {income.length === 0 ? (
+        {items.length === 0 ? (
           <Box
             sx={{
               display: "flex",
@@ -131,11 +146,11 @@ const IncomesList: React.FC<{
               style={{ width: "100%" }}
             />
             <Typography variant="h6" component="p">
-              No incomes yet
+              {emptyText}
             </Typography>
           </Box>
         ) : (
-          income.map((item: IIncome) => (
+          items.map((item: IBaseTransaction) => (
             <ListItem key={item._id.toString()} sx={{ p: 0 }}>
               <Paper
                 sx={{
@@ -158,7 +173,7 @@ const IncomesList: React.FC<{
 
                   <Delete
                     sx={{ cursor: "pointer" }}
-                    onClick={() => handleDeleteIncome(item._id.toString())}
+                    onClick={() => handleDeleteItem(item._id.toString())}
                   />
                 </Box>
               </Paper>
@@ -167,15 +182,16 @@ const IncomesList: React.FC<{
         )}
       </List>
 
-      {editingIncomeId && (
-        <EditIncomeForm
-          incomeId={editingIncomeId}
-          refreshIncomes={reloadData}
-          onClose={() => setEditingIncomeId(null)}
+      {editingId && (
+        <EditTransactionForm
+          transactionId={editingId}
+          type={type}
+          refreshData={refetch}
+          onClose={() => setEditingId(null)}
         />
       )}
     </>
   );
 };
 
-export default IncomesList;
+export default TransactionsList;

@@ -1,14 +1,22 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useSession } from "next-auth/react";
-import { ExpenseFormProps, ICategory } from "@/interfaces";
+import { ICategory } from "@/interfaces";
 import SnackbarNotification from "@/components/Notification/Snackbar";
 import { validateFormsTransactions } from "@/utils/validators/validateFormTransactions";
 import TransactionForm from "@/components/TransactionForm/TransactionForm";
 import apiClient from "@/lib/apiClient";
 
-const ExpenseForm: React.FC<ExpenseFormProps> = ({ initialData }) => {
+interface TransactionFormWrapperProps {
+  type: "income" | "expense";
+  initialData?: any;
+}
+
+const TransactionFormWrapper: React.FC<TransactionFormWrapperProps> = ({
+  type,
+  initialData,
+}) => {
   const { data: session } = useSession();
 
   const [amount, setAmount] = useState<number | string>(
@@ -18,7 +26,6 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ initialData }) => {
     initialData?.description || "",
   );
 
-  const [type] = useState<string>("expense");
   const [category, setCategory] = useState<string>("");
   const [date, setDate] = useState(initialData?.date || "");
   const [loading, setLoading] = useState(false);
@@ -46,29 +53,29 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ initialData }) => {
     "success",
   );
 
-  const loadCategories = async () => {
+  const loadCategories = useCallback(async () => {
     try {
       const res = await apiClient.get(
-        "/api/transactions/categories?type=expense",
+        `/api/transactions/categories?type=${type}`,
       );
       setCategories(res.data);
     } catch (error) {
       console.error("Failed to load categories", error);
     }
-  };
+  }, [type]);
 
   useEffect(() => {
     if (session?.user?.currency) {
       setCurrency(session.user.currency);
     }
     loadCategories();
-  }, [session]);
+  }, [session, loadCategories]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!session) {
-      setSnackbarMessage("You must be logged in to add expense.");
+      setSnackbarMessage(`You must be logged in to add ${type}.`);
       setSnackbarSeverity("error");
       setShowSnackbar(true);
       return;
@@ -95,7 +102,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ initialData }) => {
 
     try {
       await apiClient.post("/api/transactions", {
-        type: "expense",
+        type,
         amount: parsedAmount,
         description,
         category,
@@ -103,7 +110,9 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ initialData }) => {
         date,
       });
 
-      setSnackbarMessage("Expense added successfully");
+      setSnackbarMessage(
+        `${type === "income" ? "Income" : "Expense"} added successfully`,
+      );
       setSnackbarSeverity("success");
       setShowSnackbar(true);
 
@@ -112,7 +121,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ initialData }) => {
       setCategory("");
       setDate("");
     } catch (error: any) {
-      setSnackbarMessage(error.message || "Failed to add expense");
+      setSnackbarMessage(error.message || `Failed to add ${type}`);
       setSnackbarSeverity("error");
       setShowSnackbar(true);
     } finally {
@@ -123,7 +132,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ initialData }) => {
   const handleAddCategory = async () => {
     if (!newCategory.trim()) return;
     try {
-      await apiClient.post("/api/transactions/categories?type=expense", {
+      await apiClient.post(`/api/transactions/categories?type=${type}`, {
         name: newCategory,
         description: newCategoryDescription,
       });
@@ -139,7 +148,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ initialData }) => {
   const handleEditCategory = async () => {
     if (!editingCategory || !newCategory.trim()) return;
     try {
-      await apiClient.put("/api/transactions/categories?type=expense", {
+      await apiClient.put(`/api/transactions/categories?type=${type}`, {
         id: editingCategory._id,
         name: newCategory,
         description: newCategoryDescription,
@@ -159,7 +168,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ initialData }) => {
   const handleDeleteCategory = async () => {
     if (!category) return;
     try {
-      await apiClient.delete("/api/transactions/categories?type=expense", {
+      await apiClient.delete(`/api/transactions/categories?type=${type}`, {
         data: { id: category },
       });
       setCategory("");
@@ -192,7 +201,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ initialData }) => {
   return (
     <>
       <TransactionForm
-        type="expense"
+        type={type}
         amount={amount}
         setAmount={setAmount}
         category={category}
@@ -237,4 +246,4 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ initialData }) => {
   );
 };
 
-export default ExpenseForm;
+export default TransactionFormWrapper;
