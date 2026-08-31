@@ -4,41 +4,28 @@ import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { ExpenseFormProps, ICategory } from "@/interfaces";
 import SnackbarNotification from "@/components/Notification/Snackbar";
-import {
-  getCategories,
-  AddCategory,
-  EditCategory,
-  DeleteCategory,
-} from "@/app/dashboard/expense/handlers";
-
 import { validateFormsTransactions } from "@/utils/validators/validateFormTransactions";
-
-import addExpense from "@/app/dashboard/expense/add";
 import TransactionForm from "@/components/TransactionForm/TransactionForm";
+import apiClient from "@/lib/apiClient";
 
 const ExpenseForm: React.FC<ExpenseFormProps> = ({ initialData }) => {
   const { data: session } = useSession();
 
   const [amount, setAmount] = useState<number | string>(
-    initialData?.amount || ""
+    initialData?.amount || "",
   );
   const [description, setDescription] = useState(
-    initialData?.description || ""
+    initialData?.description || "",
   );
 
-  const [type, setType] = useState<string>("expense");
+  const [type] = useState<string>("expense");
   const [category, setCategory] = useState<string>("");
   const [date, setDate] = useState(initialData?.date || "");
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  // const [currency, setCurrency] = useState<string>("USD");
   const [currency, setCurrency] = useState<string>(
-    session?.user.currency || "USD"
+    session?.user.currency || "USD",
   );
-  const [currencies, setCurrencies] = useState<
-    { code: string; name: string }[]
-  >([]);
-
+  const [currencies] = useState<{ code: string; name: string }[]>([]);
   const [categories, setCategories] = useState<ICategory[]>([]);
 
   const [newCategory, setNewCategory] = useState("");
@@ -46,7 +33,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ initialData }) => {
   const [open, setOpen] = useState(false);
 
   const [editingCategory, setEditingCategory] = useState<ICategory | null>(
-    null
+    null,
   );
   const [openEditDialog, setOpenEditDialog] = useState(false);
 
@@ -56,81 +43,76 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ initialData }) => {
   const [showSnackbar, setShowSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">(
-    "success"
+    "success",
   );
 
-  useEffect(() => {
-    const loadCategories = async () => {
-      try {
-        const data = await getCategories("expense");
-        setCategories(data);
-      } catch (error) {
-        console.error("Failed to load categories", error);
-      }
-    };
+  const loadCategories = async () => {
+    try {
+      const res = await apiClient.get(
+        "/api/transactions/categories?type=expense",
+      );
+      setCategories(res.data);
+    } catch (error) {
+      console.error("Failed to load categories", error);
+    }
+  };
 
+  useEffect(() => {
     if (session?.user?.currency) {
       setCurrency(session.user.currency);
     }
-
     loadCategories();
   }, [session]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!session) {
+      setSnackbarMessage("You must be logged in to add expense.");
+      setSnackbarSeverity("error");
+      setShowSnackbar(true);
+      return;
+    }
+
+    if (
+      !validateFormsTransactions(
+        amount,
+        description,
+        category,
+        date,
+        setPopoverMessage,
+        setAnchorEl,
+      )
+    ) {
+      return;
+    }
+
     setLoading(true);
+    setPopoverMessage("");
+    setAnchorEl(null);
+
+    const parsedAmount = parseFloat(amount as string);
 
     try {
-      if (!session) {
-        setError("You must be logged in to add expense.");
-        return;
-      }
-
-      if (
-        !validateFormsTransactions(
-          amount,
-          description,
-          category,
-          date,
-          setPopoverMessage,
-          setAnchorEl
-        )
-      ) {
-        return;
-      }
-
-      setLoading(true);
-
-      setPopoverMessage("");
-      setAnchorEl(null);
-
-      const parsedAmount = parseFloat(amount as string);
-
-      const res = await addExpense({
+      await apiClient.post("/api/transactions", {
+        type: "expense",
         amount: parsedAmount,
         description,
         category,
         currency,
         date,
-        type,
       });
 
-      if (res.success) {
-        setSnackbarMessage(res.message);
-        setSnackbarSeverity("success");
-        setShowSnackbar(true);
+      setSnackbarMessage("Expense added successfully");
+      setSnackbarSeverity("success");
+      setShowSnackbar(true);
 
-        setAmount("");
-        setDescription("");
-        setCategory("");
-        setDate("");
-      } else {
-        throw new Error(res.message);
-      }
+      setAmount("");
+      setDescription("");
+      setCategory("");
+      setDate("");
     } catch (error: any) {
-      setError(error.message || "Failed to add expense");
-
-      setSnackbarMessage("Failed to add expense");
+      setSnackbarMessage(error.message || "Failed to add expense");
       setSnackbarSeverity("error");
       setShowSnackbar(true);
     } finally {
@@ -138,14 +120,65 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ initialData }) => {
     }
   };
 
-  const handleOpenEditDialog = (category: ICategory) => {
-    if (!category) {
-      console.error("Selected category not found");
-      return;
+  const handleAddCategory = async () => {
+    if (!newCategory.trim()) return;
+    try {
+      await apiClient.post("/api/transactions/categories?type=expense", {
+        name: newCategory,
+        description: newCategoryDescription,
+      });
+      setNewCategory("");
+      setNewCategoryDescription("");
+      setOpen(false);
+      await loadCategories();
+    } catch (err: any) {
+      console.error("Failed to add category", err);
     }
-    setEditingCategory(category);
-    setNewCategory(category.name);
-    setNewCategoryDescription(category.description || "");
+  };
+
+  const handleEditCategory = async () => {
+    if (!editingCategory || !newCategory.trim()) return;
+    try {
+      await apiClient.put("/api/transactions/categories?type=expense", {
+        id: editingCategory._id,
+        name: newCategory,
+        description: newCategoryDescription,
+      });
+      setSnackbarMessage("Category updated successfully");
+      setSnackbarSeverity("success");
+      setShowSnackbar(true);
+      handleCloseEditDialog();
+      await loadCategories();
+    } catch (err: any) {
+      setSnackbarMessage("Failed to update category");
+      setSnackbarSeverity("error");
+      setShowSnackbar(true);
+    }
+  };
+
+  const handleDeleteCategory = async () => {
+    if (!category) return;
+    try {
+      await apiClient.delete("/api/transactions/categories?type=expense", {
+        data: { id: category },
+      });
+      setCategory("");
+      setSnackbarMessage("Category deleted successfully");
+      setSnackbarSeverity("success");
+      setShowSnackbar(true);
+      await loadCategories();
+    } catch (err: any) {
+      setSnackbarMessage("Failed to delete category");
+      setSnackbarSeverity("error");
+      setShowSnackbar(true);
+    }
+  };
+
+  const handleOpenEditDialog = (cat: ICategory) => {
+    if (!cat) return;
+    setEditingCategory(cat);
+    setNewCategory(cat.name);
+    setNewCategoryDescription(cat.description || "");
     setOpenEditDialog(true);
   };
 
@@ -178,41 +211,10 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ initialData }) => {
         newCategoryDescription={newCategoryDescription}
         setNewCategory={setNewCategory}
         setNewCategoryDescription={setNewCategoryDescription}
-        handleAddCategory={() =>
-          AddCategory(
-            newCategory,
-            newCategoryDescription,
-            setCategories,
-            setNewCategory,
-            setNewCategoryDescription,
-            setOpen,
-            () => getCategories("expense")
-          )
-        }
-        handleEditCategory={() =>
-          EditCategory(
-            editingCategory,
-            newCategory,
-            newCategoryDescription,
-            setCategories,
-            setSnackbarMessage,
-            setSnackbarSeverity,
-            setShowSnackbar,
-            handleCloseEditDialog
-          )
-        }
+        handleAddCategory={handleAddCategory}
+        handleEditCategory={handleEditCategory}
         handleOpenEditDialog={handleOpenEditDialog}
-        handleDeleteCategory={async () =>
-          await DeleteCategory(
-            category,
-            category,
-            setCategory,
-            setCategories,
-            setSnackbarMessage,
-            setSnackbarSeverity,
-            setShowSnackbar
-          )
-        }
+        handleDeleteCategory={handleDeleteCategory}
         openAddDialog={open}
         setOpenAddDialog={setOpen}
         openEditDialog={openEditDialog}

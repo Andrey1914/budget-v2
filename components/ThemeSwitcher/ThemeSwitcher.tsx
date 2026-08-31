@@ -28,7 +28,7 @@ const ThemeSwitcher: React.FC<SwitcherProps> = ({
           size="small"
         />
       }
-      label={isDarkMode ? "Dark mode" : "Light mode"}
+      label={isDarkMode ? "Light theme" : "Dark theme"}
     />
   );
 };

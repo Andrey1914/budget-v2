@@ -4,9 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
-import { handleDelete } from "@/app/dashboard/expense/delete";
-import { getExpenses } from "@/app/dashboard/expense/get";
-import { refreshExpenses } from "@/app/dashboard/expense/refresh";
+import { useTransactions, useDeleteTransaction } from "@/hooks/useTransactions";
 import { Session, IExpense } from "@/interfaces";
 import EditExpenseForm from "@/components/Expense/EditExpenseForm";
 import emptyList from "@/public/empty-list.webp";
@@ -28,67 +26,39 @@ const ExpensesList: React.FC<{
   totalExpense: number;
   onUpdate: (updatedExpenses: number) => void;
 }> = ({ totalExpense, onUpdate }) => {
-  const { data: session, status } = useSession() as {
+  const { data: session } = useSession() as {
     data: Session | null;
     status: string;
   };
   const router = useRouter();
   const theme = useTheme();
 
-  const [expense, setExpense] = useState<IExpense[]>([]);
-  const [error, setError] = useState<string | null>(null);
+  const { data: expensesData, error, refetch } = useTransactions("expense");
+  const deleteTransactionMutation = useDeleteTransaction();
   const [editingExpenseId, setEditingExpenseId] = useState<string | null>(null);
 
   const userCurrency = session?.user?.currency;
 
   useEffect(() => {
-    if (session) {
-      const getExpensesData = async () => {
-        try {
-          const expensesData = await getExpenses(session);
+    if (expensesData && session?.user?.currency) {
+      const total = (expensesData as IExpense[])
+        .filter((item) => item.currency === session.user.currency)
+        .reduce((acc: number, item: IExpense) => acc + item.amount, 0);
 
-          setExpense(expensesData);
-
-          const total = expensesData
-            .filter((item) => item.currency === session.user.currency)
-            .reduce((acc: number, item: IExpense) => acc + item.amount, 0);
-
-          onUpdate(total);
-        } catch (err) {
-          console.error("Error fetching expenses:", err);
-          setError((err as Error).message);
-        }
-      };
-
-      if (session) {
-        getExpensesData();
-      }
+      onUpdate(total);
     }
-  }, [session, status, onUpdate]);
+  }, [expensesData, session, onUpdate]);
 
   const handleEdit = (id: string) => {
     setEditingExpenseId(id);
   };
 
-  const reloadData = async () => {
-    if (!session) {
-      setError("Session or token is not available");
-      return;
-    }
+  const handleDeleteExpense = (id: string) => {
+    deleteTransactionMutation.mutate({ id, type: "expense" });
+  };
 
-    try {
-      const expensesData = await refreshExpenses(session);
-
-      setExpense(expensesData);
-
-      const total = expensesData
-        .filter((item) => item.currency === session.user.currency)
-        .reduce((acc: number, item: IExpense) => acc + item.amount, 0);
-
-      onUpdate(total);
-    } catch (err) {
-      setError((err as Error).message);
-    }
+  const reloadData = () => {
+    refetch();
   };
 
   const hendleAddClick = () => {
@@ -99,9 +69,11 @@ const ExpensesList: React.FC<{
     return null;
   }
 
+  const expense = (expensesData || []) as IExpense[];
+
   return (
     <>
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {error && <p style={{ color: "red" }}>{(error as Error).message}</p>}
       <Box sx={{ p: 4 }}>
         <Typography variant="h3" component="h2">
           Expenses
@@ -180,17 +152,14 @@ const ExpensesList: React.FC<{
                   {item.amount} {item.currency} - {item.description}
                 </Typography>
                 <Box sx={{ display: "flex", gap: 3 }}>
-                  <Edit onClick={() => handleEdit(item._id.toString())} />
+                  <Edit
+                    sx={{ cursor: "pointer" }}
+                    onClick={() => handleEdit(item._id.toString())}
+                  />
 
                   <Delete
-                    onClick={() =>
-                      handleDelete(
-                        item._id.toString(),
-                        expense,
-                        setExpense,
-                        reloadData
-                      )
-                    }
+                    sx={{ cursor: "pointer" }}
+                    onClick={() => handleDeleteExpense(item._id.toString())}
                   />
                 </Box>
               </Paper>
