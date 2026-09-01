@@ -1,0 +1,11 @@
+{
+  "Common": {
+    "language": "Мова",
+    "english": "Англійська",
+    "ukrainian": "Українська",
+    "russian": "Російська"
+  },
+  "Dashboard": {
+    "welcome": "З поверненням!"
+  }
+}

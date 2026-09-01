@@ -1,7 +1,8 @@
 "use client";
 
 import React from "react";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
+import { useRouter } from "@/i18n/navigation";
 
 import TaskForm from "@/components/Tasks/TasksForm";
 import { useAddTask } from "@/hooks/useTaskHooks";

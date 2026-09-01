@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 
 import { Session, AnalyticsTransaction } from "@/interfaces";
 
-import { getAnalyticsData } from "@/app/dashboard/analytics/get";
+import { getAnalyticsData } from "@/app/[locale]/dashboard/analytics/get";
 
 import BalanceComparison from "@/components/BalanceComparison/BalanceComparison";
 import CategoryChart from "@/components/Analytics/Analytics";

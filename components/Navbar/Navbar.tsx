@@ -30,6 +30,7 @@ import UserMenu from "@/components/UserMenu/UserMenu";
 import ThemeSwitcher from "@/components/ThemeSwitcher/ThemeSwitcher";
 import { SwitcherProps } from "@/interfaces";
 import Logo from "@/components/Logo/Logo";
+import { LanguageSwitcher } from "@/components/LanguageSelector/LanguageSwitcher";
 
 import AuthTabsModal from "@/components/Auth/AuthModal";
 
@@ -216,6 +217,7 @@ const Navbar: React.FC<SwitcherProps> = ({ toggleTheme, isDarkMode }) => {
                     <List>
                       {renderLinks()} {renderMobileLinks()}
                     </List>
+                    <LanguageSwitcher />
 
                     <Box
                       sx={{
@@ -254,6 +256,7 @@ const Navbar: React.FC<SwitcherProps> = ({ toggleTheme, isDarkMode }) => {
                       isDarkMode={isDarkMode}
                       toggleTheme={toggleTheme}
                     />
+                    <LanguageSwitcher />
                   </>
                 )}
               </Box>
@@ -318,6 +321,7 @@ const Navbar: React.FC<SwitcherProps> = ({ toggleTheme, isDarkMode }) => {
                   isDarkMode={isDarkMode}
                   toggleTheme={toggleTheme}
                 />
+                <LanguageSwitcher />
               </Box>
             )}
           </Box>

@@ -19,7 +19,8 @@ import { Oval } from "react-loader-spinner";
 import { signIn } from "next-auth/react";
 import googleIcon from "@/public/google.png";
 import axios from "axios";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
+import { useRouter } from "@/i18n/navigation";
 
 import SnackbarNotification from "@/components/Notification/Snackbar";
 import { validateFormRegistration } from "@/utils/validators/validateFormRegistration";
@@ -27,7 +28,7 @@ import { validateFieldName } from "@/utils/validators/validateFieldName";
 import validateFieldEmail from "@/utils/validators/validateFieldEmail";
 import validateFieldPassword from "@/utils/validators/validateFieldPassword";
 import StyledTextField from "@/components/Auth/Input.styled";
-import { MainButton } from "@/app/styles/Buttons";
+import { MainButton } from "@/app/[locale]/styles/Buttons";
 
 interface RegisterTabProps {
   onSuccessRegistration: () => void;
@@ -50,7 +51,7 @@ const RegisterTab: React.FC<RegisterTabProps> = ({ onSuccessRegistration }) => {
   const [showSnackbar, setShowSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">(
-    "success"
+    "success",
   );
 
   const handleTogglePasswordVisibility = () => setShowPassword((prev) => !prev);
@@ -75,7 +76,7 @@ const RegisterTab: React.FC<RegisterTabProps> = ({ onSuccessRegistration }) => {
       (element) => {
         setShowSnackbar(true);
         if (element) element.scrollIntoView({ behavior: "smooth" });
-      }
+      },
     );
 
     if (!isValid) {

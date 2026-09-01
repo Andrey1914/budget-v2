@@ -20,7 +20,7 @@ import {
 } from "@mui/material";
 
 import FilterPanel from "@/components/FilterPanel/FilterPanel";
-import { fetchTransactions } from "@/app/dashboard/history/get";
+import { fetchTransactions } from "@/app/[locale]/dashboard/history/get";
 import emptyHistory from "@/public/empty-history.webp";
 
 const HistoryPage = () => {
@@ -30,16 +30,16 @@ const HistoryPage = () => {
 
   const theme = useTheme();
   const isMobile = useMediaQuery((theme: Theme) =>
-    theme.breakpoints.down("sm")
+    theme.breakpoints.down("sm"),
   );
 
   const userCurrency = session?.user?.currency;
 
   const [selectedYear, setSelectedYear] = useState<number | "">(
-    new Date().getFullYear()
+    new Date().getFullYear(),
   );
   const [selectedMonth, setSelectedMonth] = useState<number | "">(
-    new Date().getMonth() + 1
+    new Date().getMonth() + 1,
   );
   const [selectedType, setSelectedType] = useState<string>("all");
 
@@ -81,7 +81,7 @@ const HistoryPage = () => {
 
   const paginatedTransactions = transactions.slice(
     (currentPage - 1) * limit,
-    currentPage * limit
+    currentPage * limit,
   );
 
   const totalPages = Math.ceil(totalTransactions / limit);

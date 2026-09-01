@@ -2,12 +2,14 @@
 
 import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
+import { useRouter } from "@/i18n/navigation";
+
 import axios from "axios";
 import { Oval } from "react-loader-spinner";
 import SnackbarNotification from "@/components/Notification/Snackbar";
 import StyledTextField from "@/components/Auth/Input.styled";
-import { MainButton } from "@/app/styles/Buttons";
+import { MainButton } from "@/app/[locale]/styles/Buttons";
 
 import { Button, Box, Typography, useTheme } from "@mui/material";
 
@@ -26,7 +28,7 @@ const VerifyEmailModal: React.FC<Props> = ({ onVerified, onCancel }) => {
   const [showSnackbar, setShowSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">(
-    "success"
+    "success",
   );
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -38,7 +40,7 @@ const VerifyEmailModal: React.FC<Props> = ({ onVerified, onCancel }) => {
         "/api/confirmEmail/check-email-verification",
         {
           verificationCode,
-        }
+        },
       );
 
       if (res.status === 200) {
