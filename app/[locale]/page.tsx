@@ -2,8 +2,8 @@
 
 import React from "react";
 import { useSession } from "next-auth/react";
-import Dashboard from "@/app/dashboard/page";
-import Landing from "@/app/landing/page";
+import Dashboard from "@/app/[locale]/dashboard/page";
+import Landing from "@/app/[locale]/landing/page";
 import { Container } from "@mui/material";
 
 const Home: React.FC = () => {

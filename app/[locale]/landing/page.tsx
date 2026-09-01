@@ -1,14 +1,15 @@
 "use client";
 
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
+import { useRouter } from "@/i18n/navigation";
 import { useSession } from "next-auth/react";
 import axios from "axios";
 
 import Link from "next/link";
 import { Box, Typography, Button, useTheme, Container } from "@mui/material";
 import { Send } from "@mui/icons-material";
-import { MainContainer } from "@/app/styles/Container";
+import { MainContainer } from "@/app/[locale]/styles/Container";
 import Hero from "@/components/Hero/Hero";
 import AdvantagesCarousel from "@/components/Advantages/AdvantagesCarousel";
 import Advantages from "@/components/Advantages/Advantages";
@@ -16,7 +17,7 @@ import ReviewsCarousel from "@/components/ReviewsCarousel/ReviewsCarousel";
 import FAQ from "@/components/faq/FAQ";
 // import AverageRating from "@/components/Review/AverageRating";
 import Feature from "@/components/Features/Features";
-import { GetStartedButton, MainButton } from "@/app/styles/Buttons";
+import { GetStartedButton, MainButton } from "@/app/[locale]/styles/Buttons";
 
 import AuthTabsModal from "@/components/Auth/AuthModal";
 import ReviewForm from "@/components/Review/ReviewForm";

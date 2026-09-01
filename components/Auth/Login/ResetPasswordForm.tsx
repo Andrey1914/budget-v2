@@ -20,7 +20,7 @@ import validateFieldPassword from "@/utils/validators/validateFieldPassword";
 import validateFieldPasswordsMatch from "@/utils/validators/validateFieldPasswordMatch";
 import { validateFormChangePassword } from "@/utils/validators/validateFormChangePassword";
 import StyledTextField from "@/components/Auth/Input.styled";
-import { MainButton } from "@/app/styles/Buttons";
+import { MainButton } from "@/app/[locale]/styles/Buttons";
 
 type Props = {
   onCancel: () => void;
@@ -40,7 +40,7 @@ const ResetPasswordModal: React.FC<Props> = ({ onCancel }) => {
 
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">(
-    "success"
+    "success",
   );
   const [showSnackbar, setShowSnackbar] = useState(false);
 
@@ -60,7 +60,7 @@ const ResetPasswordModal: React.FC<Props> = ({ onCancel }) => {
       (el) => {
         setShowSnackbar(true);
         el?.scrollIntoView({ behavior: "smooth", block: "center" });
-      }
+      },
     );
 
     if (!isFormValid) {
@@ -85,7 +85,7 @@ const ResetPasswordModal: React.FC<Props> = ({ onCancel }) => {
     } catch (error: any) {
       console.error("Ошибка:", error);
       setSnackbarMessage(
-        error.response?.data?.message || "Ошибка при соединении с сервером."
+        error.response?.data?.message || "Ошибка при соединении с сервером.",
       );
       setSnackbarSeverity("error");
       setShowSnackbar(true);
@@ -148,7 +148,7 @@ const ResetPasswordModal: React.FC<Props> = ({ onCancel }) => {
               newPassword,
               confirmPassword,
               setPopoverMessage,
-              setAnchorEl
+              setAnchorEl,
             )
           }
           required

@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 import { ICategory } from "@/interfaces";
 import SnackbarNotification from "@/components/Notification/Snackbar";
 import { validateFormsTransactions } from "@/utils/validators/validateFormTransactions";
-import TransactionForm from "@/components/TransactionForm/TransactionForm";
+import TransactionForm from "@/components/Transactions/TransactionForm";
 import apiClient from "@/lib/apiClient";
 
 interface TransactionFormWrapperProps {

@@ -2,7 +2,8 @@
 
 import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
+import { useRouter } from "@/i18n/navigation";
 
 import TransactionsList from "@/components/Transactions/TransactionsList";
 import TasksList from "@/components/Tasks/TasksList";

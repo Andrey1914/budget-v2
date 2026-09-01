@@ -2,7 +2,8 @@
 
 import React, { useEffect } from "react";
 import { useSession } from "next-auth/react";
-import { useRouter, useParams } from "next/navigation";
+import { useParams } from "next/navigation";
+import { useRouter } from "@/i18n/navigation";
 import TransactionFormWrapper from "@/components/Transactions/TransactionFormWrapper";
 import { Container } from "@mui/material";
 

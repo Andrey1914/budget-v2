@@ -16,6 +16,7 @@ import {
   RateReview,
   History,
 } from "@mui/icons-material";
+import { LanguageSwitcher } from "@/components/LanguageSelector/LanguageSwitcher";
 
 import { UserMenuProps } from "@/interfaces";
 
@@ -102,6 +103,9 @@ const UserMenu: React.FC<UserMenuProps> = ({ userName, userImage }) => {
         <MenuItem onClick={handleLogout} sx={{ gap: 2 }}>
           <Logout />
           LogOut
+        </MenuItem>
+        <MenuItem sx={{ gap: 2 }}>
+          <LanguageSwitcher />
         </MenuItem>
       </Menu>
     </>
