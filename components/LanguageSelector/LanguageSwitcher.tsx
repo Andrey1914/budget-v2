@@ -2,7 +2,7 @@
 
 import React, { useTransition } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { usePathname, useRouter } from "@/i18n/navigation";
+import { usePathname } from "@/i18n/navigation";
 import {
   MenuItem,
   Select,
@@ -13,7 +13,6 @@ import {
 export const LanguageSwitcher: React.FC = () => {
   const t = useTranslations("Common");
   const locale = useLocale();
-  const router = useRouter();
   const pathname = usePathname();
   const [isPending, startTransition] = useTransition();
 
@@ -21,9 +20,15 @@ export const LanguageSwitcher: React.FC = () => {
     const nextLocale = event.target.value;
 
     startTransition(() => {
-      // usePathname() from next-intl returns the pathname without the locale.
-      // Pass the locale separately so the navigation helper builds /en/landing.
-      router.push(pathname ?? "/landing", { locale: nextLocale });
+      // Build the public URL explicitly. This avoids the router briefly using
+      // the old locale before middleware resolves the new request.
+      const path = pathname ?? "/landing";
+      const normalizedPath = path.startsWith("/") ? path : `/${path}`;
+      const pathWithoutLocale = normalizedPath.replace(
+        /^\/(en|uk|ru)(?=\/|$)/,
+        "",
+      ) || "/landing";
+      window.location.assign(`/${nextLocale}${pathWithoutLocale}`);
     });
   };
 
