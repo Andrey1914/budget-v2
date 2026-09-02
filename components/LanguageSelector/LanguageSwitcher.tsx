@@ -21,17 +21,9 @@ export const LanguageSwitcher: React.FC = () => {
     const nextLocale = event.target.value;
 
     startTransition(() => {
-      const currentPath = pathname ?? `/${locale}`;
-      const segments = currentPath.split("/");
-
-      if (segments.length > 1) {
-        segments[1] = nextLocale;
-      } else {
-        segments.push(nextLocale);
-      }
-
-      const newPathname = segments.join("/");
-      router.push(newPathname);
+      // usePathname() from next-intl returns the pathname without the locale.
+      // Pass the locale separately so the navigation helper builds /en/landing.
+      router.push(pathname ?? "/landing", { locale: nextLocale });
     });
   };
 
