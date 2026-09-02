@@ -7,6 +7,9 @@ const intlMiddleware = createMiddleware({
   locales,
   defaultLocale,
   localePrefix: "always",
+  // The locale in the URL must be authoritative. Otherwise next-intl can
+  // use the stale NEXT_LOCALE/browser locale and redirect /en back to /uk.
+  localeDetection: false,
 });
 
 export async function middleware(req: NextRequest) {
