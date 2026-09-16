@@ -14,6 +14,7 @@ const TransactionPage: React.FC = () => {
   const router = useRouter();
 
   const params = useParams();
+
   const rawType = params?.type as string | undefined;
 
   const isValidType = rawType === "income" || rawType === "expense";

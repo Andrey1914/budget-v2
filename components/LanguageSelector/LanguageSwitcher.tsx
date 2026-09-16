@@ -17,21 +17,18 @@ export const LanguageSwitcher: React.FC = () => {
   const pathname = usePathname();
   const [isPending, startTransition] = useTransition();
 
-  const handleLanguageChange = (event: SelectChangeEvent<string>) => {
-    const nextLocale = event.target.value;
+  const handleLanguageChange = (e: SelectChangeEvent<string>) => {
+    const nextLocale = e.target.value;
+    if (nextLocale === locale) return;
+
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
+
+    document.cookie = `NEXT_LOCALE=${nextLocale}; path=/; max-age=31536000; SameSite=Lax`;
 
     startTransition(() => {
-      const currentPath = pathname ?? `/${locale}`;
-      const segments = currentPath.split("/");
-
-      if (segments.length > 1) {
-        segments[1] = nextLocale;
-      } else {
-        segments.push(nextLocale);
-      }
-
-      const newPathname = segments.join("/");
-      router.push(newPathname);
+      router.replace(pathname, { locale: nextLocale });
     });
   };
 
@@ -42,6 +39,11 @@ export const LanguageSwitcher: React.FC = () => {
         onChange={handleLanguageChange}
         disabled={isPending}
         sx={{ minWidth: 120 }}
+        MenuProps={{
+          disableScrollLock: true,
+          disableAutoFocusItem: true,
+          disableRestoreFocus: true,
+        }}
       >
         <MenuItem value="uk">{t("ukrainian")}</MenuItem>
         <MenuItem value="en">{t("english")}</MenuItem>

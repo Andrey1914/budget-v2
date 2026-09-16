@@ -110,6 +110,7 @@ const AdvantagesCarousel = () => {
         alt="Hand with money"
         width={398}
         height={280}
+        style={{ height: "auto" }}
       />
     </Box>
   );

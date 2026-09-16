@@ -143,7 +143,9 @@ const TransactionsList: React.FC<TransactionsListProps> = ({
             <Image
               src={emptyList}
               alt="Empty list image"
-              style={{ width: "100%" }}
+              width={300}
+              height={200}
+              style={{ height: "auto" }}
             />
             <Typography variant="h6" component="p">
               {emptyText}

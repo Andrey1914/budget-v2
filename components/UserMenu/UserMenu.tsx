@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/i18n/navigation";
 import { signOut } from "next-auth/react";
 import {
   Menu,
@@ -28,53 +28,39 @@ const UserMenu: React.FC<UserMenuProps> = ({ userName, userImage }) => {
   const userInitial = userName?.charAt(0).toUpperCase() || "?";
 
   const theme = useTheme();
-
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
-  if (isMobile) {
-    return (
-      <Avatar src={userImage || undefined} alt={userName || "User"}>
-        {!userImage && userInitial}
-      </Avatar>
-    );
-  }
-
-  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleMenuClose = () => {
+  const handleClose = () => {
     setAnchorEl(null);
   };
 
   const handleAnalytics = () => {
-    handleMenuClose();
+    handleClose();
     router.push("/dashboard/analytics");
   };
 
   const handleReviews = () => {
-    handleMenuClose();
+    handleClose();
     router.push("/dashboard/reviews");
   };
 
   const handleHistory = () => {
-    handleMenuClose();
+    handleClose();
     router.push("/dashboard/history");
   };
 
-  const handleProfileSettings = () => {
-    handleMenuClose();
+  const handleProfile = () => {
+    handleClose();
     router.push("/dashboard/profile");
-  };
-
-  const handleLogout = () => {
-    handleMenuClose();
-    signOut({ callbackUrl: "/landing" });
   };
 
   return (
     <>
-      <IconButton onClick={handleMenuOpen}>
+      <IconButton onClick={handleClick} size="small" sx={{ ml: 2 }}>
         <Avatar src={userImage || undefined} alt={userName || "User"}>
           {!userImage && userInitial}
         </Avatar>
@@ -82,31 +68,62 @@ const UserMenu: React.FC<UserMenuProps> = ({ userName, userImage }) => {
       <Menu
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}
-        onClose={handleMenuClose}
+        onClose={handleClose}
+        onClick={handleClose}
+        autoFocus={false}
+        disableAutoFocusItem
+        slotProps={{
+          paper: {
+            elevation: 0,
+            sx: {
+              overflow: "visible",
+              filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+              mt: 1.5,
+              "& .MuiAvatar-root": {
+                width: 32,
+                height: 32,
+                ml: -0.5,
+                mr: 1,
+              },
+              "&:before": {
+                content: '""',
+                display: "block",
+                position: "absolute",
+                top: 0,
+                right: 14,
+                width: 10,
+                height: 10,
+                bgcolor: "background.paper",
+                transform: "translateY(-50%) rotate(45deg)",
+                zIndex: 0,
+              },
+            },
+          },
+        }}
+        transformOrigin={{ horizontal: "right", vertical: "top" }}
+        anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        <MenuItem onClick={handleAnalytics} sx={{ gap: 2 }}>
-          <BarChart />
-          Analytics
+        <MenuItem onClick={handleProfile}>
+          <Settings sx={{ mr: 1 }} /> Profile
         </MenuItem>
-        <MenuItem onClick={handleReviews} sx={{ gap: 2 }}>
-          <RateReview />
-          Reviews
+        <MenuItem onClick={handleHistory}>
+          <History sx={{ mr: 1 }} /> History
         </MenuItem>
-        <MenuItem onClick={handleHistory} sx={{ gap: 2 }}>
-          <History />
-          History
+        <MenuItem onClick={handleAnalytics}>
+          <BarChart sx={{ mr: 1 }} /> Analytics
         </MenuItem>
-        <MenuItem onClick={handleProfileSettings} sx={{ gap: 2 }}>
-          <Settings />
-          Settings
+        <MenuItem onClick={handleReviews}>
+          <RateReview sx={{ mr: 1 }} /> Reviews
         </MenuItem>
-        <MenuItem onClick={handleLogout} sx={{ gap: 2 }}>
-          <Logout />
-          LogOut
+        <MenuItem onClick={() => signOut()}>
+          <Logout sx={{ mr: 1 }} /> Logout
         </MenuItem>
-        <MenuItem sx={{ gap: 2 }}>
-          <LanguageSwitcher />
-        </MenuItem>
+
+        {isMobile && (
+          <MenuItem>
+            <LanguageSwitcher />
+          </MenuItem>
+        )}
       </Menu>
     </>
   );

@@ -4,18 +4,20 @@ import Image from "next/image";
 export const StyledImage = styled(Image)(({ theme }) => ({
   position: "absolute",
   width: 293,
-  height: 228,
+  height: "auto",
   bottom: -78,
   right: -137,
 
   [theme.breakpoints.up("sm")]: {
     width: 300,
+    height: "auto",
     bottom: 0,
     right: 0,
   },
 
   [theme.breakpoints.up("md")]: {
     width: 398,
+    height: "auto",
     bottom: 0,
     right: 0,
   },
