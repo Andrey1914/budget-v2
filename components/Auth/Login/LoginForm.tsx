@@ -16,7 +16,6 @@ import {
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import Image from "next/image";
 import { signIn } from "next-auth/react";
-// import { useRouter } from "next/navigation";
 import { useRouter } from "@/i18n/navigation";
 
 import googleIcon from "@/public/google.png";

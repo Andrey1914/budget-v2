@@ -1,0 +1,30 @@
+{
+  "switcher": {
+    "language": "Language",
+    "english": "English",
+    "ukrainian": "Ukrainian",
+    "russian": "Russian"
+  },
+  "buttons": {
+    "close": "Close",
+    "cancel": "Cancel",
+    "save": "Save",
+    "getStarted": "Get started",
+    "authButton": "SignIn/SignUp",
+    "logout": "Logout",
+    "sendFeedback": "Send feedback",
+    "allReviews": "All reviews"
+  },
+  "links": {
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "history": "History",
+    "analytics": "Analytics",
+    "reviews": "Reviews",
+    "profile": "Profile",
+    "terms": "Terms of Service",
+    "privacy": "Privacy Policy",
+    "cookie": "Cookie Policy",
+    "license": "License Agreement"
+  }
+}

@@ -9,15 +9,27 @@ import {
   useTheme,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { useTranslations } from "next-intl";
 
-import { faqData } from "@/components/faq/faqData";
+interface FAQSubItem {
+  question: string;
+  answer: string;
+}
+
+interface FAQSection {
+  question: string;
+  subItems?: FAQSubItem[];
+}
 
 const FAQ: React.FC = () => {
   const theme = useTheme();
+  const t = useTranslations("landing.faq");
+
+  const faqItems = t.raw("items") as FAQSection[];
 
   return (
-    <>
-      {faqData.map((section, sectionIndex) => (
+    <div suppressHydrationWarning>
+      {faqItems.map((section, sectionIndex) => (
         <Accordion
           key={sectionIndex}
           sx={{
@@ -28,6 +40,9 @@ const FAQ: React.FC = () => {
         >
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
+            id={`faq-header-${sectionIndex}`}
+            aria-controls={`faq-content-${sectionIndex}`}
+            suppressHydrationWarning
             sx={{
               background: theme.palette.background.default,
               boxShadow: "none",
@@ -61,6 +76,9 @@ const FAQ: React.FC = () => {
                 >
                   <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}
+                    id={`faq-sub-header-${sectionIndex}-${itemIndex}`}
+                    aria-controls={`faq-sub-content-${sectionIndex}-${itemIndex}`}
+                    suppressHydrationWarning
                     sx={{
                       background: theme.palette.background.default,
                       boxShadow: "none",
@@ -72,12 +90,13 @@ const FAQ: React.FC = () => {
                     <Typography>{item.question}</Typography>
                   </AccordionSummary>
                   <AccordionDetails
-                  // sx={{
-                  //   background: theme.palette.background.default,
-                  //   boxShadow: "none",
-                  //   borderBottom: "1px solid #030303 ",
-                  //   borderRadius: "none",
-                  // }}
+                    suppressHydrationWarning
+                    // sx={{
+                    //   background: theme.palette.background.default,
+                    //   boxShadow: "none",
+                    //   borderBottom: "1px solid #030303 ",
+                    //   borderRadius: "none",
+                    // }}
                   >
                     <Typography>{item.answer}</Typography>
                   </AccordionDetails>
@@ -86,7 +105,7 @@ const FAQ: React.FC = () => {
           </AccordionDetails>
         </Accordion>
       ))}
-    </>
+    </div>
   );
 };
 

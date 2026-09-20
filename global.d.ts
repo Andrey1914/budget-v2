@@ -6,10 +6,8 @@ declare module "validator";
 declare module "*.css";
 declare module "swiper/css";
 declare module "swiper/css/navigation";
+declare module "swiper/css/effect-fade";
 declare module "react-intersection-observer";
-// declare module "react-intersection-observer" {
-//   export const useInView: any;
-// }
 declare module "cloudinary";
 declare module "multer";
 declare module "ws";

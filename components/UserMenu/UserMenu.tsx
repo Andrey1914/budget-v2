@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useRouter } from "@/i18n/navigation";
 import { signOut } from "next-auth/react";
+import { useTranslations } from "next-intl";
+
 import {
   Menu,
   MenuItem,
@@ -21,6 +23,9 @@ import { LanguageSwitcher } from "@/components/LanguageSelector/LanguageSwitcher
 import { UserMenuProps } from "@/interfaces";
 
 const UserMenu: React.FC<UserMenuProps> = ({ userName, userImage }) => {
+  const tLinks = useTranslations("common.links");
+  const tCommon = useTranslations("common.buttons");
+
   const router = useRouter();
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -78,11 +83,11 @@ const UserMenu: React.FC<UserMenuProps> = ({ userName, userImage }) => {
             sx: {
               overflow: "visible",
               filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
-              mt: 1.5,
+              mt: 2,
               "& .MuiAvatar-root": {
                 width: 32,
                 height: 32,
-                ml: -0.5,
+                ml: -4,
                 mr: 1,
               },
               "&:before": {
@@ -104,19 +109,19 @@ const UserMenu: React.FC<UserMenuProps> = ({ userName, userImage }) => {
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
         <MenuItem onClick={handleProfile}>
-          <Settings sx={{ mr: 1 }} /> Profile
+          <Settings sx={{ mr: 1 }} /> {tLinks("profile")}
         </MenuItem>
         <MenuItem onClick={handleHistory}>
-          <History sx={{ mr: 1 }} /> History
+          <History sx={{ mr: 1 }} /> {tLinks("history")}
         </MenuItem>
         <MenuItem onClick={handleAnalytics}>
-          <BarChart sx={{ mr: 1 }} /> Analytics
+          <BarChart sx={{ mr: 1 }} /> {tLinks("analytics")}
         </MenuItem>
         <MenuItem onClick={handleReviews}>
-          <RateReview sx={{ mr: 1 }} /> Reviews
+          <RateReview sx={{ mr: 1 }} /> {tLinks("reviews")}
         </MenuItem>
         <MenuItem onClick={() => signOut()}>
-          <Logout sx={{ mr: 1 }} /> Logout
+          <Logout sx={{ mr: 1 }} /> {tCommon("logout")}
         </MenuItem>
 
         {isMobile && (

@@ -11,11 +11,19 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import financeAnalysis from "../../public/financial-analysis.png";
-import { features } from "@/components/Features/FeaturesData";
+import { useTranslations } from "next-intl";
+
+interface FeatureItem {
+  title: string;
+  description: string;
+}
 
 const Feature = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+
+  const t = useTranslations("landing.features");
+  const features = t.raw("items") as FeatureItem[];
 
   return (
     <Parallax

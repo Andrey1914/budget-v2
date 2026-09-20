@@ -1,0 +1,174 @@
+{
+  "advantages": {
+    "title": "Control your finances with a new level of convenience.",
+    "description": "Our financial and transaction management app is a convenient tool for those who strive to keep their expenses and income under control. We've carefully considered every detail to make the process of planning, analyzing, and managing money as simple and efficient as possible.",
+    "items": [
+      {
+        "title": "Flexibility and convenience with monthly filters.",
+        "text": "The app allows you to quickly sort and analyze data by month. This means you can track how your expenses and income change from month to month, identify patterns, and make more informed financial decisions based on that. No more wasting time searching for the right transactions—everything is structured and at your fingertips."
+      },
+      {
+        "title": "Customizable chart for analysis.",
+        "text": "With a customizable chart, you can visualize your financial flows. Tracking data becomes not only convenient but also more intuitive. You decide which parameters interest you and in what format you want to see them. This helps you understand the dynamics of your finances and adjust your budget in time."
+      },
+      {
+        "title": "Intuitive task and record lists.",
+        "text": "In our app, you can create task lists that are easy to edit, delete, or change their status. This approach allows you to efficiently organize your workflow and keep track of important financial operations, such as scheduled payments or incoming funds. It gives you a complete sense of control and helps systematize your financial activities."
+      },
+      {
+        "title": "Complete freedom with incomes and expenses.",
+        "text": "You can manage income and expense records just as easily. Every entry can be edited, deleted, or its status changed, giving you full control over your personal finances. This means you will always be aware of the transactions made, any modifications, and how your financial goals are progressing."
+      },
+      {
+        "title": "Simple and user-friendly interface.",
+        "text": "We have designed the interface to be as intuitive as possible, so you don't have to spend time learning how to use the app. All features are available right from the main screen, allowing you to quickly and easily find the necessary data without wasting time searching."
+      },
+      {
+        "title": "Enhancing financial awareness.",
+        "text": "This is not just an app for tracking expenses and income; it's a tool that helps you understand where your money is going and which financial habits need improvement. You can observe trends and use them to develop more effective strategies for achieving your financial goals."
+      }
+    ]
+  },
+  "features": {
+    "items": [
+      {
+        "title": "Income and Expense Tracking",
+        "description": "Keep track of all your transactions in one place and get a clear overview of your finances."
+      },
+      {
+        "title": "Financial Analysis",
+        "description": "View analytical insights about your income and expenses to make informed decisions."
+      },
+      {
+        "title": "Transaction Categorization",
+        "description": "Organize your income and expenses using categories for easier tracking and analysis."
+      },
+      {
+        "title": "Multi-User Support",
+        "description": "Manage finances securely with user registration and authentication features."
+      }
+    ]
+  },
+  "reviews": {
+    "readMore": "Read more...",
+    "placeholders": [
+      {
+        "username": "Place for your review",
+        "text": "Tell us what you think about the service 💬"
+      },
+      {
+        "username": "Anonymous",
+        "text": "Your success story could be here ✨"
+      },
+      {
+        "username": "New User",
+        "text": "Share your experience and inspire others 🤗"
+      },
+      {
+        "username": "Place for your review",
+        "text": "Tell us what you think about the service 💬"
+      },
+      {
+        "username": "New User",
+        "text": "Share your experience and inspire others 🤗"
+      }
+    ],
+    "rateApp": "Please, rate our app.",
+    "feedbackPlaceholder": "Type your feedback here...",
+    "successMessage": "Review added successfully",
+    "errorMessage": "Failed to add review"
+  },
+  "feedback": {
+    "title": "We hope you enjoy our app!",
+    "verifiedSubtitle": "Leave your feedback. It helps us to become better!",
+    "unverifiedSubtitle": "Sign in and leave your feedback. It helps us to become better!"
+  },
+  "faq": {
+    "items": [
+      {
+        "question": "App Features",
+        "subItems": [
+          {
+            "question": "How do I add a new income or expense?",
+            "answer": "You can fill out the form and save the transaction by clicking the 'Add transaction' button."
+          },
+          {
+            "question": "Can I create categories for income and expenses?",
+            "answer": "Yes, the app allows you to add and edit categories for better financial organization."
+          },
+          {
+            "question": "Can I track my monthly financial goals?",
+            "answer": "Of course! You can set budget limits and track your progress in the 'Analytics' section."
+          },
+          {
+            "question": "How can I view my complete transaction history?",
+            "answer": "The 'History' section displays a full list of all added income and expenses, with options to filter by date and type."
+          }
+        ]
+      },
+      {
+        "question": "Access and Security",
+        "subItems": [
+          {
+            "question": "Do I need to register to use the app?",
+            "answer": "Yes, registration allows you to save your data and access it from any device."
+          },
+          {
+            "question": "How does the app protect my data?",
+            "answer": "We use modern data encryption to ensure your information remains secure."
+          },
+          {
+            "question": "Can I use the app offline?",
+            "answer": "Currently, the app requires an active internet connection to function."
+          },
+          {
+            "question": "Who can see my data?",
+            "answer": "Only you have access to your data. We do not share information with third parties."
+          }
+        ]
+      },
+      {
+        "question": "Usage",
+        "subItems": [
+          {
+            "question": "Is there a mobile version of the app?",
+            "answer": "The app is optimized for smartphones and tablets via web browser. A standalone mobile app is coming soon."
+          },
+          {
+            "question": "Can I export data to Excel or PDF?",
+            "answer": "Yes, the 'History' section offers the option to export transactions in Excel or PDF formats."
+          },
+          {
+            "question": "What should I do if I made a mistake when adding a transaction?",
+            "answer": "You can edit or delete any transaction on the 'Dashboard' page."
+          }
+        ]
+      },
+      {
+        "question": "Technical Questions",
+        "subItems": [
+          {
+            "question": "Which devices support the app?",
+            "answer": "The app is available on desktop computers, tablets, and smartphones using modern browsers (Chrome, Safari, Firefox)."
+          },
+          {
+            "question": "Does the app support multiple users?",
+            "answer": "Yes, you can create multiple user accounts, and each user's data remains private."
+          },
+          {
+            "question": "What if I forgot my password?",
+            "answer": "On the sign-in page, click 'Forgot password?' to recover access to your account."
+          },
+          {
+            "question": "How are app updates handled?",
+            "answer": "Updates occur automatically, ensuring you always use the latest version."
+          }
+        ]
+      }
+    ]
+  },
+  "hero": {
+    "title": "Manage your finances easily and simply!",
+    "subtitle": "Use our app to track your incomes and expenses. An easy way to control your budget."
+  }
+}

@@ -2,10 +2,10 @@ import { useRef, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import type { Swiper as SwiperClass } from "swiper";
+import { useTranslations } from "next-intl";
 
 import "swiper/css";
 
-import { textData } from "./AdvantagesData";
 import { Box, Typography, IconButton, useTheme } from "@mui/material";
 import {
   ArrowBackIosRounded,
@@ -14,14 +14,23 @@ import {
 
 import { StyledImage } from "./AdvantagesCarousel.styled";
 
+interface AdvantageItem {
+  title: string;
+  text: string;
+}
+
 const AdvantagesCarousel = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const swiperRef = useRef<SwiperClass | null>(null);
 
   const theme = useTheme();
+  const t = useTranslations("landing.advantages");
+
+  const items = t.raw("items") as AdvantageItem[];
 
   return (
     <Box
+      suppressHydrationWarning
       sx={{
         display: "flex",
         position: "relative",
@@ -46,7 +55,7 @@ const AdvantagesCarousel = () => {
             swiperRef.current = swiperInstance;
           }}
         >
-          {textData.map((item, index) => (
+          {items.map((item, index) => (
             <SwiperSlide key={index}>
               <Box>
                 <Typography
@@ -84,7 +93,10 @@ const AdvantagesCarousel = () => {
             gap: theme.spacing(1),
           }}
         >
-          <IconButton onClick={() => swiperRef.current?.slidePrev()}>
+          <IconButton
+            onClick={() => swiperRef.current?.slidePrev()}
+            suppressHydrationWarning
+          >
             <ArrowBackIosRounded fontSize="large" sx={{ color: "#7d7d7d" }} />
           </IconButton>
           <Typography
@@ -94,9 +106,12 @@ const AdvantagesCarousel = () => {
               color: "#7d7d7d",
             }}
           >
-            {activeIndex + 1} / {textData.length}
+            {activeIndex + 1} / {items.length}
           </Typography>
-          <IconButton onClick={() => swiperRef.current?.slideNext()}>
+          <IconButton
+            onClick={() => swiperRef.current?.slideNext()}
+            suppressHydrationWarning
+          >
             <ArrowForwardIosRounded
               fontSize="large"
               sx={{ color: "#7d7d7d" }}
