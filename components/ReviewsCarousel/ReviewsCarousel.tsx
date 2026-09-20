@@ -14,9 +14,17 @@ import {
   Button,
 } from "@mui/material";
 import { IReview, IClientReview } from "@/interfaces";
-import placeholderReviews from "@/components/ReviewsCarousel/PlaceholderReviews";
+import { getPlaceholderReviews } from "./PlaceholderReviews";
+import { useTranslations } from "next-intl";
+
+interface PlaceholderTranslation {
+  username: string;
+  text: string;
+}
 
 const ReviewsCarousel: React.FC = () => {
+  const t = useTranslations("landing.reviews");
+  const tCommon = useTranslations("common.buttons");
   const [latestReviews, setLatestReviews] = useState<IClientReview[]>([]);
   const [selectedReview, setSelectedReview] = useState<IClientReview | null>(
     null,
@@ -26,14 +34,19 @@ const ReviewsCarousel: React.FC = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
+  const localizedPlaceholders = useMemo(() => {
+    const rawPlaceholders = t.raw("placeholders") as PlaceholderTranslation[];
+    return getPlaceholderReviews(rawPlaceholders);
+  }, [t]);
+
   const reviewsToShow = useMemo(() => {
     return latestReviews.length < 5
       ? [
           ...latestReviews,
-          ...placeholderReviews.slice(0, 5 - latestReviews.length),
+          ...localizedPlaceholders.slice(0, 5 - latestReviews.length),
         ]
       : latestReviews;
-  }, [latestReviews]);
+  }, [latestReviews, localizedPlaceholders]);
 
   useEffect(() => {
     const fetchLatestReviews = async () => {
@@ -158,7 +171,7 @@ const ReviewsCarousel: React.FC = () => {
               handleOpen(review);
             }}
           >
-            Читати більше...
+            {t("readMore")}
           </Typography>
         )}
       </Box>
@@ -191,7 +204,7 @@ const ReviewsCarousel: React.FC = () => {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">
-            Закрити
+            {tCommon("close")}
           </Button>
         </DialogActions>
       </Dialog>

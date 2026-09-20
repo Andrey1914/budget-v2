@@ -1,0 +1,30 @@
+{
+  "switcher": {
+    "language": "Мова",
+    "english": "Англійська",
+    "ukrainian": "Українська",
+    "russian": "Російська"
+  },
+  "buttons": {
+    "close": "Закрити",
+    "cancel": "Скасувати",
+    "save": "Зберегти",
+    "getStarted": "Розпочати",
+    "authButton": "Вхід/Реєстрація",
+    "logout": "Вийти",
+    "sendFeedback": "Надіслати відгук",
+    "allReviews": "Усі відгуки"
+  },
+  "links": {
+    "home": "Головна",
+    "dashboard": "Дашборд",
+    "history": "Історія",
+    "analytics": "Аналітика",
+    "reviews": "Відгуки",
+    "profile": "Профіль",
+    "terms": "Умови використання",
+    "privacy": "Політика конфіденційності",
+    "cookie": "Політика cookie",
+    "license": "Ліцензійна угода"
+  }
+}

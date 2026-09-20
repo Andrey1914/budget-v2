@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import { useRouter } from "@/i18n/navigation";
 import { useSession } from "next-auth/react";
 import axios from "axios";
+import { useTranslations } from "next-intl";
 
 import Link from "next/link";
 import { Box, Typography, Button, useTheme, Container } from "@mui/material";
@@ -17,13 +18,14 @@ import ReviewsCarousel from "@/components/ReviewsCarousel/ReviewsCarousel";
 import FAQ from "@/components/faq/FAQ";
 // import AverageRating from "@/components/Review/AverageRating";
 import Feature from "@/components/Features/Features";
-import { GetStartedButton, MainButton } from "@/app/[locale]/styles/Buttons";
-
+import { GetStartedButton } from "@/app/[locale]/styles/Buttons";
+import FeedbackSection from "@/components/ReviewsCarousel/FeedbackSection";
 import AuthTabsModal from "@/components/Auth/AuthModal";
-import ReviewForm from "@/components/Review/ReviewForm";
 import { IReview } from "@/interfaces";
 
 const Landing: React.FC = () => {
+  const t = useTranslations("common.buttons");
+
   const { data: session, status } = useSession();
   const router = useRouter();
 
@@ -101,7 +103,6 @@ const Landing: React.FC = () => {
           sx={{
             py: 6,
             px: 2,
-            // background: theme.palette.gradients.reviews,
           }}
         >
           <Container maxWidth="lg">
@@ -110,133 +111,12 @@ const Landing: React.FC = () => {
                 <ReviewsCarousel />
               </Box>
 
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                }}
-              >
-                <Typography
-                  variant="h2"
-                  component="h2"
-                  gutterBottom
-                  sx={{
-                    fontSize: theme.typography.fontSizes[5],
-                    fontWeight: theme.typography.fontWeightRegular,
-                    lineHeight: "40px",
-                  }}
-                >
-                  We hope you enjoy our app!
-                </Typography>
-
-                {session && session.user.isVerified ? (
-                  <Box>
-                    <Typography
-                      variant="h4"
-                      component="p"
-                      gutterBottom
-                      sx={{
-                        fontSize: theme.typography.fontSizes[4],
-                        fontWeight: theme.typography.fontWeightRegular,
-                        lineHeight: "32px",
-                        mb: theme.spacing(5),
-                      }}
-                    >
-                      Leave your feedback. It helps us to became better!{" "}
-                    </Typography>
-                    <ReviewForm onAddReview={handleAddReview} />
-                    <Link
-                      href="reviews"
-                      style={{ display: "flex", textDecoration: "none" }}
-                    >
-                      <Typography
-                        variant="body2"
-                        sx={{
-                          fontSize: "14px",
-                          p: 1,
-                          color: theme.palette.text.secondary,
-                          border: `2px solid ${theme.palette.text.secondary}`,
-                          borderRadius: theme.spacing(1),
-                        }}
-                      >
-                        All reviews
-                      </Typography>
-                    </Link>
-                  </Box>
-                ) : (
-                  <>
-                    <Typography
-                      variant="h4"
-                      component="p"
-                      gutterBottom
-                      sx={{
-                        fontSize: theme.typography.fontSizes[4],
-                        fontWeight: theme.typography.fontWeightRegular,
-                        lineHeight: "32px",
-                        mb: theme.spacing(5),
-                      }}
-                    >
-                      Sign in and leave your feedback. It helps us to became
-                      better!
-                    </Typography>
-                    <Box sx={{ display: "flex", justifyContent: "center" }}>
-                      <MainButton
-                        variant="contained"
-                        color="primary"
-                        onClick={handleReviewClick}
-                      >
-                        {/* <Send sx={{ mr: 2 }} /> */}
-                        Get started
-                      </MainButton>
-                    </Box>
-                  </>
-                )}
-
-                {/* <AverageRating /> */}
-              </Box>
+              <FeedbackSection
+                session={session}
+                handleAddReview={handleAddReview}
+                handleReviewClick={handleReviewClick}
+              />
             </Box>
-
-            {/* <Box sx={{ py: 4 }}>
-              <Box
-                component="div"
-                sx={{
-                  display: "flex",
-                  ml: "auto",
-                  alignItems: "end",
-                  flexDirection: "column",
-                  gap: "1rem",
-                  maxWidth: "200px",
-                }}
-              >
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={handleReviewClick}
-                >
-                  <Send sx={{ mr: 2 }} />
-                  Send feedback
-                </Button>
-
-                <Link
-                  href="reviews"
-                  style={{ display: "flex", textDecoration: "none" }}
-                >
-                  <Typography
-                    variant="body2"
-                    sx={{
-                      fontSize: "14px",
-                      p: 1,
-                      color: theme.palette.text.secondary,
-                      border: `2px solid ${theme.palette.text.secondary}`,
-                      borderRadius: theme.spacing(1),
-                    }}
-                  >
-                    All reviews
-                  </Typography>
-                </Link>
-              </Box>
-            </Box> */}
           </Container>
         </Box>
 
@@ -254,8 +134,9 @@ const Landing: React.FC = () => {
             <GetStartedButton
               colors={["#40ffaa", "#4079ff", "#40ffaa", "#4079ff", "#40ffaa"]}
               onClick={handleOpenAuthModal}
+              suppressHydrationWarning
             >
-              <span className="text-content">Get Started</span>
+              <span className="text-content">{t("getStarted")}</span>
               <span className="gradient-overlay"></span>
             </GetStartedButton>
           </Box>

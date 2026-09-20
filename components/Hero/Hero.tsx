@@ -12,8 +12,11 @@ import {
 } from "@/components/Hero/Hero.styled";
 
 import AuthTabsModal from "@/components/Auth/AuthModal";
+import { useTranslations } from "next-intl";
 
 const Hero: React.FC = () => {
+  const t = useTranslations("landing.hero");
+  const tCommon = useTranslations("common.buttons");
   const [authModalOpen, setAuthModalOpen] = useState(false);
 
   const handleOpenAuthModal = () => setAuthModalOpen(true);
@@ -28,20 +31,16 @@ const Hero: React.FC = () => {
               boxShadow: 3,
             }}
           >
-            <HeroTitle variant="h1">
-              Manage your finances easily and simply!
-            </HeroTitle>
-            <HeroSubTitle variant="h2">
-              Use our app to track your incomes and expenses. An easy way to
-              control your budget.
-            </HeroSubTitle>
+            <HeroTitle variant="h1">{t("title")}</HeroTitle>
+            <HeroSubTitle variant="h2">{t("subtitle")}</HeroSubTitle>
             <Button
               variant="contained"
               size="large"
               color="primary"
               onClick={handleOpenAuthModal}
+              suppressHydrationWarning
             >
-              Get Started
+              {tCommon("getStarted")}
             </Button>
           </HeroBackdrop>
         </HeroContainer>

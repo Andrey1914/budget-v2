@@ -1,0 +1,30 @@
+{
+  "switcher": {
+    "language": "Язык",
+    "english": "Английский",
+    "ukrainian": "Украинский",
+    "russian": "Русский"
+  },
+  "buttons": {
+    "close": "Закрыть",
+    "cancel": "Отмена",
+    "save": "Сохранить",
+    "getStarted": "Начать",
+    "authButton": "Вход/Регистрация",
+    "logout": "Выйти",
+    "sendFeedback": "Отправить отзыв",
+    "allReviews": "Все отзывы"
+  },
+  "links": {
+    "home": "Главная",
+    "dashboard": "Дашборд",
+    "history": "История",
+    "analytics": "Аналитика",
+    "reviews": "Отзывы",
+    "profile": "Профиль",
+    "terms": "Условия использования",
+    "privacy": "Политика конфиденциальности",
+    "cookie": "Политика cookie",
+    "license": "Лицензионное соглашение"
+  }
+}

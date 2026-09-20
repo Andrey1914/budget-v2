@@ -1,47 +1,9 @@
-"use client";
-
-import { useRouter } from "next/navigation";
 import { Link, List, ListItem, useTheme } from "@mui/material";
+import { useLegalLinks } from "@/hooks/useLegalLinks";
 
 const LegalInformation: React.FC = () => {
-  const router = useRouter();
-
+  const links = useLegalLinks();
   const theme = useTheme();
-
-  const handleLinkAgreement = () => {
-    router.push("/landing/user-agreement");
-  };
-
-  const handleLinkPrivacy = () => {
-    router.push("/landing/privacy");
-  };
-
-  const handleLinkCookie = () => {
-    router.push("/landing/cookie");
-  };
-
-  const handleLinkLicense = () => {
-    router.push("/landing/license");
-  };
-
-  const links = [
-    {
-      text: "Умови використання",
-      handler: () => handleLinkAgreement(),
-    },
-    {
-      text: "Політика конфіденційності",
-      handler: () => handleLinkPrivacy(),
-    },
-    {
-      text: "cookie",
-      handler: () => handleLinkCookie(),
-    },
-    {
-      text: "Ліцензійна угода",
-      handler: () => handleLinkLicense(),
-    },
-  ];
 
   return (
     <List
@@ -56,7 +18,6 @@ const LegalInformation: React.FC = () => {
           <Link
             onClick={link.handler}
             underline="hover"
-            target="_blank"
             sx={{
               cursor: "pointer",
               whiteSpace: "nowrap",

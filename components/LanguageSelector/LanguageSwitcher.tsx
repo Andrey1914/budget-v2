@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 
 export const LanguageSwitcher: React.FC = () => {
-  const t = useTranslations("Common");
+  const t = useTranslations("common.switcher");
   const locale = useLocale();
   const router = useRouter();
   const pathname = usePathname();

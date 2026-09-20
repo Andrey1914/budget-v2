@@ -3,6 +3,8 @@
 import React, { useEffect, useState } from "react";
 import { FormControlLabel, Switch } from "@mui/material";
 import { SwitcherProps } from "@/interfaces";
+import WbSunnyIcon from "@mui/icons-material/WbSunny";
+import DarkModeIcon from "@mui/icons-material/DarkMode";
 
 const ThemeSwitcher: React.FC<SwitcherProps> = ({
   toggleTheme,
@@ -17,6 +19,17 @@ const ThemeSwitcher: React.FC<SwitcherProps> = ({
   if (!mounted) {
     return null;
   }
+
+  const label = isDarkMode ? (
+    <WbSunnyIcon
+      sx={{ display: "flex", alignItems: "center", color: "#fcfcfc" }}
+    />
+  ) : (
+    <DarkModeIcon
+      sx={{ display: "flex", alignItems: "center", color: "#8d8d8d" }}
+    />
+  );
+
   return (
     <FormControlLabel
       sx={{ gap: 2 }}
@@ -28,7 +41,7 @@ const ThemeSwitcher: React.FC<SwitcherProps> = ({
           size="small"
         />
       }
-      label={isDarkMode ? "Light theme" : "Dark theme"}
+      label={label}
     />
   );
 };

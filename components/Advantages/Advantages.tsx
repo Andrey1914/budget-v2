@@ -1,29 +1,17 @@
-import React, { useState } from "react";
+import React from "react";
 import { Typography, Box, Grid2, useTheme } from "@mui/material";
 import { AdvantagesText } from "@/components/Advantages/Advantages.styled";
-import { textData } from "@/components/Advantages/AdvantagesData";
+import { useTranslations } from "next-intl";
 
 const Advantages: React.FC = () => {
+  const t = useTranslations("landing.advantages");
   const theme = useTheme();
-
-  const [expandedStates, setExpandedStates] = useState<boolean[]>(
-    Array(textData.length).fill(false),
-  );
-
-  const toggleText = (index: number) => {
-    setExpandedStates((prevStates) => {
-      const newStates = [...prevStates];
-      newStates[index] = !newStates[index];
-      return newStates;
-    });
-  };
 
   return (
     <Box
       sx={{
         py: theme.spacing(6),
         px: theme.spacing(3),
-        // backgroundColor: theme.palette.background.advantages,
         [theme.breakpoints.up("sm")]: {
           px: theme.spacing(5),
         },
@@ -39,7 +27,7 @@ const Advantages: React.FC = () => {
           fontSize: theme.typography.fontSizes[5],
         }}
       >
-        Control your finances with a new level of convenience.
+        {t("title")}
       </Typography>
 
       <Typography
@@ -51,11 +39,7 @@ const Advantages: React.FC = () => {
           fontSize: theme.typography.fontSizes[4],
         }}
       >
-        Our financial and transaction management app is a convenient tool for
-        those who strive to keep their expenses and income under control.
-        We&apos;ve carefully considered every detail to make the process of
-        planning, analyzing, and managing money as simple and efficient as
-        possible.
+        {t("description")}
       </Typography>
     </Box>
   );

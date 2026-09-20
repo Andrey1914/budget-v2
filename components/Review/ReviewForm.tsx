@@ -3,8 +3,11 @@ import { Box, TextField, Button, Rating, Typography } from "@mui/material";
 import { Send } from "@mui/icons-material";
 import SnackbarNotification from "@/components/Notification/Snackbar";
 import { ReviewFormProps } from "@/interfaces";
+import { useTranslations } from "next-intl";
 
 const ReviewForm: React.FC<ReviewFormProps> = ({ onAddReview }) => {
+  const tCommon = useTranslations("common.buttons");
+  const tLanding = useTranslations("landing.reviews");
   const [rating, setRating] = useState<number | null>(3);
   const [text, setText] = useState<string>("");
   const [error, setError] = useState<string>("");
@@ -12,7 +15,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ onAddReview }) => {
   const [showSnackbar, setShowSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">(
-    "success"
+    "success",
   );
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -27,12 +30,11 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ onAddReview }) => {
       setText("");
       setError("");
 
-      setSnackbarMessage("Отзыв успешно добавлен");
+      setSnackbarMessage(tLanding("successMessage"));
       setSnackbarSeverity("success");
       setShowSnackbar(true);
     } catch (error) {
-      const errorMessage =
-        (error as Error).message || "Не удалось добавить отзыв";
+      const errorMessage = (error as Error).message || tLanding("errorMessage");
       setSnackbarMessage(errorMessage);
       setSnackbarSeverity("error");
       setShowSnackbar(true);
@@ -42,14 +44,14 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ onAddReview }) => {
   return (
     <>
       <Box component="form">
-        <Typography variant="h6">Please, rate our app.</Typography>
+        <Typography variant="h6">{tLanding("rateApp")}</Typography>
         <Rating
           name="rating"
           value={rating}
           onChange={(event, newValue) => setRating(newValue)}
         />
         <TextField
-          label="Type your feedback here..."
+          label={tLanding("feedbackPlaceholder")}
           multiline
           rows={4}
           value={text}
@@ -65,7 +67,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ onAddReview }) => {
           sx={{ mt: 2 }}
         >
           <Send sx={{ mr: 2 }} />
-          Send feedback
+          {tCommon("sendFeedback")}
         </Button>
       </Box>
 
