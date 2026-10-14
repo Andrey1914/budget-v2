@@ -1,9 +1,12 @@
-"use client";
+// "use client";
 
 import React, { useTransition } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { usePathname, useRouter } from "@/i18n/navigation";
+import { GB, UA, RU } from "country-flag-icons/react/3x2";
 import {
+  Box,
+  Typography,
   MenuItem,
   Select,
   SelectChangeEvent,
@@ -45,9 +48,26 @@ export const LanguageSwitcher: React.FC = () => {
           disableRestoreFocus: true,
         }}
       >
-        <MenuItem value="uk">{t("ukrainian")}</MenuItem>
-        <MenuItem value="en">{t("english")}</MenuItem>
-        <MenuItem value="ru">{t("russian")}</MenuItem>
+        <MenuItem value="en">
+          <Box display="flex" alignItems="center" gap={1}>
+            <GB title={t("english")} style={{ width: 20, borderRadius: 2 }} />
+            <Typography variant="body2">{t("english")}</Typography>
+          </Box>
+        </MenuItem>
+
+        <MenuItem value="uk">
+          <Box display="flex" alignItems="center" gap={1}>
+            <UA title={t("ukrainian")} style={{ width: 20, borderRadius: 2 }} />
+            <Typography variant="body2">{t("ukrainian")}</Typography>
+          </Box>
+        </MenuItem>
+
+        <MenuItem value="ru">
+          <Box display="flex" alignItems="center" gap={1}>
+            <RU title={t("russian")} style={{ width: 20, borderRadius: 2 }} />
+            <Typography variant="body2">{t("russian")}</Typography>
+          </Box>
+        </MenuItem>
       </Select>
     </FormControl>
   );
