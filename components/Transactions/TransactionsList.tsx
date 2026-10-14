@@ -2,25 +2,13 @@
 
 import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
 
 import { useTransactions, useDeleteTransaction } from "@/hooks/useTransactions";
 import { Session, IBaseTransaction } from "@/interfaces";
 import EditTransactionForm from "@/components/Transactions/EditTransactionForm";
-import emptyList from "@/public/empty-list.webp";
-import { Delete, Edit, Add } from "@mui/icons-material";
-import ForeignCurrency from "@/components/Transactions/ForeignCurrency";
+import { Delete, Edit } from "@mui/icons-material";
 
-import {
-  Box,
-  List,
-  ListItem,
-  Paper,
-  Typography,
-  Fab,
-  useTheme,
-} from "@mui/material";
-import Image from "next/image";
+import { Box, List, ListItem, Paper, Typography } from "@mui/material";
 
 interface TransactionsListProps {
   type: "income" | "expense";
@@ -30,28 +18,19 @@ interface TransactionsListProps {
 
 const TransactionsList: React.FC<TransactionsListProps> = ({
   type,
-  totalAmount,
   onUpdate,
 }) => {
   const { data: session } = useSession() as {
     data: Session | null;
     status: string;
   };
-  const router = useRouter();
-  const theme = useTheme();
 
   const isIncome = type === "income";
-  const title = isIncome ? "Incomes" : "Expenses";
-  const totalLabel = isIncome
-    ? "Total Incomes for this month:"
-    : "Total Expenses for this month:";
   const emptyText = isIncome ? "No incomes yet" : "No expenses to show";
 
   const { data: transactionsData, error, refetch } = useTransactions(type);
   const deleteTransactionMutation = useDeleteTransaction();
   const [editingId, setEditingId] = useState<string | null>(null);
-
-  const userCurrency = session?.user?.currency;
 
   useEffect(() => {
     if (transactionsData && session?.user?.currency) {
@@ -71,14 +50,6 @@ const TransactionsList: React.FC<TransactionsListProps> = ({
     deleteTransactionMutation.mutate({ id, type });
   };
 
-  const reloadData = () => {
-    refetch();
-  };
-
-  const handleAddClick = () => {
-    router.push(`/dashboard/${type}`);
-  };
-
   if (!session) {
     return null;
   }
@@ -88,38 +59,6 @@ const TransactionsList: React.FC<TransactionsListProps> = ({
   return (
     <>
       {error && <p style={{ color: "red" }}>{(error as Error).message}</p>}
-      <Box sx={{ p: 4 }}>
-        <Typography variant="h3" component="h2">
-          {title}
-        </Typography>
-      </Box>
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          p: 3,
-          backgroundColor: theme.palette.background.totalSum,
-          borderRadius: 1,
-          border: "1px solid #FEA362",
-        }}
-      >
-        <Box>
-          <Typography
-            variant="h5"
-            component="p"
-            sx={{ color: theme.palette.text.primary }}
-          >
-            {totalLabel} {totalAmount} {userCurrency}
-          </Typography>
-          <ForeignCurrency type={type} />
-        </Box>
-        <Box>
-          <Fab color="primary" aria-label="add" onClick={handleAddClick}>
-            <Add />
-          </Fab>
-        </Box>
-      </Box>
 
       <List
         sx={{
@@ -140,13 +79,6 @@ const TransactionsList: React.FC<TransactionsListProps> = ({
               width: "100%",
             }}
           >
-            <Image
-              src={emptyList}
-              alt="Empty list image"
-              width={300}
-              height={200}
-              style={{ height: "auto" }}
-            />
             <Typography variant="h6" component="p">
               {emptyText}
             </Typography>

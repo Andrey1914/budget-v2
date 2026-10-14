@@ -11,11 +11,15 @@ import apiClient from "@/lib/apiClient";
 interface TransactionFormWrapperProps {
   type: "income" | "expense";
   initialData?: any;
+  onSuccess?: () => void;
+  onClose?: () => void;
 }
 
 const TransactionFormWrapper: React.FC<TransactionFormWrapperProps> = ({
   type,
   initialData,
+  onSuccess,
+  onClose,
 }) => {
   const { data: session } = useSession();
 
@@ -120,6 +124,13 @@ const TransactionFormWrapper: React.FC<TransactionFormWrapperProps> = ({
       setDescription("");
       setCategory("");
       setDate("");
+
+      if (onSuccess) {
+        onSuccess();
+      }
+      if (onClose) {
+        onClose();
+      }
     } catch (error: any) {
       setSnackbarMessage(error.message || `Failed to add ${type}`);
       setSnackbarSeverity("error");

@@ -21,6 +21,7 @@
     "bcrypt": "^5.1.1",
     "chart.js": "^4.4.6",
     "cloudinary": "^2.5.1",
+    "country-flag-icons": "^1.6.20",
     "date-fns": "^3.6.0",
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.8.0",
