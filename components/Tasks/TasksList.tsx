@@ -21,7 +21,7 @@ import {
   Paper,
   Checkbox,
   Typography,
-  Fab,
+  // Fab,
   useTheme,
 } from "@mui/material";
 
@@ -29,7 +29,7 @@ const TasksList: React.FC = () => {
   const { data: session } = useSession() as {
     data: Session | null;
   };
-  const router = useRouter();
+  // const router = useRouter();
   const theme = useTheme();
 
   const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
@@ -45,7 +45,7 @@ const TasksList: React.FC = () => {
         onSuccess: () => {
           refetch();
         },
-      }
+      },
     );
   };
 
@@ -61,10 +61,6 @@ const TasksList: React.FC = () => {
     setEditingTaskId(id);
   };
 
-  const handleAddClick = () => {
-    router.push("/dashboard/tasks");
-  };
-
   if (!session) {
     return null;
   }
@@ -72,11 +68,6 @@ const TasksList: React.FC = () => {
   return (
     <>
       {error && <p style={{ color: "red" }}>{error.message}</p>}
-      <Box sx={{ p: 4 }}>
-        <Typography variant="h3" component="h2">
-          Tasks
-        </Typography>
-      </Box>
 
       <Box
         sx={{
@@ -84,9 +75,6 @@ const TasksList: React.FC = () => {
           justifyContent: "space-between",
           alignItems: "center",
           p: 3,
-          backgroundColor: theme.palette.background.totalSum,
-          borderRadius: 1,
-          border: "1px solid #FEA362",
         }}
       >
         {unresolvedTasksCount > 0 ? (
@@ -102,11 +90,6 @@ const TasksList: React.FC = () => {
             No unresolved tasks, great job!
           </Typography>
         )}
-        <Box>
-          <Fab color="primary" aria-label="add" onClick={handleAddClick}>
-            <Add />
-          </Fab>
-        </Box>
       </Box>
       {tasks.length === 0 ? (
         <Box sx={{ p: 3 }}>
@@ -142,7 +125,7 @@ const TasksList: React.FC = () => {
                       onChange={() =>
                         handleCheckboxChange(
                           item._id.toString(),
-                          item.completed
+                          item.completed,
                         )
                       }
                     />

@@ -28,9 +28,7 @@ export const TransactionsCard: React.FC<TransactionsCardProps> = ({
   const userCurrency = session?.user?.currency;
   const isIncome = type === "income";
   const title = isIncome ? "Incomes" : "Expenses";
-  const totalLabel = isIncome
-    ? "Total Incomes for this month:"
-    : "Total Expenses for this month:";
+  const totalLabel = `Total ${isIncome ? "Incomes" : "Expenses"} for this month:`;
 
   return (
     <DashboardCard elevation={0}>
@@ -44,10 +42,7 @@ export const TransactionsCard: React.FC<TransactionsCardProps> = ({
           <Typography variant="h3" component="h2">
             {title}
           </Typography>
-          <PlusIconButton
-            onClick={onOpenModal}
-            sx={{ backgroundColor: isIncome ? "primary.main" : "error.main" }}
-          />
+          <PlusIconButton onClick={onOpenModal} variantType={type} />
         </Box>
 
         <Box>

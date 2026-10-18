@@ -24,6 +24,7 @@ export default withAuth(async function getUser(
     name: user.name,
     image: user.image,
     createdAt: user.createdAt,
+    currency: user.currency || "USD",
     baseCurrency: user.baseCurrency || "USD",
   });
 });

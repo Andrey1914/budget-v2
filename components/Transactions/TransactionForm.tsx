@@ -147,6 +147,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
             value={currency}
             label="Currency"
             onChange={(e) => setCurrency(e.target.value)}
+            placeholder={userCurrency || "Select Currency"}
           >
             {Array.isArray(currencies) && currencies.length > 0 ? (
               currencies.map((currency, index) => (
