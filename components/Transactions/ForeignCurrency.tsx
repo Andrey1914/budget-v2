@@ -10,7 +10,6 @@ export interface CurrencyTotal {
 export type TransactionType = "income" | "expense";
 
 interface ForeignCurrencySummaryProps {
-  /** Тип транзакции. Если не указан, отображаются и доходы, и расходы */
   type?: TransactionType;
 }
 
@@ -19,6 +18,8 @@ const ForeignCurrency: React.FC<ForeignCurrencySummaryProps> = ({ type }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const isIncome = type === "income";
+
   useEffect(() => {
     const fetchForeignCurrencyTotals = async () => {
       try {
@@ -26,12 +27,10 @@ const ForeignCurrency: React.FC<ForeignCurrencySummaryProps> = ({ type }) => {
         const res = await axios.get("/api/transactions/getFinancialSummary");
 
         if (type) {
-          // Выбираем конкретный массив в зависимости от пропса
           const key =
             type === "income" ? "incomeByCurrency" : "expenseByCurrency";
           setData(res.data[key] || []);
         } else {
-          // Если тип не передан, можно объединить или передать всё
           const income: CurrencyTotal[] = res.data.incomeByCurrency || [];
           const expense: CurrencyTotal[] = res.data.expenseByCurrency || [];
           setData([...income, ...expense]);
@@ -67,7 +66,7 @@ const ForeignCurrency: React.FC<ForeignCurrencySummaryProps> = ({ type }) => {
     return (
       <Box mt={2}>
         <Typography variant="body1" color="text.secondary">
-          У вас нет доходов или расходов в других валютах.
+          {`У вас нет ${isIncome ? "доходов" : "расходов"} в других валютах.`}
         </Typography>
       </Box>
     );

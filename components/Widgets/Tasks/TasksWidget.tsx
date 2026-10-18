@@ -10,17 +10,14 @@ interface TasksWidgetProps {
 export const TasksWidget: React.FC<TasksWidgetProps> = ({ onOpenModal }) => {
   return (
     <DashboardCard elevation={0}>
-      <Box
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-        mb={2}
-      >
-        <Typography variant="h6" fontWeight={700}>
-          Tasks
-        </Typography>
+      <Box display="flex" justifyContent="space-between" alignItems="center">
+        <Box sx={{ p: 4 }}>
+          <Typography variant="h3" component="h2">
+            Tasks
+          </Typography>
+        </Box>
 
-        <PlusIconButton onClick={onOpenModal} />
+        <PlusIconButton variantType="task" onClick={onOpenModal} />
       </Box>
 
       <TasksList />

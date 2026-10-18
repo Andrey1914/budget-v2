@@ -6,7 +6,7 @@ import { useRouter } from "@/i18n/navigation";
 
 import { useFinancialSummary } from "@/hooks/useFinancialSummary";
 import TransactionModal from "@/components/Transactions/TransactionModal";
-import TaskModal from "@/components/Transactions/TaskModal";
+import TaskModal from "@/components/Tasks/TaskModal";
 import {
   TransactionsCard,
   CurrencyConverter,

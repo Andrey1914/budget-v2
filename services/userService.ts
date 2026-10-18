@@ -4,7 +4,8 @@ import { ObjectId } from "mongodb";
 export interface UpdateProfileInput {
   name: string;
   avatar: string;
-  baseCurrency?: string;
+  // baseCurrency?: string;
+  currency?: string;
 }
 
 export const userService = {
@@ -26,16 +27,27 @@ export const userService = {
     const db = await getDb();
     const updateFields: Record<string, any> = {
       name: input.name,
-      image: input.avatar,
+      // image: input.avatar,
     };
 
-    if (input.baseCurrency) {
-      updateFields.baseCurrency = input.baseCurrency;
+    if (input.avatar !== undefined) {
+      updateFields.image = input.avatar;
+    }
+
+    // if (input.baseCurrency) {
+    //   updateFields.baseCurrency = input.baseCurrency;
+    // }
+    if (input.currency) {
+      updateFields.currency = input.currency;
     }
 
     const result = await db
       .collection("users")
       .updateOne({ email }, { $set: updateFields });
+
+    if (result.matchedCount === 0) {
+      return false;
+    }
 
     if (result.modifiedCount > 0) {
       await db
@@ -46,7 +58,8 @@ export const userService = {
         );
     }
 
-    return result.modifiedCount > 0;
+    // return result.modifiedCount > 0;
+    return true;
   },
 
   async updateUserCurrency(email: string, currency: string) {
@@ -55,7 +68,8 @@ export const userService = {
       .collection("users")
       .updateOne({ email }, { $set: { currency } });
 
-    return result.modifiedCount > 0;
+    // return result.modifiedCount > 0;
+    return result.matchedCount > 0;
   },
 
   async deleteUserAvatar(email: string) {
@@ -64,6 +78,7 @@ export const userService = {
       .collection("users")
       .updateOne({ email }, { $set: { image: null } });
 
-    return result.modifiedCount > 0;
+    // return result.modifiedCount > 0;
+    return result.matchedCount > 0;
   },
 };

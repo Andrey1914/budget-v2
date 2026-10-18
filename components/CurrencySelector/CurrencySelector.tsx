@@ -17,6 +17,7 @@ import { CurrencySelectorProps } from "@/interfaces";
 const CurrencySelector: React.FC<CurrencySelectorProps> = ({
   selectedCurrency,
   onCurrencyChange,
+  onSaveCurrency,
 }) => {
   const [currencies, setCurrencies] = useState<
     { code: string; name: string }[]
@@ -64,15 +65,18 @@ const CurrencySelector: React.FC<CurrencySelectorProps> = ({
           <MenuItem disabled>{error || "No currencies available"}</MenuItem>
         )}
       </Select>
-      <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => alert("Currency saved!")}
-        >
+      {/* <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
+        <Button variant="contained" color="primary" onClick={onSaveCurrency}>
           Save Currency
         </Button>
-      </Box>
+      </Box> */}
+      {onSaveCurrency && (
+        <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
+          <Button variant="contained" color="primary" onClick={onSaveCurrency}>
+            Save Currency
+          </Button>
+        </Box>
+      )}
     </FormControl>
   );
 };

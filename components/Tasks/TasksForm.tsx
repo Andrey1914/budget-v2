@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import { TaskFormProps } from "@/interfaces";
 import { Oval } from "react-loader-spinner";
 import SnackbarNotification from "@/components/Notification/Snackbar";
+import { PrimaryButton } from "@/components/UI/Buttons";
 
 import { Box, TextField, Button } from "@mui/material";
 
@@ -17,7 +18,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ onSubmit, loading }) => {
   const [showSnackbar, setShowSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">(
-    "success"
+    "success",
   );
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -37,7 +38,11 @@ const TaskForm: React.FC<TaskFormProps> = ({ onSubmit, loading }) => {
     <>
       <Box
         component="form"
-        sx={{ "& > :not(style)": { m: 2, width: "25ch" } }}
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 4,
+        }}
         noValidate
         autoComplete="off"
         onSubmit={handleSubmit}
@@ -52,6 +57,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ onSubmit, loading }) => {
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Title"
             required
+            sx={{ width: "100%" }}
           />
         </div>
         <div>
@@ -59,14 +65,26 @@ const TaskForm: React.FC<TaskFormProps> = ({ onSubmit, loading }) => {
             multiline
             rows={4}
             color="primary"
-            label="Content"
+            label="Content..."
             variant="outlined"
             value={content || ""}
             onChange={(e) => setContent(e.target.value)}
             placeholder="Content"
+            sx={{ width: "100%" }}
           />
         </div>
-        <Button variant="outlined" type="submit" disabled={loading}>
+        <PrimaryButton
+          variant="contained"
+          type="submit"
+          disabled={loading}
+          // sx={{
+          //   width: "auto",
+          //   minWidth: "auto",
+          //   alignSelf: "center",
+          //   px: 6,
+          //   py: 2,
+          // }}
+        >
           {loading ? (
             <Oval
               height="30"
@@ -77,7 +95,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ onSubmit, loading }) => {
           ) : (
             "Save"
           )}
-        </Button>
+        </PrimaryButton>
       </Box>
 
       {showSnackbar && (

@@ -89,7 +89,14 @@ export default NextAuth({
     maxAge: 7 * 24 * 60 * 60,
   },
   callbacks: {
-    async jwt({ token, user, account }) {
+    async jwt({ token, user, account, trigger, session }) {
+      if (trigger === "update" && session) {
+        if (session.user?.name) token.name = session.user.name;
+        if (session.user?.image !== undefined) token.image = session.user.image;
+        if (session.user?.currency) token.currency = session.user.currency;
+        return token;
+      }
+
       if (user) {
         if (account?.provider === "google") {
           const db = await getDb();
@@ -146,6 +153,7 @@ export default NextAuth({
         if (dbUser) {
           token.name = dbUser.name;
           token.image = dbUser.image;
+          token.currency = dbUser.currency;
         }
       }
 
