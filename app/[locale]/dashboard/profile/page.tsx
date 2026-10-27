@@ -5,7 +5,7 @@ import { Box, Container, Typography } from "@mui/material";
 
 import { ProfileAvatar } from "@/components/Profile/ProfileAvatar";
 import { ProfileForm } from "@/components/Profile/ProfileForm";
-import { ConfirmModal } from "@/components/Profile/ConfirmModal";
+import { ConfirmModal } from "@/components/UI/Modal";
 import SnackbarNotification from "@/components/Notification/Snackbar";
 import { useProfile } from "@/hooks/useProfile";
 

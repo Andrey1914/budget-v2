@@ -1,202 +1,202 @@
-import React, { useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
+"use client";
 
-import axios from "axios";
-import {
-  Box,
-  TextField,
-  Button,
-  MenuItem,
-  Select,
-  InputLabel,
-  FormControl,
-} from "@mui/material";
+import React from "react";
+import { Box, MenuItem, FormControl } from "@mui/material";
 import { Oval } from "react-loader-spinner";
 import SelectCategory from "@/components/Category/Select";
 import CustomPopover from "@/components/Popover/Popover";
-import { Session, TransactionFormProps } from "@/interfaces";
+import SnackbarNotification from "@/components/Notification/Snackbar";
+import { TransactionFormProps } from "@/interfaces";
+import {
+  useCurrencies,
+  useCategoryManager,
+  useTransactionForm,
+} from "@/hooks/useTransactionHooks";
+import {
+  FormContainer,
+  ThreeColumnsRow,
+  FormTextField,
+  FormSelectField,
+  ButtonContainer,
+  ConfirmSubmitButton,
+} from "./styles";
 
-const TransactionForm: React.FC<TransactionFormProps> = ({
-  amount,
-  setAmount,
-  category,
-  setCategory,
-  description,
-  setDescription,
-  date,
-  setDate,
-  currency,
-  setCurrency,
-  loading,
-  onSubmit,
-  categories,
-  newCategory,
-  newCategoryDescription,
-  setNewCategory,
-  setNewCategoryDescription,
-  handleAddCategory,
-  handleEditCategory,
-  handleOpenEditDialog,
-  handleDeleteCategory,
-  openAddDialog,
-  setOpenAddDialog,
-  openEditDialog,
-  setOpenEditDialog,
-  editingCategory,
-  handleCloseEditDialog,
+const TransactionForm: React.FC<TransactionFormProps> = (props) => {
+  const { type } = props;
 
-  open,
-  anchorEl,
-  message,
-  onClose,
-}) => {
-  const { data: session } = useSession() as { data: Session | null };
+  const {
+    values,
+    setAmount,
+    setDescription,
+    setCategory,
+    setDate,
+    setCurrency,
+    loading,
+    handleSubmit,
+    popover,
+    snackbar,
+    showNotification,
+  } = useTransactionForm(props);
 
-  const [currencies, setCurrencies] = useState<
-    { code: string; name: string }[]
-  >([]);
+  const {
+    currencies,
+    error: currencyError,
+    loading: currenciesLoading,
+  } = useCurrencies();
 
-  const [error, setError] = useState<string | null>(null);
-
-  const userCurrency = session?.user?.currency;
-
-  useEffect(() => {
-    const fetchCurrencies = async () => {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-      const appId = process.env.NEXT_PUBLIC_APP_ID;
-      try {
-        const response = await axios.get(`${apiUrl}?app_id=${appId}`);
-
-        const currenciesList = Object.keys(response.data).map((key) => ({
-          code: key,
-          name: response.data[key],
-        }));
-
-        setCurrencies(currenciesList);
-      } catch (error) {
-        console.error("Error fetching currencies:", error);
-        setError("Failed to load currencies.");
-      }
-    };
-
-    fetchCurrencies();
-  }, []);
+  const categoryManager = useCategoryManager({
+    type,
+    onNotification: showNotification,
+  });
 
   return (
-    <Box
-      component="form"
-      sx={{ "& > :not(style)": { m: 2, width: "25ch" } }}
-      noValidate
-      autoComplete="off"
-      onSubmit={onSubmit}
-    >
-      <div>
-        <TextField
-          id="amount"
-          label="Amount"
-          variant="outlined"
-          autoFocus={true}
-          type="number"
-          value={amount}
-          onChange={(e) => setAmount(e.target.value)}
-          required
-        />
-      </div>
-      <div>
+    <>
+      <FormContainer noValidate autoComplete="off" onSubmit={handleSubmit}>
         <SelectCategory
-          categories={categories}
-          category={category}
+          categories={categoryManager.categories}
+          category={values.category}
           setCategory={setCategory}
-          newCategory={newCategory}
-          newCategoryDescription={newCategoryDescription}
-          setNewCategory={setNewCategory}
-          setNewCategoryDescription={setNewCategoryDescription}
-          handleAddCategory={handleAddCategory}
-          handleEditCategory={handleEditCategory}
-          handleOpenEditDialog={handleOpenEditDialog}
-          handleDeleteCategory={handleDeleteCategory}
-          openAddDialog={openAddDialog}
-          setOpenAddDialog={setOpenAddDialog}
-          openEditDialog={openEditDialog}
-          setOpenEditDialog={setOpenEditDialog}
-          editingCategory={editingCategory}
-          handleCloseEditDialog={handleCloseEditDialog}
+          newCategory={categoryManager.newCategory}
+          newCategoryDescription={categoryManager.newCategoryDescription}
+          setNewCategory={categoryManager.setNewCategory}
+          setNewCategoryDescription={categoryManager.setNewCategoryDescription}
+          handleAddCategory={categoryManager.handleAddCategory}
+          handleEditCategory={categoryManager.handleEditCategory}
+          handleOpenEditDialog={categoryManager.handleOpenEditDialog}
+          handleDeleteCategory={() =>
+            categoryManager.handleDeleteCategory(values.category, () =>
+              setCategory(""),
+            )
+          }
+          openAddDialog={categoryManager.openAddDialog}
+          setOpenAddDialog={categoryManager.setOpenAddDialog}
+          openEditDialog={categoryManager.openEditDialog}
+          setOpenEditDialog={categoryManager.setOpenEditDialog}
+          editingCategory={categoryManager.editingCategory}
+          handleCloseEditDialog={categoryManager.handleCloseEditDialog}
         />
-      </div>
 
-      <div>
-        <TextField
+        <ThreeColumnsRow>
+          <Box sx={{ flex: 1 }}>
+            <FormTextField
+              id="date"
+              variant="outlined"
+              type="date"
+              value={values.date}
+              onChange={(e) => setDate(e.target.value)}
+              required
+              fullWidth
+            />
+          </Box>
+
+          <Box sx={{ flex: 1 }}>
+            <FormTextField
+              id="amount"
+              placeholder="Сума"
+              variant="outlined"
+              type="number"
+              value={values.amount}
+              onChange={(e) => setAmount(e.target.value)}
+              required
+              fullWidth
+              autoFocus
+            />
+          </Box>
+
+          <Box sx={{ flex: { xs: 1, sm: 1.4 } }}>
+            <FormControl fullWidth variant="outlined">
+              <FormSelectField
+                id="currency"
+                value={values.currency}
+                onChange={(e) => setCurrency(e.target.value as string)}
+                displayEmpty
+                required
+                renderValue={(selected) => {
+                  if (!selected) {
+                    return <span style={{ color: "#757575" }}>Валюта</span>;
+                  }
+                  const curr = currencies.find((c) => c.code === selected);
+                  return curr
+                    ? `${curr.code} - ${curr.name}`
+                    : (selected as string);
+                }}
+              >
+                <MenuItem value="" disabled>
+                  Валюта
+                </MenuItem>
+
+                {Boolean(values.currency) &&
+                  !currencies.some((curr) => curr.code === values.currency) && (
+                    <MenuItem
+                      key={values.currency}
+                      value={values.currency}
+                      sx={{ display: "none" }}
+                    >
+                      {values.currency}
+                    </MenuItem>
+                  )}
+                {Array.isArray(currencies) && currencies.length > 0 ? (
+                  currencies.map((curr) => (
+                    <MenuItem key={curr.code} value={curr.code}>
+                      {curr.code} - {curr.name}
+                    </MenuItem>
+                  ))
+                ) : (
+                  <MenuItem disabled>
+                    {currenciesLoading
+                      ? "Завантаження валют..."
+                      : currencyError || "No currencies available"}
+                  </MenuItem>
+                )}
+              </FormSelectField>
+            </FormControl>
+          </Box>
+        </ThreeColumnsRow>
+
+        <FormTextField
           id="description"
-          multiline
-          rows={4}
-          color="primary"
-          label="Description"
+          placeholder="Description"
           variant="outlined"
           type="text"
-          value={description}
+          value={values.description}
           onChange={(e) => setDescription(e.target.value)}
+          fullWidth
         />
-      </div>
 
-      <div>
-        <FormControl fullWidth>
-          <InputLabel id="currency-label">Currency</InputLabel>
-          <Select
-            labelId="currency-label"
-            id="currency"
-            value={currency}
-            label="Currency"
-            onChange={(e) => setCurrency(e.target.value)}
-            placeholder={userCurrency || "Select Currency"}
+        <ButtonContainer>
+          <ConfirmSubmitButton
+            id="submit-button"
+            type="submit"
+            disabled={loading}
           >
-            {Array.isArray(currencies) && currencies.length > 0 ? (
-              currencies.map((currency, index) => (
-                <MenuItem key={index} value={currency.code}>
-                  {currency.code} - {currency.name}
-                </MenuItem>
-              ))
+            {loading ? (
+              <Oval
+                height="24"
+                width="24"
+                color="#ffffff"
+                secondaryColor="#6fb5e7"
+              />
             ) : (
-              <MenuItem disabled>{error || "No currencies available"}</MenuItem>
+              "CONFIRM"
             )}
-          </Select>
-        </FormControl>
-      </div>
+          </ConfirmSubmitButton>
+        </ButtonContainer>
 
-      <div>
-        <TextField
-          id="date"
-          variant="outlined"
-          type="date"
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
-          required
+        <CustomPopover
+          open={popover.open}
+          anchorEl={popover.anchorEl}
+          message={popover.message}
+          onClose={popover.onClose}
         />
-      </div>
-      <Button
-        id="submit-button"
-        variant="outlined"
-        type="submit"
-        disabled={loading}
-      >
-        {loading ? (
-          <Oval
-            height="30"
-            width="30"
-            color="#1727b7"
-            secondaryColor="#6fb5e7"
-          />
-        ) : (
-          "Add Transaction"
-        )}
-      </Button>
+      </FormContainer>
 
-      <CustomPopover
-        open={open}
-        anchorEl={anchorEl}
-        message={message}
-        onClose={onClose}
-      />
-    </Box>
+      {snackbar.open && (
+        <SnackbarNotification
+          message={snackbar.message}
+          severity={snackbar.severity}
+        />
+      )}
+    </>
   );
 };
 

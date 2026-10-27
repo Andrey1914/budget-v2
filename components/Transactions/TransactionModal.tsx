@@ -1,15 +1,16 @@
 "use client";
 
 import React from "react";
-import { Dialog, DialogContent, IconButton, Box } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
-import TransactionFormWrapper from "./TransactionFormWrapper";
+import TransactionForm from "./TransactionForm";
+import { Modal } from "@/components/UI";
+import { ModalBody, ModalTitle } from "./styles";
 
 interface TransactionModalProps {
   open: boolean;
   onClose: () => void;
   type: "income" | "expense";
-  onSubmit: (data?: any) => void | Promise<any>;
+  onSubmit?: (data?: any) => void | Promise<any>;
+  title?: string;
 }
 
 const TransactionModal: React.FC<TransactionModalProps> = ({
@@ -17,36 +18,41 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
   onClose,
   type,
   onSubmit,
+  title,
 }) => {
-  return (
-    <Dialog
-      open={open}
-      onClose={onClose}
-      maxWidth="sm"
-      fullWidth
-      PaperProps={{
-        sx: {
-          borderRadius: 2,
-          p: { xs: 1, md: 2 },
-        },
-      }}
-    >
-      <Box display="flex" justifyContent="flex-end" mb={-2}>
-        <IconButton onClick={onClose} aria-label="close">
-          <CloseIcon />
-        </IconButton>
-      </Box>
+  const defaultTitle =
+    type === "income" ? "Додати нове надходження:" : "Додати нову витрату:";
+  const modalTitle = title || defaultTitle;
 
-      <DialogContent>
-        <TransactionFormWrapper
+  const handleClose = () => {
+    if (
+      typeof document !== "undefined" &&
+      document.activeElement instanceof HTMLElement
+    ) {
+      document.activeElement.blur();
+    }
+    onClose();
+  };
+
+  const handleSuccess = async () => {
+    if (onSubmit) {
+      await onSubmit();
+    }
+    handleClose();
+  };
+
+  return (
+    <Modal open={open} onClose={handleClose} maxWidth="xs">
+      <ModalBody>
+        <ModalTitle variant="h5">{modalTitle}</ModalTitle>
+
+        <TransactionForm
           type={type}
-          onSuccess={() => {
-            onSubmit({});
-          }}
-          onClose={onClose}
+          onSuccess={handleSuccess}
+          onClose={handleClose}
         />
-      </DialogContent>
-    </Dialog>
+      </ModalBody>
+    </Modal>
   );
 };
 

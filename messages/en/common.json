@@ -13,7 +13,8 @@
     "authButton": "SignIn/SignUp",
     "logout": "Logout",
     "sendFeedback": "Send feedback",
-    "allReviews": "All reviews"
+    "allReviews": "All reviews",
+    "showMore": "Show more"
   },
   "links": {
     "home": "Home",

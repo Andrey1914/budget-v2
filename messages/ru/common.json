@@ -13,7 +13,8 @@
     "authButton": "Вход/Регистрация",
     "logout": "Выйти",
     "sendFeedback": "Отправить отзыв",
-    "allReviews": "Все отзывы"
+    "allReviews": "Все отзывы",
+    "showMore": "Показать больше"
   },
   "links": {
     "home": "Главная",
