@@ -1,24 +1,42 @@
 "use client";
 
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { useSession } from "next-auth/react";
-
-import { useTransactions, useDeleteTransaction } from "@/hooks/useTransactions";
+import { useTranslations } from "next-intl";
+import { useTransactions } from "@/hooks/useTransactions";
 import { Session, IBaseTransaction, ICategory } from "@/interfaces";
 import EditTransactionForm from "@/components/Transactions/EditTransactionForm";
-import { Delete, Edit } from "@mui/icons-material";
-
-import { Box, List, ListItem, Typography, Divider } from "@mui/material";
+import { DetailedTransactionsList } from "@/components/Transactions/DetailedTransactionsList";
+import { TransactionListItem } from "@/components/Transactions/TransactionListItem";
+import {
+  getTransactionCategoryName,
+  getTransactionTotal,
+} from "@/components/Transactions/transactionUtils";
+import { Typography } from "@mui/material";
+import {
+  TransactionsListWrapper,
+  ErrorText,
+  EmptyStateBox,
+  ListContainer,
+  StyledMuiList,
+  FadingShadowOverlay,
+  ShowMoreWrapper,
+  InlineShowMoreButton,
+  ShowMoreActionText,
+} from "./styles";
 
 interface TransactionsListProps {
   type: "income" | "expense";
   totalAmount: number;
   onUpdate: (updatedAmount: number) => void;
+  expandableInline?: boolean;
 }
 
 const TransactionsList: React.FC<TransactionsListProps> = ({
   type,
+  totalAmount,
   onUpdate,
+  expandableInline = false,
 }) => {
   const { data: session } = useSession() as {
     data: Session | null;
@@ -27,143 +45,130 @@ const TransactionsList: React.FC<TransactionsListProps> = ({
 
   const isIncome = type === "income";
   const emptyText = isIncome ? "No incomes yet" : "No expenses to show";
+  const showMoreText = useTranslations("common.buttons")("showMore");
 
   const { data: transactionsData, error, refetch } = useTransactions(type);
-  const deleteTransactionMutation = useDeleteTransaction();
-  const [editingId, setEditingId] = useState<string | null>(null);
 
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [isExpanded, setIsExpanded] = useState(false);
   const [categoryMap, setCategoryMap] = useState<Record<string, string>>({});
+  const [isDetailedModalOpen, setIsDetailedModalOpen] = useState(false);
 
   const loadCategories = useCallback(async () => {
     try {
-      const res = await fetch(`/api/transactions/categories?type=${type}`);
-      if (res.ok) {
-        const categories: ICategory[] = await res.json();
-        const map: Record<string, string> = {};
-        categories.forEach((cat) => {
-          if (cat._id) {
-            map[cat._id.toString()] = cat.name;
-          }
-        });
-        setCategoryMap(map);
+      const response = await fetch(`/api/transactions/categories?type=${type}`);
+
+      if (!response.ok) {
+        return;
       }
-    } catch (err) {
-      console.error("Failed to load categories", err);
+
+      const categories: ICategory[] = await response.json();
+      const map: Record<string, string> = {};
+
+      categories.forEach((category) => {
+        if (category._id) {
+          map[category._id.toString()] = category.name;
+        }
+      });
+
+      setCategoryMap(map);
+    } catch (error) {
+      console.error("Failed to load categories", error);
     }
   }, [type]);
 
   useEffect(() => {
-    loadCategories();
+    void loadCategories();
   }, [loadCategories]);
 
   useEffect(() => {
-    if (transactionsData && session?.user?.currency) {
-      const total = (transactionsData as IBaseTransaction[])
-        .filter((item) => item.currency === session.user.currency)
-        .reduce((acc: number, item: IBaseTransaction) => acc + item.amount, 0);
-
-      onUpdate(total);
+    if (!transactionsData || !session?.user?.currency) {
+      return;
     }
-  }, [transactionsData, session, onUpdate]);
 
-  const handleEdit = (id: string) => {
-    setEditingId(id);
-  };
+    const total = getTransactionTotal(
+      transactionsData as IBaseTransaction[],
+      session.user.currency,
+    );
 
-  const handleDeleteItem = (id: string) => {
-    deleteTransactionMutation.mutate({ id, type });
-  };
+    onUpdate(total);
+  }, [transactionsData, session?.user?.currency, onUpdate]);
+
+  const items = useMemo(() => {
+    const rawItems = (transactionsData || []) as IBaseTransaction[];
+    return [...rawItems].sort((a, b) => {
+      const timeA = new Date(a.date).getTime();
+      const timeB = new Date(b.date).getTime();
+      if (timeB !== timeA) {
+        return timeB - timeA;
+      }
+      return String(b._id).localeCompare(String(a._id));
+    });
+  }, [transactionsData]);
 
   if (!session) {
     return null;
   }
 
-  const items = (transactionsData || []) as IBaseTransaction[];
+  const hasMoreThanThree = items.length > 3;
 
   return (
-    <>
-      {error && <p style={{ color: "red" }}>{(error as Error).message}</p>}
+    <TransactionsListWrapper>
+      {error && <ErrorText>{(error as Error).message}</ErrorText>}
 
-      <List
-        sx={{
-          width: "100%",
-          display: "flex",
-          flexDirection: "column",
-          gap: 1,
-          minHeight: "320px",
-        }}
-      >
-        {items.length === 0 ? (
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              width: "100%",
-            }}
+      {items.length === 0 ? (
+        <EmptyStateBox>
+          <Typography variant="body1" color="text.secondary" component="p">
+            {emptyText}
+          </Typography>
+        </EmptyStateBox>
+      ) : (
+        <>
+          <ListContainer
+            isExpanded={isExpanded}
+            hasMoreThanThree={hasMoreThanThree}
           >
-            <Typography variant="h6" component="p">
-              {emptyText}
-            </Typography>
-          </Box>
-        ) : (
-          items.map((item: IBaseTransaction) => {
-            const categoryIdStr = item.category?.toString();
-            const categoryName = categoryIdStr
-              ? categoryMap[categoryIdStr]
-              : "";
+            <StyledMuiList>
+              {items.map((transaction, index) => (
+                <TransactionListItem
+                  key={transaction._id.toString()}
+                  transaction={transaction}
+                  categoryName={getTransactionCategoryName(
+                    transaction,
+                    categoryMap,
+                  )}
+                  type={type}
+                  variant="compact"
+                  isLast={index === items.length - 1}
+                  onClick={() => setIsDetailedModalOpen(true)}
+                />
+              ))}
+            </StyledMuiList>
 
-            return (
-              <React.Fragment key={item._id.toString()}>
-                <ListItem
-                  sx={{
-                    p: 3,
-                    display: "flex",
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    width: "100%",
-                    backgroundColor: "transparent",
-                  }}
+            {hasMoreThanThree && !isExpanded && (
+              <FadingShadowOverlay aria-hidden="true" />
+            )}
+          </ListContainer>
+
+          {hasMoreThanThree && (
+            <ShowMoreWrapper>
+              {expandableInline ? (
+                <InlineShowMoreButton
+                  onClick={() => setIsExpanded((previous) => !previous)}
                 >
-                  <Box
-                    sx={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      width: "100%",
-                    }}
-                  >
-                    <Typography variant="body1" component="p">
-                      {categoryName}
-                    </Typography>
-                    <Typography
-                      variant="body1"
-                      component="p"
-                      sx={{ color: isIncome ? "primary.main" : "error.main" }}
-                    >
-                      {item.amount} {item.currency}
-                    </Typography>
-                  </Box>
-
-                  {/* <Box sx={{ display: "flex", gap: 3 }}>
-                    <Edit
-                      sx={{ cursor: "pointer" }}
-                      onClick={() => handleEdit(item._id.toString())}
-                    />
-
-                    <Delete
-                      sx={{ cursor: "pointer" }}
-                      onClick={() => handleDeleteItem(item._id.toString())}
-                    />
-                  </Box> */}
-                </ListItem>
-                <Divider />
-              </React.Fragment>
-            );
-          })
-        )}
-      </List>
+                  {isExpanded ? "Show less" : showMoreText}
+                </InlineShowMoreButton>
+              ) : (
+                <ShowMoreActionText
+                  onClick={() => setIsDetailedModalOpen(true)}
+                >
+                  {showMoreText}
+                </ShowMoreActionText>
+              )}
+            </ShowMoreWrapper>
+          )}
+        </>
+      )}
 
       {editingId && (
         <EditTransactionForm
@@ -173,7 +178,20 @@ const TransactionsList: React.FC<TransactionsListProps> = ({
           onClose={() => setEditingId(null)}
         />
       )}
-    </>
+
+      <DetailedTransactionsList
+        open={isDetailedModalOpen}
+        onClose={() => setIsDetailedModalOpen(false)}
+        totalAmount={totalAmount}
+        transactions={items}
+        categoryMap={categoryMap}
+        type={type}
+        onItemClick={(transaction) => {
+          setIsDetailedModalOpen(false);
+          setEditingId(transaction._id.toString());
+        }}
+      />
+    </TransactionsListWrapper>
   );
 };
 

@@ -13,7 +13,8 @@
     "authButton": "Вхід/Реєстрація",
     "logout": "Вийти",
     "sendFeedback": "Надіслати відгук",
-    "allReviews": "Усі відгуки"
+    "allReviews": "Усі відгуки",
+    "showMore": "Показати більше"
   },
   "links": {
     "home": "Головна",

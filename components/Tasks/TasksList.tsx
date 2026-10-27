@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 
 import EditTaskForm from "@/components/Tasks/EditTaskForm";
 import {
@@ -13,14 +13,15 @@ import {
 
 import { Session, ITask } from "@/interfaces";
 
-import { Delete, Edit, Add } from "@mui/icons-material";
+// import { Delete, Edit, Add } from "@mui/icons-material";
 import {
   Box,
   List,
   ListItem,
-  Paper,
+  // Paper,
   Checkbox,
   Typography,
+  Divider,
   // Fab,
   useTheme,
 } from "@mui/material";
@@ -108,8 +109,8 @@ const TasksList: React.FC = () => {
         >
           {Array.isArray(tasks) &&
             tasks.map((item: ITask) => (
-              <ListItem key={item._id.toString()} sx={{ p: 0 }}>
-                <Paper
+              <React.Fragment key={item._id.toString()}>
+                <ListItem
                   sx={{
                     p: 2,
                     display: "flex",
@@ -117,6 +118,7 @@ const TasksList: React.FC = () => {
                     flexDirection: "row",
                     justifyContent: "space-between",
                     width: "100%",
+                    backgroundColor: "transparent",
                   }}
                 >
                   <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -134,12 +136,13 @@ const TasksList: React.FC = () => {
                     </Typography>
                   </Box>
 
-                  <Box sx={{ display: "flex", gap: 3 }}>
+                  {/* <Box sx={{ display: "flex", gap: 3 }}>
                     <Edit onClick={() => handleEdit(item._id.toString())} />
                     <Delete onClick={() => handleDelete(item._id.toString())} />
-                  </Box>
-                </Paper>
-              </ListItem>
+                  </Box> */}
+                </ListItem>
+                <Divider />
+              </React.Fragment>
             ))}
         </List>
       )}
