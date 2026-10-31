@@ -24,7 +24,7 @@ interface ConfirmDeleteModalProps {
   loading?: boolean;
 }
 
-const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({
+export const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({
   open,
   onClose,
   onConfirm,
@@ -100,5 +100,3 @@ const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({
     </Dialog>
   );
 };
-
-export default ConfirmDeleteModal;

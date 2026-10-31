@@ -1,17 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Box, Typography, CircularProgress, Alert } from "@mui/material";
 import axios from "axios";
-
-export interface CurrencyTotal {
-  _id: string;
-  total: number;
-}
-
-export type TransactionType = "income" | "expense";
-
-interface ForeignCurrencySummaryProps {
-  type?: TransactionType;
-}
+import { CurrencyTotal, ForeignCurrencySummaryProps } from "./types";
 
 const ForeignCurrency: React.FC<ForeignCurrencySummaryProps> = ({ type }) => {
   const [data, setData] = useState<CurrencyTotal[]>([]);

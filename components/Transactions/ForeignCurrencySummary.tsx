@@ -7,11 +7,7 @@ import {
   Divider,
 } from "@mui/material";
 import axios from "axios";
-
-interface CurrencyTotal {
-  _id: string;
-  total: number;
-}
+import { CurrencyTotal } from "./types";
 
 const ForeignCurrencySummary: React.FC = () => {
   const [incomeByCurrency, setIncomeByCurrency] = useState<CurrencyTotal[]>([]);

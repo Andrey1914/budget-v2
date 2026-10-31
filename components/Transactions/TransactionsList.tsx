@@ -1,17 +1,25 @@
 "use client";
 
 import React, { useEffect, useState, useCallback, useMemo } from "react";
+
 import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
-import { useTransactions } from "@/hooks/useTransactions";
 import { Session, IBaseTransaction, ICategory } from "@/interfaces";
+import { TransactionsListProps } from "./types";
 import EditTransactionForm from "@/components/Transactions/EditTransactionForm";
 import { DetailedTransactionsList } from "@/components/Transactions/DetailedTransactionsList";
 import { TransactionListItem } from "@/components/Transactions/TransactionListItem";
+import { Modal } from "@/components/UI";
+
+import { DetailedTransactionsListItem } from "@/components/Transactions/DetailedTransactionsListItem";
+import { ConfirmModal } from "@/components/UI/Modal";
+
+import { useTransactions, useDeleteTransaction } from "@/hooks/useTransactions";
+
 import {
   getTransactionCategoryName,
   getTransactionTotal,
-} from "@/components/Transactions/transactionUtils";
+} from "@/components/Transactions/utils";
 import { Typography } from "@mui/material";
 import {
   TransactionsListWrapper,
@@ -24,13 +32,6 @@ import {
   InlineShowMoreButton,
   ShowMoreActionText,
 } from "./styles";
-
-interface TransactionsListProps {
-  type: "income" | "expense";
-  totalAmount: number;
-  onUpdate: (updatedAmount: number) => void;
-  expandableInline?: boolean;
-}
 
 const TransactionsList: React.FC<TransactionsListProps> = ({
   type,
@@ -47,12 +48,24 @@ const TransactionsList: React.FC<TransactionsListProps> = ({
   const emptyText = isIncome ? "No incomes yet" : "No expenses to show";
   const showMoreText = useTranslations("common.buttons")("showMore");
 
-  const { data: transactionsData, error, refetch } = useTransactions(type);
+  const { data: transactionsData, error } = useTransactions(type);
 
   const [editingId, setEditingId] = useState<string | null>(null);
   const [isExpanded, setIsExpanded] = useState(false);
   const [categoryMap, setCategoryMap] = useState<Record<string, string>>({});
   const [isDetailedModalOpen, setIsDetailedModalOpen] = useState(false);
+
+  const [selectedTransaction, setSelectedTransaction] =
+    useState<IBaseTransaction | null>(null);
+
+  const [isTransactionDetailsOpen, setIsTransactionDetailsOpen] =
+    useState(false);
+
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
+  const deleteTransactionMutation = useDeleteTransaction();
 
   const loadCategories = useCallback(async () => {
     try {
@@ -112,6 +125,51 @@ const TransactionsList: React.FC<TransactionsListProps> = ({
 
   const hasMoreThanThree = items.length > 3;
 
+  const handleTransactionClick = (transaction: IBaseTransaction) => {
+    setIsDetailedModalOpen(false);
+    setSelectedTransaction(transaction);
+    setIsTransactionDetailsOpen(true);
+  };
+
+  const handleEditSelectedTransaction = () => {
+    if (!selectedTransaction) {
+      return;
+    }
+
+    setEditingId(selectedTransaction._id.toString());
+    setIsTransactionDetailsOpen(false);
+    setIsEditModalOpen(true);
+  };
+
+  const handleDeleteSelectedTransaction = () => {
+    setIsTransactionDetailsOpen(false);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!selectedTransaction) {
+      return;
+    }
+
+    try {
+      await deleteTransactionMutation.mutateAsync({
+        id: selectedTransaction._id.toString(),
+        type,
+      });
+
+      setIsDeleteModalOpen(false);
+      setSelectedTransaction(null);
+    } catch (error) {
+      console.error("Failed to delete transaction:", error);
+    }
+  };
+
+  const handleEditClose = () => {
+    setIsEditModalOpen(false);
+    setEditingId(null);
+    setSelectedTransaction(null);
+  };
+
   return (
     <TransactionsListWrapper>
       {error && <ErrorText>{(error as Error).message}</ErrorText>}
@@ -170,15 +228,6 @@ const TransactionsList: React.FC<TransactionsListProps> = ({
         </>
       )}
 
-      {editingId && (
-        <EditTransactionForm
-          transactionId={editingId}
-          type={type}
-          refreshData={refetch}
-          onClose={() => setEditingId(null)}
-        />
-      )}
-
       <DetailedTransactionsList
         open={isDetailedModalOpen}
         onClose={() => setIsDetailedModalOpen(false)}
@@ -186,10 +235,52 @@ const TransactionsList: React.FC<TransactionsListProps> = ({
         transactions={items}
         categoryMap={categoryMap}
         type={type}
-        onItemClick={(transaction) => {
-          setIsDetailedModalOpen(false);
-          setEditingId(transaction._id.toString());
+        onItemClick={handleTransactionClick}
+      />
+
+      <DetailedTransactionsListItem
+        open={isTransactionDetailsOpen}
+        onClose={() => {
+          setIsTransactionDetailsOpen(false);
+          setSelectedTransaction(null);
         }}
+        transaction={selectedTransaction}
+        type={type}
+        categoryName={
+          selectedTransaction
+            ? getTransactionCategoryName(
+                selectedTransaction,
+                categoryMap,
+                "Без категорії",
+              )
+            : ""
+        }
+        onEdit={handleEditSelectedTransaction}
+        onDelete={handleDeleteSelectedTransaction}
+      />
+
+      <Modal open={isEditModalOpen} onClose={handleEditClose} maxWidth="sm">
+        {editingId && (
+          <EditTransactionForm
+            transactionId={editingId}
+            type={type}
+            onClose={handleEditClose}
+          />
+        )}
+      </Modal>
+
+      <ConfirmModal
+        message="Ви впевнені, що хочете видалити цю транзакцію? Цю дію неможливо скасувати."
+        title="Видалити транзакцію"
+        confirmText="Видалити"
+        cancelText="Скасувати"
+        open={isDeleteModalOpen}
+        onClose={() => {
+          setIsDeleteModalOpen(false);
+          setSelectedTransaction(null);
+        }}
+        onConfirm={handleConfirmDelete}
+        loading={deleteTransactionMutation.isPending}
       />
     </TransactionsListWrapper>
   );

@@ -3,10 +3,15 @@
 import React, { useMemo } from "react";
 import { List, Typography } from "@mui/material";
 import { useSession } from "next-auth/react";
-import { Session, IBaseTransaction } from "@/interfaces";
+import { Session } from "@/interfaces";
+import { DetailedTransactionsListProps } from "./types";
 import { Modal } from "@/components/UI";
 import { TransactionListItem } from "@/components/Transactions/TransactionListItem";
-import { getTransactionCategoryName } from "@/components/Transactions/transactionUtils";
+import {
+  getTransactionCategoryName,
+  sortTransactionsByDate,
+} from "@/components/Transactions/utils";
+
 import {
   ModalScrollContainer,
   ModalHeading,
@@ -14,16 +19,6 @@ import {
   TotalAmountText,
   EmptyStateBoxDetailed,
 } from "./styles";
-
-interface DetailedTransactionsListProps {
-  open: boolean;
-  onClose: () => void;
-  totalAmount: number;
-  transactions: IBaseTransaction[];
-  categoryMap: Record<string, string>;
-  type: "income" | "expense";
-  onItemClick?: (transaction: IBaseTransaction) => void;
-}
 
 export const DetailedTransactionsList: React.FC<
   DetailedTransactionsListProps
@@ -47,16 +42,10 @@ export const DetailedTransactionsList: React.FC<
   const totalLabel = `Total ${title} for this month:`;
   const emptyText = isIncome ? "No incomes yet" : "No expenses to show";
 
-  const sortedTransactions = useMemo(() => {
-    return [...transactions].sort((a, b) => {
-      const timeA = new Date(a.date).getTime();
-      const timeB = new Date(b.date).getTime();
-      if (timeB !== timeA) {
-        return timeB - timeA;
-      }
-      return String(b._id).localeCompare(String(a._id));
-    });
-  }, [transactions]);
+  const sortedTransactions = useMemo(
+    () => sortTransactionsByDate(transactions),
+    [transactions],
+  );
 
   return (
     <Modal open={open} onClose={onClose} maxWidth="sm">

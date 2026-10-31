@@ -19,9 +19,8 @@ import validateFieldEmail from "@/utils/validators/validateFieldEmail";
 import validateFieldPassword from "@/utils/validators/validateFieldPassword";
 import validateFieldPasswordsMatch from "@/utils/validators/validateFieldPasswordMatch";
 import { validateFormChangePassword } from "@/utils/validators/validateFormChangePassword";
-// import StyledTextField from "@/components/Auth/Input.styled";
 import { MainButton } from "@/app/[locale]/styles/Buttons";
-import { StyledTextField, PrimaryButton } from "@/components/UI";
+import { StyledTextField } from "@/components/UI";
 
 type Props = {
   onCancel: () => void;
