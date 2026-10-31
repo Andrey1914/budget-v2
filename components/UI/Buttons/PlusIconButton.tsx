@@ -3,7 +3,7 @@
 import React from "react";
 import { IconButtonProps } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import { StyledPlusIconButton } from "./PlusIconButton.styled";
+import { StyledPlusIconButton } from "./styles";
 
 export interface PlusIconButtonProps extends IconButtonProps {
   variantType?: "income" | "expense" | "task";

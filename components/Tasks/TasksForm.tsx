@@ -5,9 +5,9 @@ import { useSession } from "next-auth/react";
 import { TaskFormProps } from "@/interfaces";
 import { Oval } from "react-loader-spinner";
 import SnackbarNotification from "@/components/Notification/Snackbar";
-import { PrimaryButton } from "@/components/UI/Buttons";
+import { PrimaryButton } from "@/components/UI/Buttons/styles";
 
-import { Box, TextField, Button } from "@mui/material";
+import { Box, TextField } from "@mui/material";
 
 const TaskForm: React.FC<TaskFormProps> = ({ onSubmit, loading }) => {
   const { data: session } = useSession();
@@ -73,18 +73,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ onSubmit, loading }) => {
             sx={{ width: "100%" }}
           />
         </div>
-        <PrimaryButton
-          variant="contained"
-          type="submit"
-          disabled={loading}
-          // sx={{
-          //   width: "auto",
-          //   minWidth: "auto",
-          //   alignSelf: "center",
-          //   px: 6,
-          //   py: 2,
-          // }}
-        >
+        <PrimaryButton variant="contained" type="submit" disabled={loading}>
           {loading ? (
             <Oval
               height="30"

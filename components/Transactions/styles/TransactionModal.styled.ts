@@ -32,12 +32,9 @@ export const StyledDialog = styled(Dialog)(({ theme }) => ({
 
 //  (Frame "xmark-large", высота 32px)
 export const ModalTopBar = styled(Box)(({ theme }) => ({
-  height: "32px",
   display: "flex",
   justifyContent: "flex-end",
   alignItems: "center",
-  paddingRight: theme.spacing(2),
-  paddingLeft: theme.spacing(2),
   backgroundColor:
     theme.palette.mode === "light"
       ? theme.palette.background.default
@@ -45,7 +42,7 @@ export const ModalTopBar = styled(Box)(({ theme }) => ({
 }));
 
 export const ModalCloseButton = styled(IconButton)(({ theme }) => ({
-  padding: "4px",
+  padding: 0,
   color: theme.palette.primary.main, // (#007826 light / #3abb5a dark)
   transition: theme.transitions.create(["opacity"]),
   "&:hover": {

@@ -32,7 +32,7 @@ export const Modal: React.FC<ModalProps> = ({
     >
       <ModalTopBar>
         <ModalCloseButton onClick={onClose} size="small" aria-label="close">
-          <CloseIcon sx={{ fontSize: "18px" }} />
+          <CloseIcon sx={{ fontSize: "24px" }} />
         </ModalCloseButton>
       </ModalTopBar>
 

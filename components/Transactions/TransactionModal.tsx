@@ -4,14 +4,7 @@ import React from "react";
 import TransactionForm from "./TransactionForm";
 import { Modal } from "@/components/UI";
 import { ModalBody, ModalTitle } from "./styles";
-
-interface TransactionModalProps {
-  open: boolean;
-  onClose: () => void;
-  type: "income" | "expense";
-  onSubmit?: (data?: any) => void | Promise<any>;
-  title?: string;
-}
+import { TransactionModalProps } from "./types";
 
 const TransactionModal: React.FC<TransactionModalProps> = ({
   open,

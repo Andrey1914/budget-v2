@@ -3,18 +3,11 @@ import apiClient from "@/lib/apiClient";
 import { useEditTransaction } from "@/hooks/useTransactions";
 import { Oval } from "react-loader-spinner";
 import { Box, TextField, Button } from "@mui/material";
-
-interface EditTransactionFormProps {
-  transactionId: string;
-  type: "income" | "expense";
-  refreshData?: (data: any) => void;
-  onClose: (data?: any) => void;
-}
+import { EditTransactionFormProps } from "./types";
 
 const EditTransactionForm = ({
   transactionId,
   type,
-  refreshData,
   onClose,
 }: EditTransactionFormProps) => {
   const [amount, setAmount] = useState("");
@@ -59,9 +52,8 @@ const EditTransactionForm = ({
         date,
       },
       {
-        onSuccess: (data) => {
-          if (refreshData) refreshData(data);
-          onClose(data);
+        onSuccess: () => {
+          onClose();
         },
         onError: (err: any) => {
           setError(err.message || `Failed to edit ${type}`);
@@ -141,7 +133,7 @@ const EditTransactionForm = ({
           "Save"
         )}
       </Button>
-      <Button variant="outlined" type="button" onClick={() => onClose()}>
+      <Button variant="outlined" type="button" onClick={onClose}>
         Cancel
       </Button>
     </Box>

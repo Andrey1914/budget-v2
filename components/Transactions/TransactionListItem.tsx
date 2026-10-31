@@ -1,17 +1,6 @@
 import React from "react";
 import { Box, ListItem, Typography, useTheme } from "@mui/material";
-import { IBaseTransaction } from "@/interfaces";
-
-type TransactionListItemVariant = "compact" | "detailed";
-
-interface TransactionListItemProps {
-  transaction: IBaseTransaction;
-  categoryName: string;
-  type: "income" | "expense";
-  variant: TransactionListItemVariant;
-  isLast?: boolean;
-  onClick?: () => void;
-}
+import { TransactionListItemProps } from "./types";
 
 export const TransactionListItem: React.FC<TransactionListItemProps> = ({
   transaction,
