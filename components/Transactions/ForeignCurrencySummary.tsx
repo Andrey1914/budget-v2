@@ -57,8 +57,8 @@ const ForeignCurrencySummary: React.FC = () => {
   if (!hasForeignIncome && !hasForeignExpenses) {
     return (
       <Box mt={2}>
-        <Typography variant="body1">
-          У вас нет доходов или расходов в других валютах.
+        <Typography variant="body1" color="text.secondary">
+          В этом месяце у вас ещё нет доходов или расходов в других валютах.
         </Typography>
       </Box>
     );

@@ -3,24 +3,11 @@ import { Box, Typography, Skeleton } from "@mui/material";
 import { US, EU } from "country-flag-icons/react/3x2";
 import { useTheme } from "@mui/material/styles";
 import { DashboardCard, PlusIconButton } from "@/components/UI";
-
-interface NbuRate {
-  r030: number;
-  txt: string;
-  rate: number;
-  cc: string; // 'USD', 'EUR'
-  exchangedate: string;
-}
-
-interface CurrencyRates {
-  USD?: { buy: string; sell: string };
-  EUR?: { buy: string; sell: string };
-}
-
-interface CurrencyWidgetProps {
-  currentDateStr: string;
-  onOpenConverter: () => void;
-}
+import type {
+  CurrencyRates,
+  NbuRate,
+  CurrencyWidgetProps,
+} from "@/components/Widgets/Currency/types";
 
 export const CurrencyWidget: React.FC<CurrencyWidgetProps> = ({
   currentDateStr,
