@@ -1,195 +1,107 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React from "react";
+import { Box, IconButton } from "@mui/material";
+import AutorenewIcon from "@mui/icons-material/Autorenew";
+
+import { Modal } from "@/components/UI";
+
+import { useCurrencyConverter } from "@/hooks/useTransactionHooks";
+
 import {
-  Dialog,
-  DialogContent,
-  Box,
-  Typography,
-  IconButton,
-  MenuItem,
-  Select,
-  FormControl,
-} from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
-import { StyledTextField } from "@/components/UI";
-import { PrimaryButton } from "@/components/UI/Buttons/styles";
+  CurrencyConverterHeader,
+  CurrencyProviderSelector,
+  CurrencyAmountField,
+  CurrencyConverterFooter,
+} from "./CurrencyConverter/index";
 
-interface CurrencyConverterProps {
-  open: boolean;
-  onClose: () => void;
-}
-
-const DEFAULT_RATES: Record<string, number> = {
-  UAH: 1.0,
-  USD: 41.35,
-  EUR: 45.9,
-  PLN: 10.8,
-};
-
-const CURRENCY_CODES = ["UAH", "USD", "EUR", "PLN"];
+import type { CurrencyConverterProps } from "@/components/Widgets/Currency/types";
 
 export const CurrencyConverter: React.FC<CurrencyConverterProps> = ({
   open,
   onClose,
 }) => {
-  const [rates, setRates] = useState<Record<string, number>>(DEFAULT_RATES);
-  const [amountFrom, setAmountFrom] = useState<string>("100");
-  const [amountTo, setAmountTo] = useState<string>("");
-  const [currencyFrom, setCurrencyFrom] = useState<string>("USD");
-  const [currencyTo, setCurrencyTo] = useState<string>("UAH");
+  const {
+    currencies,
+    supportedCurrencies,
 
-  useEffect(() => {
-    const fetchRates = async () => {
-      try {
-        const res = await fetch(
-          "https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?json",
-        );
-        if (res.ok) {
-          const data = await res.json();
-          const newRates: Record<string, number> = { UAH: 1.0 };
-          data.forEach((item: { cc: string; rate: number }) => {
-            if (["USD", "EUR", "PLN"].includes(item.cc)) {
-              newRates[item.cc] = item.rate;
-            }
-          });
-          setRates((prev) => ({ ...prev, ...newRates }));
-        }
-      } catch (err) {
-        console.warn("Курсы НБУ загружены из резервных данных:", err);
-      }
-    };
+    provider,
+    amountFrom,
+    amountTo,
+    currencyFrom,
+    currencyTo,
 
-    if (open) {
-      fetchRates();
-    }
-  }, [open]);
+    isLoading,
+    error,
+    updatedAt,
 
-  useEffect(() => {
-    const val = parseFloat(amountFrom);
-    if (isNaN(val) || val <= 0) {
-      setAmountTo("");
-      return;
-    }
-    const rateFrom = rates[currencyFrom] || 1;
-    const rateTo = rates[currencyTo] || 1;
-    const converted = (val * rateFrom) / rateTo;
-    setAmountTo(converted.toFixed(2));
-  }, [amountFrom, currencyFrom, currencyTo, rates]);
+    setCurrencyFrom,
+    setCurrencyTo,
+
+    handleAmountFromChange,
+    handleAmountToChange,
+    handleSwapCurrencies,
+    handleProviderChange,
+  } = useCurrencyConverter(open);
 
   return (
-    <Dialog
-      open={open}
-      onClose={onClose}
-      fullWidth
-      maxWidth="sm"
-      PaperProps={{
-        sx: {
-          width: "656px",
-          maxWidth: "100%",
-          borderRadius: 1,
-          p: 0,
-          backgroundColor: "background.paper",
-        },
-      }}
-    >
-      {/* Шапка с кнопкой закрытия */}
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "flex-end",
-          alignItems: "center",
-          borderBottom: "1px solid",
-          borderColor: "divider",
-        }}
-      >
-        <IconButton onClick={onClose} size="small" sx={{ p: 0.5 }}>
-          <CloseIcon sx={{ fontSize: 20 }} />
-        </IconButton>
-      </Box>
+    <Modal open={open} onClose={onClose} maxWidth="sm">
+      <Box display="flex" flexDirection="column" gap={2.5}>
+        <CurrencyConverterHeader />
 
-      {/* Контент модального окна */}
-      <DialogContent
-        sx={{ p: 3, display: "flex", flexDirection: "column", gap: 2.5 }}
-      >
-        <Box display="flex" flexDirection="column" gap={0.5}>
-          <Typography variant="h5" color="text.primary" fontWeight={400}>
-            Конвертувати:
-          </Typography>
-          <Typography variant="body1" color="text.secondary">
-            Конвертація здійснюється за курсом НБУ.
-          </Typography>
-        </Box>
+        <CurrencyProviderSelector
+          provider={provider}
+          onChange={handleProviderChange}
+        />
 
-        <Box display="flex" flexDirection="column" gap={1.5}>
-          <Box display="flex" gap={1.5} alignItems="center">
-            <Box flex={1}>
-              <StyledTextField
-                placeholder="Сума"
-                type="number"
-                value={amountFrom}
-                onChange={(e) => setAmountFrom(e.target.value)}
-                fullWidth
-                size="small"
-              />
-            </Box>
-            <FormControl size="small" sx={{ width: 120 }}>
-              <Select
-                value={currencyFrom}
-                onChange={(e) => setCurrencyFrom(e.target.value as string)}
-                sx={{ borderRadius: 1, height: "40px" }}
-              >
-                {CURRENCY_CODES.map((code) => (
-                  <MenuItem key={code} value={code}>
-                    {code}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+        <Box display="flex" flexDirection="column" gap={1}>
+          <CurrencyAmountField
+            amount={amountFrom}
+            currency={currencyFrom}
+            currencies={currencies}
+            supportedCurrencies={supportedCurrencies}
+            loading={isLoading}
+            error={error}
+            onAmountChange={handleAmountFromChange}
+            onCurrencyChange={setCurrencyFrom}
+          />
+
+          <Box display="flex" justifyContent="center" p={2}>
+            <IconButton
+              onClick={handleSwapCurrencies}
+              aria-label="Поміняти валюти місцями"
+              size="small"
+              sx={{
+                border: 1,
+                borderColor: "divider",
+                borderRadius: "50%",
+              }}
+            >
+              <AutorenewIcon />
+            </IconButton>
           </Box>
 
-          <Box display="flex" gap={1.5} alignItems="center">
-            <Box flex={1}>
-              <StyledTextField
-                placeholder="Сума"
-                type="number"
-                value={amountTo}
-                InputProps={{ readOnly: true }}
-                fullWidth
-                size="small"
-              />
-            </Box>
-            <FormControl size="small" sx={{ width: 120 }}>
-              <Select
-                value={currencyTo}
-                onChange={(e) => setCurrencyTo(e.target.value as string)}
-                sx={{ borderRadius: 1, height: "40px" }}
-              >
-                {CURRENCY_CODES.map((code) => (
-                  <MenuItem key={code} value={code}>
-                    {code}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Box>
+          <CurrencyAmountField
+            amount={amountTo}
+            currency={currencyTo}
+            currencies={currencies}
+            supportedCurrencies={supportedCurrencies}
+            loading={isLoading}
+            error={error}
+            onAmountChange={handleAmountToChange}
+            onCurrencyChange={setCurrencyTo}
+          />
         </Box>
-      </DialogContent>
 
-      {/* Центрированная кнопка OK по макету */}
-      <Box sx={{ py: 2, px: 3, display: "flex", justifyContent: "center" }}>
-        <PrimaryButton
-          onClick={onClose}
-          sx={{
-            width: "110px",
-            height: "48px",
-            fontSize: "24px",
-            fontWeight: 300,
-          }}
-        >
-          OK
-        </PrimaryButton>
+        <CurrencyConverterFooter
+          loading={isLoading}
+          error={error}
+          updatedAt={updatedAt}
+          onClose={onClose}
+        />
       </Box>
-    </Dialog>
+    </Modal>
   );
 };
+
+export default CurrencyConverter;

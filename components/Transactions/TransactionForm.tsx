@@ -12,6 +12,8 @@ import {
   useCategoryManager,
   useTransactionForm,
 } from "@/hooks/useTransactionHooks";
+import { CURRENCY_FLAGS } from "@/components/Widgets/Currency";
+import * as Flags from "country-flag-icons/react/3x2";
 import {
   FormContainer,
   ThreeColumnsRow,
@@ -20,6 +22,8 @@ import {
   ButtonContainer,
   ConfirmSubmitButton,
 } from "./styles";
+
+type FlagComponent = React.ComponentType<React.SVGProps<SVGSVGElement>>;
 
 const TransactionForm: React.FC<TransactionFormProps> = (props) => {
   const { type } = props;
@@ -49,6 +53,41 @@ const TransactionForm: React.FC<TransactionFormProps> = (props) => {
     onNotification: showNotification,
   });
 
+  const renderCurrency = (currencyCode: string) => {
+    const currency = currencies.find((curr) => curr.code === currencyCode);
+
+    const countryCode = CURRENCY_FLAGS[currencyCode];
+
+    const FlagIcon = countryCode
+      ? (Flags as unknown as Record<string, FlagComponent>)[countryCode]
+      : undefined;
+
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          gap: 2,
+        }}
+      >
+        {FlagIcon && (
+          <FlagIcon
+            style={{
+              width: 24,
+              height: 16,
+              flexShrink: 0,
+              borderRadius: 1,
+            }}
+          />
+        )}
+
+        <span>
+          {currency ? `${currency.code} - ${currency.name}` : currencyCode}
+        </span>
+      </Box>
+    );
+  };
+
   return (
     <>
       <FormContainer noValidate autoComplete="off" onSubmit={handleSubmit}>
@@ -77,7 +116,7 @@ const TransactionForm: React.FC<TransactionFormProps> = (props) => {
         />
 
         <ThreeColumnsRow>
-          <Box sx={{ flex: 1 }}>
+          <Box sx={{ flex: "0.5" }}>
             <FormTextField
               id="date"
               variant="outlined"
@@ -89,7 +128,7 @@ const TransactionForm: React.FC<TransactionFormProps> = (props) => {
             />
           </Box>
 
-          <Box sx={{ flex: 1 }}>
+          <Box sx={{ flex: "0.7" }}>
             <FormTextField
               id="amount"
               placeholder="Сума"
@@ -115,10 +154,8 @@ const TransactionForm: React.FC<TransactionFormProps> = (props) => {
                   if (!selected) {
                     return <span style={{ color: "#757575" }}>Валюта</span>;
                   }
-                  const curr = currencies.find((c) => c.code === selected);
-                  return curr
-                    ? `${curr.code} - ${curr.name}`
-                    : (selected as string);
+
+                  return renderCurrency(selected as string);
                 }}
               >
                 <MenuItem value="" disabled>
@@ -132,13 +169,13 @@ const TransactionForm: React.FC<TransactionFormProps> = (props) => {
                       value={values.currency}
                       sx={{ display: "none" }}
                     >
-                      {values.currency}
+                      {renderCurrency(values.currency)}
                     </MenuItem>
                   )}
                 {Array.isArray(currencies) && currencies.length > 0 ? (
                   currencies.map((curr) => (
                     <MenuItem key={curr.code} value={curr.code}>
-                      {curr.code} - {curr.name}
+                      {renderCurrency(curr.code)}
                     </MenuItem>
                   ))
                 ) : (
@@ -155,7 +192,7 @@ const TransactionForm: React.FC<TransactionFormProps> = (props) => {
 
         <FormTextField
           id="description"
-          placeholder="Description"
+          placeholder="Щоб не забути, напиши щось..."
           variant="outlined"
           type="text"
           value={values.description}

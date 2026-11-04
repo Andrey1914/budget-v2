@@ -88,11 +88,11 @@ const Dashboard: React.FC = () => {
     return null;
   }
 
-  const currentDateStr = new Date().toLocaleDateString("en-US", {
+  const currentDateStr = new Date().toLocaleDateString("en-GB", {
     weekday: "long",
     year: "numeric",
-    month: "numeric",
-    day: "numeric",
+    month: "2-digit",
+    day: "2-digit",
   });
 
   const netBalance = totalIncome - totalExpense;
