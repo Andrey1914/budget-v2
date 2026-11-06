@@ -9,7 +9,7 @@ import axios from "axios";
 import { Oval } from "react-loader-spinner";
 import SnackbarNotification from "@/components/Notification/Snackbar";
 import StyledTextField from "@/components/Auth/Input.styled";
-import { MainButton } from "@/app/[locale]/styles/Buttons";
+import { MainButton } from "@/theme";
 
 import { Button, Box, Typography, useTheme } from "@mui/material";
 
