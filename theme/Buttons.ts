@@ -88,5 +88,52 @@ export const GetStartedButton = styled(Button)<GetStartedButtonProps>(
         backgroundPosition: "0% 50%",
       },
     },
-  })
+  }),
 );
+
+// import { Button, styled } from "@mui/material";
+
+// export const MainButton = styled(Button)(({ theme }) => ({
+//   color: "#FFFFFF",
+//   background: "#26793B",
+//   borderRadius: 4,
+//   fontFamily: "Roboto",
+//   fontWeight: 400,
+//   fontSize: 16,
+//   lineHeight: 1.5,
+//   letterSpacing: "0.03em",
+//   textTransform: "none",
+//   width: "100%",
+//   boxShadow:
+//     "0px 4px 5px rgba(0, 0, 0, 0.14), 0px 1px 10px rgba(0, 0, 0, 0.12), 0px 2px 4px rgba(0, 0, 0, 0.2)",
+//   "&:hover": {
+//     background: "#206732",
+//   },
+//   "&:active": {
+//     background: "#195228",
+//   },
+// }));
+
+// export const GetStartedButton = styled(Button)(({ theme }) => ({
+//   background: "#26793B",
+//   color: "#FFFFFF",
+//   borderRadius: 4,
+//   fontFamily: "Roboto",
+//   fontWeight: 400,
+//   fontSize: 16,
+//   lineHeight: 1.5,
+//   letterSpacing: "0.03em",
+//   textTransform: "none",
+//   width: 200,
+//   boxShadow:
+//     "0px 4px 5px rgba(0, 0, 0, 0.14), 0px 1px 10px rgba(0, 0, 0, 0.12), 0px 2px 4px rgba(0, 0, 0, 0.2)",
+//   "&:hover": {
+//     background: "#206732",
+//   },
+//   "&:active": {
+//     background: "#195228",
+//   },
+//   [theme.breakpoints.down("sm")]: {
+//     width: "100%",
+//   },
+// }));

@@ -6,7 +6,7 @@ import { Box, Typography, useTheme } from "@mui/material";
 import { useTranslations } from "next-intl";
 import { Session } from "next-auth";
 import ReviewForm from "@/components/Review/ReviewForm";
-import { MainButton } from "@/app/[locale]/styles/Buttons";
+import { MainButton } from "@/theme";
 
 interface FeedbackSectionProps {
   session: Session | null;

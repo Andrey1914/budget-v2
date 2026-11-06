@@ -19,7 +19,7 @@ import validateFieldEmail from "@/utils/validators/validateFieldEmail";
 import validateFieldPassword from "@/utils/validators/validateFieldPassword";
 import validateFieldPasswordsMatch from "@/utils/validators/validateFieldPasswordMatch";
 import { validateFormChangePassword } from "@/utils/validators/validateFormChangePassword";
-import { MainButton } from "@/app/[locale]/styles/Buttons";
+import { MainButton } from "@/theme";
 import { StyledTextField } from "@/components/UI";
 
 type Props = {

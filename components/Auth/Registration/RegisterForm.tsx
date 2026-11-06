@@ -28,7 +28,7 @@ import { validateFieldName } from "@/utils/validators/validateFieldName";
 import validateFieldEmail from "@/utils/validators/validateFieldEmail";
 import validateFieldPassword from "@/utils/validators/validateFieldPassword";
 import StyledTextField from "@/components/Auth/Input.styled";
-import { MainButton } from "@/app/[locale]/styles/Buttons";
+import { MainButton } from "@/theme";
 
 interface RegisterTabProps {
   onSuccessRegistration: () => void;

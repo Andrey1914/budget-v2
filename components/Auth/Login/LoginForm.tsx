@@ -22,7 +22,7 @@ import googleIcon from "@/public/google.png";
 import SnackbarNotification from "@/components/Notification/Snackbar";
 import { Oval } from "react-loader-spinner";
 import StyledTextField from "@/components/Auth/Input.styled";
-import { MainButton } from "@/app/[locale]/styles/Buttons";
+import { MainButton } from "@/theme";
 // import { StyledTextField, PrimaryButton, GoogleButton } from "@/components/UI";
 
 interface LoginTabProps {
