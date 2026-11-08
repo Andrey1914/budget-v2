@@ -20,7 +20,7 @@ import {
 } from "@mui/material";
 
 import FilterPanel from "@/components/FilterPanel/FilterPanel";
-import { fetchTransactions } from "@/app/[locale]/dashboard/history/get";
+import { fetchTransactions } from "@/services/transactionService";
 import emptyHistory from "@/public/empty-history.webp";
 
 const HistoryPage = () => {
