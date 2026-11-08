@@ -20,7 +20,7 @@ import {
 } from "@mui/material";
 
 import FilterPanel from "@/components/FilterPanel/FilterPanel";
-import { fetchTransactions } from "@/services/transactionService";
+import { historyService } from "@/services/historyService";
 import emptyHistory from "@/public/empty-history.webp";
 
 const HistoryPage = () => {
@@ -54,7 +54,7 @@ const HistoryPage = () => {
 
   const handleFilterSubmit = useCallback(async () => {
     try {
-      const data = await fetchTransactions({
+      const data = await historyService.fetchTransactions({
         year: selectedYear,
         month: selectedMonth,
         type: selectedType,
