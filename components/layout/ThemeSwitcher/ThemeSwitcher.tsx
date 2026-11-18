@@ -6,7 +6,7 @@ import { SwitcherProps } from "@/interfaces";
 import WbSunnyIcon from "@mui/icons-material/WbSunny";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 
-const ThemeSwitcher: React.FC<SwitcherProps> = ({
+export const ThemeSwitcher: React.FC<SwitcherProps> = ({
   toggleTheme,
   isDarkMode,
 }) => {
@@ -45,5 +45,3 @@ const ThemeSwitcher: React.FC<SwitcherProps> = ({
     />
   );
 };
-
-export default ThemeSwitcher;

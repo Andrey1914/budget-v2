@@ -4,11 +4,7 @@ import React from "react";
 import { ListItem, ListItemText, Box, Icon } from "@mui/material";
 import { Login } from "@mui/icons-material";
 import { useTranslations } from "next-intl";
-
-interface NavAuthButtonProps {
-  label?: string;
-  onClick: () => void;
-}
+import { NavAuthButtonProps } from "./types";
 
 export const NavAuthButton: React.FC<NavAuthButtonProps> = ({
   label,

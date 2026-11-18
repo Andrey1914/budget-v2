@@ -18,11 +18,11 @@ import {
   RateReview,
   History,
 } from "@mui/icons-material";
-import { LanguageSwitcher } from "@/components/LanguageSelector/LanguageSwitcher";
+import { LanguageSwitcher } from "@/components/layout";
 
 import { UserMenuProps } from "@/interfaces";
 
-const UserMenu: React.FC<UserMenuProps> = ({ userName, userImage }) => {
+export const UserMenu: React.FC<UserMenuProps> = ({ userName, userImage }) => {
   const tLinks = useTranslations("common.links");
   const tCommon = useTranslations("common.buttons");
 
@@ -133,5 +133,3 @@ const UserMenu: React.FC<UserMenuProps> = ({ userName, userImage }) => {
     </>
   );
 };
-
-export default UserMenu;

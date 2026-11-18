@@ -10,8 +10,7 @@ import createEmotionCache from "@/lib/createEmotionCache";
 import useIdleLogout from "@/hooks/useIdleLogout";
 import { CustomThemeProvider, useColorMode } from "@/context/ThemeContext";
 
-import Footer from "@/components/Footer";
-import Header from "@/components/Header/Header";
+import { Header, Footer } from "@/components/layout";
 
 const clientSideEmotionCache = createEmotionCache();
 
