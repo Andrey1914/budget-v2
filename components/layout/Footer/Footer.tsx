@@ -6,9 +6,9 @@ import { useSession } from "next-auth/react";
 
 import { Box, Container, useTheme } from "@mui/material";
 import LegalInformation from "@/components/LegalInformation/LegalInformation";
-import Logo from "@/components/Logo/Logo";
+import { Logo } from "@/components/layout";
 
-const Footer: React.FC = () => {
+export const Footer: React.FC = () => {
   const { data: session } = useSession();
   const theme = useTheme();
 
@@ -28,5 +28,3 @@ const Footer: React.FC = () => {
     </Box>
   );
 };
-
-export default Footer;

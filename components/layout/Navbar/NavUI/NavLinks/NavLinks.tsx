@@ -4,16 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { usePathname } from "@/i18n/navigation";
 import { ListItem, ListItemText } from "@mui/material";
-
-export interface NavLinkItem {
-  href: string;
-  label: string;
-}
-
-interface NavLinksProps {
-  items: NavLinkItem[];
-  isMobileList?: boolean;
-}
+import { NavLinkItem, NavLinksProps } from "./types";
 
 export const NavLinks: React.FC<NavLinksProps> = ({
   items,

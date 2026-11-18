@@ -2,29 +2,20 @@
 
 import React from "react";
 import { signOut } from "next-auth/react";
-import { Session } from "next-auth";
+
 import { Drawer, Box, Typography, List, Button, useTheme } from "@mui/material";
 import { Logout, Home } from "@mui/icons-material";
-
-import Logo from "@/components/Logo/Logo";
-import UserMenu from "@/components/UserMenu/UserMenu";
-import ThemeSwitcher from "@/components/ThemeSwitcher/ThemeSwitcher";
-import { LanguageSwitcher } from "@/components/LanguageSelector/LanguageSwitcher";
-import { NavLinks, NavLinkItem } from "./NavLinks";
-import { NavIconLink } from "./NavIconLink";
-import { NavAuthButton } from "./NavAuthButton";
+import {
+  ThemeSwitcher,
+  LanguageSwitcher,
+  Logo,
+  UserMenu,
+} from "@/components/layout";
+import { NavLinks } from "../NavLinks";
+import { NavIconLink } from "../NavIconLink";
+import { NavAuthButton } from "../NavAuthButton";
 import { useTranslations } from "next-intl";
-
-interface MobileDrawerProps {
-  open: boolean;
-  onClose: () => void;
-  session: Session | null;
-  links: NavLinkItem[];
-  mobileLinks: NavLinkItem[];
-  isDarkMode: boolean;
-  toggleTheme: () => void;
-  onOpenAuthModal: () => void;
-}
+import { MobileDrawerProps } from "./types";
 
 export const MobileDrawer: React.FC<MobileDrawerProps> = ({
   open,

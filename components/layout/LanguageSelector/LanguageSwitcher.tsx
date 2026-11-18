@@ -1,5 +1,3 @@
-// "use client";
-
 import React, { useTransition } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { usePathname, useRouter } from "@/i18n/navigation";

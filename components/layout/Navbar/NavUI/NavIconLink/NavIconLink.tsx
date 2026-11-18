@@ -4,12 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { usePathname } from "@/i18n/navigation";
 import { ListItem, ListItemText, Box, Icon } from "@mui/material";
-
-interface NavIconLinkProps {
-  href: string;
-  label: string;
-  icon: React.ReactNode;
-}
+import { NavIconLinkProps } from "./types";
 
 export const NavIconLink: React.FC<NavIconLinkProps> = ({
   href,

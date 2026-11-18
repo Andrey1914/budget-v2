@@ -1,13 +1,9 @@
 import React, { useState } from "react";
-import { CircularContainer, SvgContainer } from "./Logo.styled";
+import { CircularContainer, SvgContainer } from "./styles";
 import { useTheme } from "@mui/material";
+import { CircularTextProps } from "./types";
 
-interface CircularTextProps {
-  text: string;
-  radius?: number;
-}
-
-const Logo: React.FC<CircularTextProps> = ({ text, radius = 80 }) => {
+export const Logo: React.FC<CircularTextProps> = ({ text, radius = 80 }) => {
   const theme = useTheme();
   const chars = text.split("");
   const charAngle = 360 / chars.length;
@@ -45,5 +41,3 @@ const Logo: React.FC<CircularTextProps> = ({ text, radius = 80 }) => {
     </CircularContainer>
   );
 };
-
-export default Logo;

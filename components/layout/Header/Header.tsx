@@ -4,13 +4,15 @@ import React from "react";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { SwitcherProps } from "@/interfaces";
-import Navbar from "@/components/Navbar/Navbar";
+import { Navbar, Logo } from "@/components/layout";
 import { useMediaQuery, useTheme } from "@mui/material";
 
-import { ContainerNavLinks } from "@/components/Header/Header.styled";
-import Logo from "@/components/Logo/Logo";
+import { ContainerNavLinks } from "./styles";
 
-const Header: React.FC<SwitcherProps> = ({ toggleTheme, isDarkMode }) => {
+export const Header: React.FC<SwitcherProps> = ({
+  toggleTheme,
+  isDarkMode,
+}) => {
   const { data: session } = useSession();
 
   const theme = useTheme();
@@ -39,5 +41,3 @@ const Header: React.FC<SwitcherProps> = ({ toggleTheme, isDarkMode }) => {
     </header>
   );
 };
-
-export default Header;
