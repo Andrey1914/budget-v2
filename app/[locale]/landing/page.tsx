@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-// import { useRouter } from "next/navigation";
 import { useRouter } from "@/i18n/navigation";
 import { useSession } from "next-auth/react";
 import axios from "axios";
@@ -10,16 +9,18 @@ import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { Box, Typography, Button, useTheme, Container } from "@mui/material";
 import { Send } from "@mui/icons-material";
-import Hero from "@/components/Hero/Hero";
-import AdvantagesCarousel from "@/components/Advantages/AdvantagesCarousel";
-import Advantages from "@/components/Advantages/Advantages";
-import ReviewsCarousel from "@/components/ReviewsCarousel/ReviewsCarousel";
-import FAQ from "@/components/faq/FAQ";
+import {
+  Hero,
+  AdvantagesCarousel,
+  Advantages,
+  Features,
+  FeedbackSection,
+  ReviewsCarousel,
+  FAQ,
+} from "@/components/landing";
 // import AverageRating from "@/components/Review/AverageRating";
-import Feature from "@/components/Features/Features";
 import { MainContainer, GetStartedButton } from "@/theme";
-import FeedbackSection from "@/components/ReviewsCarousel/FeedbackSection";
-import AuthTabsModal from "@/components/Auth/AuthModal";
+import { AuthTabsModal } from "@/components/features/auth";
 import { IReview } from "@/interfaces";
 
 const Landing: React.FC = () => {
@@ -92,7 +93,7 @@ const Landing: React.FC = () => {
 
         {/* Основные функции */}
         <Box component="section" title="main-features">
-          <Feature />
+          <Features />
         </Box>
 
         {/* Отзывы и кейсы успеха */}

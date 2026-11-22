@@ -1,17 +1,7 @@
 import React from "react";
 import { Modal } from "@/components/UI";
 import { Box, Button, Typography } from "@mui/material";
-
-interface ConfirmModalProps {
-  open: boolean;
-  onClose: () => void;
-  onConfirm: () => void;
-  title?: string;
-  message: string;
-  confirmText?: string;
-  cancelText?: string;
-  loading?: boolean;
-}
+import { ConfirmModalProps } from "./types";
 
 export const ConfirmModal: React.FC<ConfirmModalProps> = ({
   open,

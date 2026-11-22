@@ -5,15 +5,15 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "@/i18n/navigation";
 
 import { useFinancialSummary } from "@/hooks/useFinancialSummary";
-import TransactionModal from "@/components/Transactions/TransactionModal";
-import TaskModal from "@/components/Tasks/TaskModal";
 import {
+  TransactionModal,
+  TaskModal,
   TransactionsCard,
   CurrencyConverter,
   CurrencyWidget,
   BalanceWidget,
   TasksWidget,
-} from "@/components/Widgets";
+} from "@/components/features";
 
 import { Box, Grid2, CircularProgress } from "@mui/material";
 

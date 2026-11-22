@@ -2,11 +2,10 @@
 
 import React, { useEffect, useState } from "react";
 
-import ReviewsList from "@/components/Review/ReviewsList";
+import { ReviewsList, AverageRating } from "@/components/features";
 import axios from "axios";
 import { IReview } from "@/interfaces";
 import { Typography, Box, Container, useTheme } from "@mui/material";
-import AverageRating from "@/components/Review/AverageRating";
 
 const AllReviewsPage: React.FC = () => {
   const [reviews, setReviews] = useState<IReview[]>([]);

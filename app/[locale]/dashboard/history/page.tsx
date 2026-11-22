@@ -19,7 +19,7 @@ import {
   Theme,
 } from "@mui/material";
 
-import FilterPanel from "@/components/FilterPanel/FilterPanel";
+import { FilterPanel } from "@/components/features";
 import { historyService } from "@/services/historyService";
 import emptyHistory from "@/public/empty-history.webp";
 

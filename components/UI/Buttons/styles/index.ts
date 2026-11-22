@@ -1,3 +1,7 @@
-export * from "./ActionButtons.styled";
-export * from "./CustomButton.styled";
-export * from "./PlusIconButton.styled";
+export { StyledActionButtons } from "./ActionButtons.styled";
+export {
+  PrimaryButton,
+  SharpButton,
+  GoogleButton,
+} from "./CustomButton.styled";
+export { StyledPlusIconButton } from "./PlusIconButton.styled";

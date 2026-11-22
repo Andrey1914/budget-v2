@@ -3,10 +3,8 @@
 import { useRouter } from "next/navigation";
 import { Box, Container, Typography } from "@mui/material";
 
-import { ProfileAvatar } from "@/components/Profile/ProfileAvatar";
-import { ProfileForm } from "@/components/Profile/ProfileForm";
-import { ConfirmModal } from "@/components/UI/Modal";
-import SnackbarNotification from "@/components/Notification/Snackbar";
+import { ProfileAvatar, ProfileForm } from "@/components/features";
+import { ConfirmModal, SnackbarNotification } from "@/components/UI";
 import { useProfile } from "@/hooks/useProfile";
 
 const ProfilePage = () => {

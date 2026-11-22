@@ -18,7 +18,7 @@ import { Menu, Home } from "@mui/icons-material";
 
 import { ThemeSwitcher, LanguageSwitcher, UserMenu } from "@/components/layout";
 import { SwitcherProps } from "@/interfaces";
-import AuthTabsModal from "@/components/Auth/AuthModal";
+import { AuthTabsModal } from "@/components/features/auth";
 
 import { NavLinks, NavIconLink, NavAuthButton, MobileDrawer } from "./NavUI";
 import { NavLinkItem } from "./NavUI/NavLinks/types";

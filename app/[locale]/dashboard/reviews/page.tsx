@@ -5,10 +5,9 @@ import Link from "next/link";
 import axios from "axios";
 
 import { Box, Container, Typography, Rating, useTheme } from "@mui/material";
-import ReviewForm from "@/components/Review/ReviewForm";
-import ReviewsList from "@/components/Review/ReviewsList";
+import { ReviewForm, ReviewsList } from "@/components/features";
 import { IReview } from "@/interfaces";
-import SnackbarNotification from "@/components/Notification/Snackbar";
+import { SnackbarNotification } from "@/components/UI";
 
 const Review: React.FC = () => {
   const [reviews, setReviews] = useState<IReview[]>([]);
