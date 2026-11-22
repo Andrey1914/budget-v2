@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React from "react";
 import { DialogContent } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import {
@@ -6,15 +6,8 @@ import {
   ModalTopBar,
   ModalCloseButton,
   ModalDivider,
-} from "@/components/Transactions/styles";
-
-interface ModalProps {
-  open: boolean;
-  onClose: () => void;
-  title?: string;
-  children: ReactNode;
-  maxWidth?: "xs" | "sm" | "md" | "lg" | "xl";
-}
+} from "@/components/features/transactions/styles";
+import { ModalProps } from "./types";
 
 export const Modal: React.FC<ModalProps> = ({
   open,

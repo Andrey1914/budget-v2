@@ -1,13 +1,9 @@
-"use client";
+// "use client";
 
 import React from "react";
-import { IconButtonProps } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { StyledPlusIconButton } from "./styles";
-
-export interface PlusIconButtonProps extends IconButtonProps {
-  variantType?: "income" | "expense" | "task";
-}
+import { PlusIconButtonProps } from "./types";
 
 export const PlusIconButton: React.FC<PlusIconButtonProps> = ({
   variantType = "income",

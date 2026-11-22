@@ -4,11 +4,7 @@ import React from "react";
 import { Box } from "@mui/material";
 import { Delete, Edit } from "@mui/icons-material";
 import { StyledActionButtons } from "./styles";
-
-interface ActionButtonsProps {
-  onEdit: () => void;
-  onDelete: () => void;
-}
+import { ActionButtonsProps } from "./types";
 
 export const ActionButtons: React.FC<ActionButtonsProps> = ({
   onEdit,

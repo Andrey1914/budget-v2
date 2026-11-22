@@ -6,10 +6,11 @@ import { useSession } from "next-auth/react";
 import { Session, AnalyticsTransaction } from "@/interfaces";
 import { analyticsService, CurrencyTotal } from "@/services/analyticsService";
 
-import BalanceComparison from "@/components/BalanceComparison/BalanceComparison";
-import CategoryChart from "@/components/Analytics/Analytics";
-import FilterPanel from "@/components/FilterPanel/FilterPanel";
-
+import {
+  CategoryChart,
+  BalanceComparison,
+  FilterPanel,
+} from "@/components/features";
 import { Box, Container, Typography } from "@mui/material";
 
 const AnalyticsPage: React.FC = () => {

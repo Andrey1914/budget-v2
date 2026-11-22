@@ -1,0 +1,42 @@
+"use client";
+
+import React, { useState } from "react";
+import { Snackbar, Alert } from "@mui/material";
+import { NotificationProps } from "./types";
+
+export const SnackbarNotification: React.FC<NotificationProps> = ({
+  open,
+  onClose,
+  message,
+  severity,
+}: NotificationProps) => {
+  const [internalOpen, setInternalOpen] = useState(true);
+
+  const isControlled = open !== undefined;
+  const isOpen = isControlled ? open : internalOpen;
+  const handleClose = (
+    _event?: React.SyntheticEvent | Event,
+    reason?: string,
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    if (!isControlled) {
+      setInternalOpen(false);
+    }
+    onClose?.();
+  };
+
+  return (
+    <Snackbar
+      open={isOpen}
+      autoHideDuration={3000}
+      onClose={handleClose}
+      anchorOrigin={{ vertical: "top", horizontal: "left" }}
+    >
+      <Alert onClose={handleClose} severity={severity} sx={{ width: "100%" }}>
+        {message}
+      </Alert>
+    </Snackbar>
+  );
+};

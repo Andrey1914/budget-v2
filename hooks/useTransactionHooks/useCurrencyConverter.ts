@@ -6,7 +6,7 @@ import {
   type ExchangeRateProvider,
 } from "@/hooks/useTransactionHooks";
 
-import { convertCurrencyAmount } from "@/components/Widgets/Currency/utils";
+import { convertCurrencyAmount } from "@/components/features/widgets/Currency/utils";
 
 type AmountSide = "from" | "to";
 

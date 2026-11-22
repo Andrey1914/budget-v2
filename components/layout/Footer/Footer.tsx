@@ -5,8 +5,8 @@ import Link from "next/link";
 import { useSession } from "next-auth/react";
 
 import { Box, Container, useTheme } from "@mui/material";
-import LegalInformation from "@/components/LegalInformation/LegalInformation";
-import { Logo } from "@/components/layout";
+import { LegalInformation } from "./LegalInformation";
+import { Logo } from "../Logo";
 
 export const Footer: React.FC = () => {
   const { data: session } = useSession();
